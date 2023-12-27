@@ -2,6 +2,23 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.8.
 
+### Description
+
+## Installation
+1. Cloner le repo :
+   https://github.com/Nikotiine/api_portfolio.git
+
+```bash
+npm install
+```
+## Recuperer les models de l'api
+
+https://github.com/Nikotiine/api_shoot_training
+
+```bash
+ng-openapi-gen --input  http://localhost:8080/v3/api-docs --output src/app/core/api
+
+```
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
@@ -25,3 +42,6 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+# app_shoot_training
