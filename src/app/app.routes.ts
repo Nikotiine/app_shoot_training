@@ -1,7 +1,19 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './main/home/home.component';
+import { LayoutComponent } from './main/layout/layout.component';
+import { LoginComponent } from './main/authentication/login/login.component';
+import { RegisterComponent } from './main/authentication/register/register.component';
+import { Routing } from './core/app/enum/Routing.enum';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', component: HomeComponent }
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: Routing.HOME, component: HomeComponent },
+      { path: Routing.LOGIN, component: LoginComponent },
+      { path: 'authentication/register', component: RegisterComponent }
+    ]
+  }
 ];
