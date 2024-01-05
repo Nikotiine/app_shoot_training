@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 
 import { TokenService } from '../../../core/app/services/token.service';
 import { mergeMap } from 'rxjs';
+import { ShooterService } from '../../../core/app/services/shooter.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authenticationService: AuthenticationService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly shooterService: ShooterService
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required]],
@@ -56,8 +58,11 @@ export class LoginComponent {
       .subscribe({
         next: (res) => {
           console.log(res);
+          //TODO redirect to home
+          this.shooterService.setProfile(res);
         },
         error: (err) => {
+          //TODO : afficher le message d'erreur
           console.log(err);
         }
       });
