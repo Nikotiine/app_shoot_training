@@ -1,5 +1,6 @@
 <div class="text-center">
   <a routerLink="/{{Routing.REGISTER}}">Pas encore de compte ?</a>
+
   <form [formGroup]="form">
     <span class="p-input-icon-left">
       <i class="pi pi-user"></i>
@@ -19,7 +20,8 @@
         placeholder="password" />
     </span>
     <br />
-
+    <a routerLink="/{{Routing.REGISTER}}">Mot de passe oublié ?</a>
+    <br />
     <p-button label="send" class="mt-2" (onClick)="submit()"></p-button>
   </form>
 </div>
