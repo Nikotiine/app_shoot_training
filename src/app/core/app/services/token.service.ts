@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Token } from '../../api/models/token';
 
@@ -6,8 +6,8 @@ import { Token } from '../../api/models/token';
   providedIn: 'root'
 })
 export class TokenService {
-  private cookie_token_key = 'access_token';
-  constructor(private readonly cookieService: CookieService) {}
+  private readonly cookie_token_key = 'access_token';
+  private cookieService: CookieService = inject(CookieService);
 
   public saveToken(token: Token) {
     this.cookieService.set(this.cookie_token_key, token.token);

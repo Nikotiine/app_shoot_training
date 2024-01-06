@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
@@ -20,9 +20,9 @@ export class NavigationComponent implements OnInit {
 
   protected readonly Routing = Routing;
 
-  private securityService = inject(SecurityService);
+  private securityService: SecurityService = inject(SecurityService);
 
-  public isLogged = computed(() => {
+  public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
   });
   public ngOnInit(): void {
