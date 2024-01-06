@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { Router } from '@angular/router';
+
 import { Routing } from '../../core/app/enum/Routing.enum';
+import { SecurityService } from '../../core/app/services/security.service';
 
 @Component({
   selector: 'app-navigation',
@@ -15,11 +16,15 @@ import { Routing } from '../../core/app/enum/Routing.enum';
   styleUrl: './navigation.component.scss'
 })
 export class NavigationComponent implements OnInit {
-  items: MenuItem[] = [];
+  public items: MenuItem[] = [];
 
-  isLogged = true;
   protected readonly Routing = Routing;
-  constructor(private readonly router: Router) {}
+
+  private securityService: SecurityService = inject(SecurityService);
+
+  public isLogged: Signal<boolean> = computed(() => {
+    return this.securityService.authenticate();
+  });
   public ngOnInit(): void {
     this.items = [
       {
@@ -102,7 +107,7 @@ export class NavigationComponent implements OnInit {
             ]
           },
           {
-            label: 'Archieve',
+            label: 'Archive',
             icon: 'pi pi-fw pi-calendar-times',
             items: [
               {
@@ -118,5 +123,9 @@ export class NavigationComponent implements OnInit {
         icon: 'pi pi-fw pi-power-off'
       }
     ];
+  }
+
+  public logout(): void {
+    this.securityService.logout();
   }
 }

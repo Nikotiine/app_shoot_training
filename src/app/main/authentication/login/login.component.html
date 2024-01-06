@@ -1,3 +1,31 @@
-<div class="text-center">
+<div class="text-center flex mt-3 flex-column">
+  <h2>Espace membre</h2>
+  <form [formGroup]="form">
+    <div class="mt-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-user"></i>
+        <input
+          type="text"
+          pInputText
+          formControlName="email"
+          placeholder="email" />
+      </span>
+    </div>
+    <div class="mt-3">
+      <span class="p-input-icon-left my-2">
+        <i class="pi pi-lock"></i>
+        <input
+          type="password"
+          pInputText
+          formControlName="password"
+          placeholder="password" />
+      </span>
+    </div>
+    <div class="mt-3">
+      <p-button label="Connexion" (onClick)="submit()"></p-button>
+    </div>
+  </form>
+
+  <a routerLink="/{{Routing.REGISTER}}" class="my-3">Mot de passe oublié ?</a>
   <a routerLink="/{{Routing.REGISTER}}">Pas encore de compte ?</a>
 </div>
