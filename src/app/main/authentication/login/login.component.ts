@@ -11,10 +11,10 @@ import { AuthenticationService } from '../../../core/api/services/authentication
 import { CredentialsDto } from '../../../core/api/models/credentials-dto';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-
 import { TokenService } from '../../../core/app/services/token.service';
 import { mergeMap } from 'rxjs';
 import { ShooterService } from '../../../core/app/services/shooter.service';
+import { SecurityService } from '../../../core/app/services/security.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +31,8 @@ export class LoginComponent {
     private readonly fb: FormBuilder,
     private readonly authenticationService: AuthenticationService,
     private readonly tokenService: TokenService,
-    private readonly shooterService: ShooterService
+    private readonly shooterService: ShooterService,
+    private readonly securityService: SecurityService
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required]],
@@ -44,7 +45,7 @@ export class LoginComponent {
       email: this.form.controls['email'].value,
       password: this.form.controls['password'].value
     };
-
+    this.tokenService.removeToken();
     this.authenticationService
       .login({
         body: credentials
@@ -60,6 +61,7 @@ export class LoginComponent {
           console.log(res);
           //TODO redirect to home
           this.shooterService.setProfile(res);
+          this.securityService.isLogged();
         },
         error: (err) => {
           //TODO : afficher le message d'erreur
