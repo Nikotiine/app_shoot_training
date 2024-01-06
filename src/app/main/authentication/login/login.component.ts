@@ -13,6 +13,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { mergeMap } from 'rxjs';
 import { SecurityService } from '../../../core/app/services/security.service';
+import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,8 @@ export class LoginComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authenticationService: AuthenticationService,
-    private readonly securityService: SecurityService
+    private readonly securityService: SecurityService,
+    private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required]],
@@ -57,8 +60,10 @@ export class LoginComponent {
           this.securityService.isAuthenticate(profile);
         },
         error: (err) => {
-          //TODO : afficher le message d'erreur
-          console.log(err);
+          this.customMessageService.errorMessage(
+            'Authentication',
+            err.error.message
+          );
         }
       });
   }
