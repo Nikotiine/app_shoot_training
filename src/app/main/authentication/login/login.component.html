@@ -1,27 +1,31 @@
-<div class="text-center">
-  <a routerLink="/{{Routing.REGISTER}}">Pas encore de compte ?</a>
-
+<div class="text-center flex mt-3 flex-column">
+  <h2>Espace membre</h2>
   <form [formGroup]="form">
-    <span class="p-input-icon-left">
-      <i class="pi pi-user"></i>
-      <input
-        type="text"
-        pInputText
-        formControlName="email"
-        placeholder="email" />
-    </span>
-    <br />
-    <span class="p-input-icon-left my-2">
-      <i class="pi pi-lock"></i>
-      <input
-        type="password"
-        pInputText
-        formControlName="password"
-        placeholder="password" />
-    </span>
-    <br />
-    <a routerLink="/{{Routing.REGISTER}}">Mot de passe oublié ?</a>
-    <br />
-    <p-button label="send" class="mt-2" (onClick)="submit()"></p-button>
+    <div class="mt-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-user"></i>
+        <input
+          type="text"
+          pInputText
+          formControlName="email"
+          placeholder="email" />
+      </span>
+    </div>
+    <div class="mt-3">
+      <span class="p-input-icon-left my-2">
+        <i class="pi pi-lock"></i>
+        <input
+          type="password"
+          pInputText
+          formControlName="password"
+          placeholder="password" />
+      </span>
+    </div>
+    <div class="mt-3">
+      <p-button label="Connexion" (onClick)="submit()"></p-button>
+    </div>
   </form>
+
+  <a routerLink="/{{Routing.REGISTER}}" class="my-3">Mot de passe oublié ?</a>
+  <a routerLink="/{{Routing.REGISTER}}">Pas encore de compte ?</a>
 </div>
