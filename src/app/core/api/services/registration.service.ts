@@ -17,6 +17,7 @@ import { refreshCode } from '../fn/registration/refresh-code';
 import { RefreshCode$Params } from '../fn/registration/refresh-code';
 import { register } from '../fn/registration/register';
 import { Register$Params } from '../fn/registration/register';
+import { ResponseMessage } from '../models/response-message';
 
 
 /**
@@ -62,8 +63,7 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  register$Response(params: Register$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+  register$Response(params: Register$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
     return register(this.http, this.rootUrl, params, context);
   }
 
@@ -73,12 +73,9 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  register(params: Register$Params, context?: HttpContext): Observable<{
-}> {
+  register(params: Register$Params, context?: HttpContext): Observable<ResponseMessage> {
     return this.register$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
+      map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
     );
   }
 
@@ -120,8 +117,7 @@ export class RegistrationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  emailVerification$Response(params: EmailVerification$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+  emailVerification$Response(params: EmailVerification$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
     return emailVerification(this.http, this.rootUrl, params, context);
   }
 
@@ -131,12 +127,9 @@ export class RegistrationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  emailVerification(params: EmailVerification$Params, context?: HttpContext): Observable<{
-}> {
+  emailVerification(params: EmailVerification$Params, context?: HttpContext): Observable<ResponseMessage> {
     return this.emailVerification$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
+      map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
     );
   }
 

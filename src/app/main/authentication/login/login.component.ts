@@ -14,7 +14,6 @@ import { ButtonModule } from 'primeng/button';
 import { mergeMap } from 'rxjs';
 import { SecurityService } from '../../../core/app/services/security.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
