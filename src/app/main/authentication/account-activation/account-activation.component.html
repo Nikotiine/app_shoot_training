@@ -1,11 +1,18 @@
-@defer (when message){ @if (message.code === 3){
-<p class="text-red-500">{{message.message}}</p>
-<div class="mt-3">
-  <p-button label="Redemander un code" (onClick)="getNewCode()"></p-button>
+@if (message.code === 103){
+<div class="text-center">
+  <p class="text-red-500">{{message.message}}</p>
+  <div class="mt-3">
+    <p-button label="Redemander un code" (onClick)="getNewCode()"></p-button>
+  </div>
 </div>
+} @else if (message.code === 102){
+<p class="text-red-500 text-4xl text-center">{{message.message}}</p>
 } @else {
 <div class="text-center">
   <h2>Activer votre compte</h2>
+  @if (message.code === 104){
+  <p class="text-red-500">{{message.message}}</p>
+  }
   <p>Entrez le code à 6 chiffres</p>
   <form [formGroup]="form">
     <p-inputNumber inputId="integeronly" formControlName="code">
@@ -17,4 +24,4 @@
   </form>
 </div>
 
-} }
+}

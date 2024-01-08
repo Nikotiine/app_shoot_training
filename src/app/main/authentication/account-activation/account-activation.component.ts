@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrationService } from '../../../core/api/services';
 import { ResponseMessage } from '../../../core/api/models/response-message';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,9 @@ import {
   Validators
 } from '@angular/forms';
 import { ValidationCodeDto } from '../../../core/api/models/validation-code-dto';
+import { RefreshCodeRequest } from '../../../core/api/models/refresh-code-request';
+import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { Routing } from '../../../core/app/enum/Routing.enum';
 
 @Component({
   selector: 'app-account-activation',
@@ -22,10 +25,18 @@ import { ValidationCodeDto } from '../../../core/api/models/validation-code-dto'
 export class AccountActivationComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private registrationService = inject(RegistrationService);
-  public message: ResponseMessage = {};
+  public message: ResponseMessage = {
+    code: 0,
+    message: ''
+  };
   public form: FormGroup;
+  private _email: string = '';
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly customMessageService: CustomMessageService,
+    private readonly router: Router
+  ) {
     this.form = this.fb.group({
       code: [
         null,
@@ -34,28 +45,30 @@ export class AccountActivationComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    const email = this.activatedRoute.snapshot.params['email'];
-
-    this.registrationService.emailVerification({ email }).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.message = res;
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
+    this._email = this.activatedRoute.snapshot.params['email'];
   }
 
   public getNewCode(): void {
-    console.log('new');
+    const refreshCodeRequest: RefreshCodeRequest = {
+      email: this._email
+    };
+    this.registrationService
+      .refreshCode({ body: refreshCodeRequest })
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
   }
 
   public submitCode(): void {
     const code: ValidationCodeDto = {
-      code: this.form.controls['code'].value
+      code: this.form.controls['code'].value,
+      shooterEmail: this._email
     };
-    console.log(code);
     this.registrationService
       .codeValidation({
         body: code
@@ -63,9 +76,14 @@ export class AccountActivationComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
+          this.message = res;
+          if (res.code === 2) {
+            this.customMessageService.successMessage('Compte', res.message);
+            this.router.navigate([Routing.LOGIN]);
+          }
         },
         error: (err) => {
-          console.log(err);
+          this.message = err.error;
         }
       });
   }

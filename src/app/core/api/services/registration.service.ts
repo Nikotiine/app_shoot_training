@@ -11,8 +11,6 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { codeValidation } from '../fn/registration/code-validation';
 import { CodeValidation$Params } from '../fn/registration/code-validation';
-import { emailVerification } from '../fn/registration/email-verification';
-import { EmailVerification$Params } from '../fn/registration/email-verification';
 import { refreshCode } from '../fn/registration/refresh-code';
 import { RefreshCode$Params } from '../fn/registration/refresh-code';
 import { register } from '../fn/registration/register';
@@ -38,7 +36,7 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  codeValidation$Response(params: CodeValidation$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  codeValidation$Response(params: CodeValidation$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
     return codeValidation(this.http, this.rootUrl, params, context);
   }
 
@@ -48,9 +46,9 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  codeValidation(params: CodeValidation$Params, context?: HttpContext): Observable<string> {
+  codeValidation(params: CodeValidation$Params, context?: HttpContext): Observable<ResponseMessage> {
     return this.codeValidation$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
     );
   }
 
@@ -88,8 +86,7 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  refreshCode$Response(params: RefreshCode$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+  refreshCode$Response(params: RefreshCode$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
     return refreshCode(this.http, this.rootUrl, params, context);
   }
 
@@ -99,36 +96,8 @@ export class RegistrationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  refreshCode(params: RefreshCode$Params, context?: HttpContext): Observable<{
-}> {
+  refreshCode(params: RefreshCode$Params, context?: HttpContext): Observable<ResponseMessage> {
     return this.refreshCode$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
-    );
-  }
-
-  /** Path part for operation `emailVerification()` */
-  static readonly EmailVerificationPath = '/api/registration/authorize-validation/{email}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `emailVerification()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  emailVerification$Response(params: EmailVerification$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
-    return emailVerification(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `emailVerification$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  emailVerification(params: EmailVerification$Params, context?: HttpContext): Observable<ResponseMessage> {
-    return this.emailVerification$Response(params, context).pipe(
       map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
     );
   }
