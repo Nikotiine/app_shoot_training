@@ -56,10 +56,11 @@ export class AccountActivationComponent implements OnInit {
       .refreshCode({ body: refreshCodeRequest })
       .subscribe({
         next: (res) => {
-          console.log(res);
+          this.message = res;
+          this.customMessageService.successMessage('Compte', res.message);
         },
         error: (err) => {
-          console.log(err);
+          this.customMessageService.errorMessage('Compte', err.error.message);
         }
       });
   }
@@ -67,7 +68,7 @@ export class AccountActivationComponent implements OnInit {
   public submitCode(): void {
     const code: ValidationCodeDto = {
       code: this.form.controls['code'].value,
-      shooterEmail: this._email
+      email: this._email
     };
     this.registrationService
       .codeValidation({
@@ -75,7 +76,6 @@ export class AccountActivationComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.message = res;
           if (res.code === 2) {
             this.customMessageService.successMessage('Compte', res.message);
@@ -84,6 +84,8 @@ export class AccountActivationComponent implements OnInit {
         },
         error: (err) => {
           this.message = err.error;
+          this.customMessageService.errorMessage('Compte', err.error.message);
+          this.form.controls['code'].setValue(null);
         }
       });
   }

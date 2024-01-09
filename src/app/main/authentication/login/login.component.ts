@@ -33,8 +33,8 @@ export class LoginComponent {
     private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', Validators.required]
+      email: [null, [Validators.required]],
+      password: [null, Validators.required]
     });
   }
 
@@ -56,6 +56,10 @@ export class LoginComponent {
       )
       .subscribe({
         next: (profile) => {
+          this.customMessageService.successMessage(
+            'Connexion',
+            `Bonjour ${profile.firstName}`
+          );
           this.securityService.isAuthenticate(profile);
         },
         error: (err) => {
@@ -63,6 +67,8 @@ export class LoginComponent {
             'Authentication',
             err.error.message
           );
+          this.form.controls['email'].setValue(null);
+          this.form.controls['password'].setValue(null);
         }
       });
   }

@@ -2,5 +2,5 @@
 /* eslint-disable */
 export interface ValidationCodeDto {
   code?: number;
-  shooterEmail: string;
+  email: string;
 }

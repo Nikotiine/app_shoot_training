@@ -13,7 +13,7 @@ export class SecurityService {
   private tokenService: TokenService = inject(TokenService);
   private shooterService: ShooterService = inject(ShooterService);
   private router = inject(Router);
-  public authenticate = signal(false);
+  public authenticate = signal(!!this.tokenService.getToken());
   public isAuthenticate(profile: ShooterProfileDto): void {
     this.authenticate.set(true);
     this.shooterService.setProfile(profile);
