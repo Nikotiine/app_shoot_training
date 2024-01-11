@@ -11,6 +11,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
+import { ShooterService } from '../../../core/api/services/shooter.service';
+import { NewPasswordRequestDto } from '../../../core/api/models/new-password-request-dto';
+
+import { Routing } from '../../../core/app/enum/Routing.enum';
 
 @Component({
   selector: 'app-new-password',
@@ -32,7 +36,8 @@ export class NewPasswordComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly shooterService: ShooterService
   ) {
     this.form = this.fb.group({
       code: [
@@ -50,20 +55,49 @@ export class NewPasswordComponent implements OnInit {
   public submit(): void {
     const isPasswordMatch: boolean = this.passwordMatch();
     if (!isPasswordMatch) {
-      this.customMessageService.errorMessage(
-        'Controle',
-        'Les mots de passe ne correpondent pas '
-      );
-      this.form.controls['password'].setValue('');
-      this.form.controls['confirmPassword'].setValue('');
+      this.resetForm();
     } else {
-      console.log('toto');
+      const newPasswordRequest: NewPasswordRequestDto = {
+        email: this._email,
+        code: this.form.controls['code'].value,
+        password: this.form.controls['password'].value
+      };
+      this.shooterService
+        .newPassword({
+          body: newPasswordRequest
+        })
+        .subscribe({
+          next: (res) => {
+            this.customMessageService.successMessage('Compte', res.message);
+            this.router.navigate([Routing.LOGIN]);
+          },
+          error: (err) => {
+            this.customMessageService.errorMessage('Compte', err.error.message);
+            this.form.controls['code'].setValue(null);
+          }
+        });
     }
   }
 
+  /**
+   * Verifie que les mots de passe correpondent
+   */
   private passwordMatch(): boolean {
     const password = this.form.controls['password'].value;
     const confirmPassword = this.form.controls['confirmPassword'].value;
     return password === confirmPassword;
+  }
+
+  /**
+   * Remet a 0 le formulaire
+   * @private
+   */
+  private resetForm(): void {
+    this.customMessageService.errorMessage(
+      'Controle',
+      'Les mots de passe ne correpondent pas '
+    );
+    this.form.controls['password'].setValue('');
+    this.form.controls['confirmPassword'].setValue('');
   }
 }

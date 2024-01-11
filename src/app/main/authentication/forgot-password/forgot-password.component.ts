@@ -45,14 +45,12 @@ export class ForgotPasswordComponent {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           if (res.code === 4) {
             this.customMessageService.successMessage('Compte', res.message);
             this.router.navigate([Routing.NEW_PASSWORD + email + '/activate']);
           }
         },
         error: (err) => {
-          console.log(err);
           this.customMessageService.errorMessage('Compte', err.error.message);
           this.form.controls['email'].setValue(null);
         }

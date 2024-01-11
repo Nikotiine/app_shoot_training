@@ -22,7 +22,7 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 })
 export class RegisterComponent {
   public form: FormGroup;
-
+  protected readonly Routing = Routing;
   constructor(
     private readonly fb: FormBuilder,
     private readonly registrationService: RegistrationService,
@@ -71,6 +71,4 @@ export class RegisterComponent {
         }
       });
   }
-
-  protected readonly Routing = Routing;
 }
