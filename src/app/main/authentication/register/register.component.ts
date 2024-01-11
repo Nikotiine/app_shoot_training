@@ -45,7 +45,6 @@ export class RegisterComponent {
       email: email,
       password: this.form.controls['password'].value
     };
-    console.log(shooterRegistration);
 
     this.registrationService
       .register({
@@ -63,7 +62,12 @@ export class RegisterComponent {
           ]);
         },
         error: (err) => {
-          console.log(err);
+          this.customMessageService.errorMessage(
+            'Creation de compte',
+            err.error.message
+          );
+          this.form.controls['email'].setValue(null);
+          this.form.controls['password'].setValue(null);
         }
       });
   }

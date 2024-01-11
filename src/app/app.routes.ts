@@ -5,6 +5,8 @@ import { LoginComponent } from './main/authentication/login/login.component';
 import { RegisterComponent } from './main/authentication/register/register.component';
 import { Routing } from './core/app/enum/Routing.enum';
 import { AccountActivationComponent } from './main/authentication/account-activation/account-activation.component';
+import { ForgotPasswordComponent } from './main/authentication/forgot-password/forgot-password.component';
+import { NewPasswordComponent } from './main/authentication/new-password/new-password.component';
 
 export const routes: Routes = [
   {
@@ -14,10 +16,18 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: Routing.HOME, component: HomeComponent },
       { path: Routing.LOGIN, component: LoginComponent },
-      { path: 'authentication/register', component: RegisterComponent },
+      { path: Routing.REGISTER, component: RegisterComponent },
       {
-        path: 'account-activation/:email/activate',
+        path: Routing.ACCOUNT_ACTIVATION + ':email/activate',
         component: AccountActivationComponent
+      },
+      {
+        path: Routing.FORGOT_PASSWORD,
+        component: ForgotPasswordComponent
+      },
+      {
+        path: Routing.NEW_PASSWORD + ':email/activate',
+        component: NewPasswordComponent
       }
     ]
   }

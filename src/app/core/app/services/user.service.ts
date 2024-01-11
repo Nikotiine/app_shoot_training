@@ -4,7 +4,7 @@ import { ShooterProfileDto } from '../../api/models/shooter-profile-dto';
 @Injectable({
   providedIn: 'root'
 })
-export class ShooterService {
+export class UserService {
   private shooter!: ShooterProfileDto;
   constructor() {}
 
