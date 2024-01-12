@@ -9,10 +9,11 @@ import {
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { RefreshCodeRequest } from '../../../core/api/models/refresh-code-request';
-import { ShooterService } from '../../../core/api/services/shooter.service';
+
 import { Router } from '@angular/router';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { Routing } from '../../../core/app/enum/Routing.enum';
+import { ForgotPasswordService } from '../../../core/api/services/forgot-password.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -25,7 +26,7 @@ export class ForgotPasswordComponent {
   public form: FormGroup;
   constructor(
     private readonly fb: FormBuilder,
-    private readonly shooterService: ShooterService,
+    private readonly forgotPasswordService: ForgotPasswordService,
     private readonly router: Router,
     private readonly customMessageService: CustomMessageService
   ) {
@@ -39,8 +40,8 @@ export class ForgotPasswordComponent {
     const request: RefreshCodeRequest = {
       email: email
     };
-    this.shooterService
-      .forgotPassword({
+    this.forgotPasswordService
+      .requestNewPassword({
         body: request
       })
       .subscribe({

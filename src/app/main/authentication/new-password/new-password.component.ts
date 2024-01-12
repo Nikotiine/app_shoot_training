@@ -11,10 +11,11 @@ import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
-import { ShooterService } from '../../../core/api/services/shooter.service';
+
 import { NewPasswordRequestDto } from '../../../core/api/models/new-password-request-dto';
 
 import { Routing } from '../../../core/app/enum/Routing.enum';
+import { ForgotPasswordService } from '../../../core/api/services/forgot-password.service';
 
 @Component({
   selector: 'app-new-password',
@@ -37,7 +38,7 @@ export class NewPasswordComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,
     private readonly router: Router,
-    private readonly shooterService: ShooterService
+    private readonly forgotPasswordService: ForgotPasswordService
   ) {
     this.form = this.fb.group({
       code: [
@@ -62,8 +63,8 @@ export class NewPasswordComponent implements OnInit {
         code: this.form.controls['code'].value,
         password: this.form.controls['password'].value
       };
-      this.shooterService
-        .newPassword({
+      this.forgotPasswordService
+        .saveNewPassword({
           body: newPasswordRequest
         })
         .subscribe({
