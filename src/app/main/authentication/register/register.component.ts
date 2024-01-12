@@ -22,7 +22,7 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 })
 export class RegisterComponent {
   public form: FormGroup;
-
+  protected readonly Routing = Routing;
   constructor(
     private readonly fb: FormBuilder,
     private readonly registrationService: RegistrationService,
@@ -45,7 +45,6 @@ export class RegisterComponent {
       email: email,
       password: this.form.controls['password'].value
     };
-    console.log(shooterRegistration);
 
     this.registrationService
       .register({
@@ -63,10 +62,13 @@ export class RegisterComponent {
           ]);
         },
         error: (err) => {
-          console.log(err);
+          this.customMessageService.errorMessage(
+            'Creation de compte',
+            err.error.message
+          );
+          this.form.controls['email'].setValue(null);
+          this.form.controls['password'].setValue(null);
         }
       });
   }
-
-  protected readonly Routing = Routing;
 }

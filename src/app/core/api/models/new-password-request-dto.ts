@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface ValidationCodeDto {
+export interface NewPasswordRequestDto {
   code?: number;
   email: string;
+  password: string;
 }

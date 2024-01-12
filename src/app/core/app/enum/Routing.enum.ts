@@ -2,5 +2,7 @@ export enum Routing {
   HOME = 'home',
   LOGIN = 'authentication/login',
   REGISTER = 'authentication/register',
-  ACCOUNT_ACTIVATION = 'account-activation'
+  ACCOUNT_ACTIVATION = 'authentication/account-activation/',
+  FORGOT_PASSWORD = 'authentication/forgot-password',
+  NEW_PASSWORD = 'authentication/new-password/'
 }

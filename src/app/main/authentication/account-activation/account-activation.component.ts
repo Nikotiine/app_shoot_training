@@ -10,10 +10,11 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ValidationCodeDto } from '../../../core/api/models/validation-code-dto';
+
 import { RefreshCodeRequest } from '../../../core/api/models/refresh-code-request';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { Routing } from '../../../core/app/enum/Routing.enum';
+import { ActivationCodeDto } from '../../../core/api/models/activation-code-dto';
 
 @Component({
   selector: 'app-account-activation',
@@ -66,7 +67,7 @@ export class AccountActivationComponent implements OnInit {
   }
 
   public submitCode(): void {
-    const code: ValidationCodeDto = {
+    const code: ActivationCodeDto = {
       code: this.form.controls['code'].value,
       email: this._email
     };

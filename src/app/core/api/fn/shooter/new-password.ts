@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ActivationCodeDto } from '../../models/activation-code-dto';
+import { NewPasswordRequestDto } from '../../models/new-password-request-dto';
 import { ResponseMessage } from '../../models/response-message';
 
-export interface CodeValidation$Params {
-      body: ActivationCodeDto
+export interface NewPassword$Params {
+      body: NewPasswordRequestDto
 }
 
-export function codeValidation(http: HttpClient, rootUrl: string, params: CodeValidation$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
-  const rb = new RequestBuilder(rootUrl, codeValidation.PATH, 'post');
+export function newPassword(http: HttpClient, rootUrl: string, params: NewPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
+  const rb = new RequestBuilder(rootUrl, newPassword.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function codeValidation(http: HttpClient, rootUrl: string, params: CodeVa
   );
 }
 
-codeValidation.PATH = '/api/registration/validation-code';
+newPassword.PATH = '/api/shooter/new-password';
