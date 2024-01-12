@@ -16,7 +16,8 @@ import { SecurityService } from '../../core/app/services/security.service';
   styleUrl: './navigation.component.scss'
 })
 export class NavigationComponent implements OnInit {
-  public items: MenuItem[] = [];
+  public navbarConnected: MenuItem[] = [];
+  public navbarVisitor: MenuItem[] = [];
 
   protected readonly Routing = Routing;
 
@@ -25,20 +26,31 @@ export class NavigationComponent implements OnInit {
   public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
   });
+
   public ngOnInit(): void {
-    this.items = [
+    this.navbarConnected = this.createNavbarConnected();
+    this.navbarVisitor = this.createNavbarVisitor();
+  }
+
+  public logout(): void {
+    this.securityService.logout();
+  }
+
+  private createNavbarConnected(): MenuItem[] {
+    return [
       {
         label: 'Accueil',
         icon: 'pi pi-home',
         routerLink: Routing.HOME
       },
       {
-        label: 'Edit',
-        icon: 'pi pi-fw pi-pencil',
+        label: 'Mon compte',
+        icon: 'pi pi-fw pi-user',
         items: [
           {
-            label: 'Left',
-            icon: 'pi pi-fw pi-align-left'
+            label: 'Mes info',
+            icon: 'pi pi-fw pi-align-left',
+            routerLink: Routing.SHOOTER_PROFILE
           },
           {
             label: 'Right',
@@ -125,7 +137,82 @@ export class NavigationComponent implements OnInit {
     ];
   }
 
-  public logout(): void {
-    this.securityService.logout();
+  private createNavbarVisitor(): MenuItem[] {
+    return [
+      {
+        label: 'Accueil',
+        icon: 'pi pi-home',
+        routerLink: Routing.HOME
+      },
+
+      {
+        label: 'Menu Hors co',
+        icon: 'pi pi-fw pi-user',
+        items: [
+          {
+            label: 'New',
+            icon: 'pi pi-fw pi-user-plus'
+          },
+          {
+            label: 'Delete',
+            icon: 'pi pi-fw pi-user-minus'
+          },
+          {
+            label: 'Search',
+            icon: 'pi pi-fw pi-users',
+            items: [
+              {
+                label: 'Filter',
+                icon: 'pi pi-fw pi-filter',
+                items: [
+                  {
+                    label: 'Print',
+                    icon: 'pi pi-fw pi-print'
+                  }
+                ]
+              },
+              {
+                icon: 'pi pi-fw pi-bars',
+                label: 'List'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        label: 'Menu Hors co',
+        icon: 'pi pi-fw pi-calendar',
+        items: [
+          {
+            label: 'Edit',
+            icon: 'pi pi-fw pi-pencil',
+            items: [
+              {
+                label: 'Save',
+                icon: 'pi pi-fw pi-calendar-plus'
+              },
+              {
+                label: 'Delete',
+                icon: 'pi pi-fw pi-calendar-minus'
+              }
+            ]
+          },
+          {
+            label: 'Archive',
+            icon: 'pi pi-fw pi-calendar-times',
+            items: [
+              {
+                label: 'Remove',
+                icon: 'pi pi-fw pi-calendar-minus'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        label: 'Menu Hors co',
+        icon: 'pi pi-fw pi-power-off'
+      }
+    ];
   }
 }
