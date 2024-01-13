@@ -11,12 +11,12 @@ import { Routing } from '../enum/Routing.enum';
 })
 export class SecurityService {
   private tokenService: TokenService = inject(TokenService);
-  private shooterService: UserService = inject(UserService);
+  private userService: UserService = inject(UserService);
   private router = inject(Router);
   public authenticate = signal(!!this.tokenService.getToken());
-  public isAuthenticate(profile: ShooterProfileDto): void {
+  public setAuthentication(profile: ShooterProfileDto): void {
     this.authenticate.set(true);
-    this.shooterService.setProfile(profile);
+    this.userService.setProfile(profile);
     this.router.navigate([Routing.HOME]);
   }
 
@@ -27,10 +27,15 @@ export class SecurityService {
   public logout(): void {
     this.authenticate.set(false);
     this.tokenService.removeToken();
+    this.userService.setProfile({});
     this.router.navigate([Routing.HOME]);
   }
 
   public removeToken(): void {
     this.tokenService.removeToken();
+  }
+
+  public isLogged(): boolean {
+    return !!this.tokenService.getToken();
   }
 }

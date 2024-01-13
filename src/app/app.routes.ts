@@ -8,11 +8,13 @@ import { AccountActivationComponent } from './main/authentication/account-activa
 import { ForgotPasswordComponent } from './main/authentication/forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './main/authentication/new-password/new-password.component';
 import { ShooterViewComponent } from './main/shooter/shooter-view/shooter-view.component';
+import { userResolver } from './core/app/resolvers/user.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    resolve: [userResolver],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: Routing.HOME, component: HomeComponent },

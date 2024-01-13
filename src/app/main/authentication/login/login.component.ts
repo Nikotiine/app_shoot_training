@@ -60,7 +60,7 @@ export class LoginComponent {
             'Connexion',
             `Bonjour ${profile.firstName}`
           );
-          this.securityService.isAuthenticate(profile);
+          this.securityService.setAuthentication(profile);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
