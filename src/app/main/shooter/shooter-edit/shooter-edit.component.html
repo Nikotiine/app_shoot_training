@@ -1,1 +1,69 @@
-<p>shooter-edit works!</p>
+<h2>Modifier mes information</h2>
+
+<form [formGroup]="form">
+  <div class="mt-3">
+    <span class="p-input-icon-left">
+      <i class="pi pi-user"></i>
+      <input
+        type="text"
+        pInputText
+        formControlName="firstName"
+        placeholder="firstName" />
+    </span>
+  </div>
+  <div class="mt-3">
+    <span class="p-input-icon-left my-2">
+      <i class="pi pi-lock"></i>
+      <input
+        type="text"
+        pInputText
+        formControlName="lastName"
+        placeholder="lastName" />
+    </span>
+  </div>
+  @defer (when isChangePassword){ @if (isChangePassword){
+  <div class="mt-3">
+    <span class="p-input-icon-left my-2">
+      <i class="pi pi-lock"></i>
+      <input
+        type="password"
+        pInputText
+        formControlName="oldPassword"
+        placeholder="Ancien mot de passe" />
+    </span>
+  </div>
+  <div class="mt-3">
+    <span class="p-input-icon-left my-2">
+      <i class="pi pi-lock"></i>
+      <input
+        type="password"
+        pInputText
+        formControlName="password"
+        placeholder="Nouveau mot de passe" />
+    </span>
+  </div>
+  <div class="mt-3">
+    <span class="p-input-icon-left my-2">
+      <i class="pi pi-lock"></i>
+      <input
+        type="password"
+        pInputText
+        formControlName="confirmPassword"
+        placeholder="Confirmez mot de passe" />
+    </span>
+  </div>
+  } }
+
+  <div class="mt-3">
+    <p-button
+      label="{{isChangePassword ? 'Annuler':'Changer le mot de passe'}}"
+      (onClick)="showFormForNewPassword()"
+      severity="{{isChangePassword ? 'secondary':'danger'}}"></p-button>
+  </div>
+  <div class="mt-3">
+    <p-button
+      label="Valider"
+      (onClick)="submit()"
+      [disabled]="form.invalid"></p-button>
+  </div>
+</form>

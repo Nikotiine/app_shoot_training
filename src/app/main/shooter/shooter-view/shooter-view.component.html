@@ -6,9 +6,11 @@
     <p>Membre depuis {{shooterProfile.createdAT | date:'dd MMM yyyy'}}</p>
   </div>
   <div class="mt-3">
-    <p-button label="Modifier" (onClick)="editProfile()"></p-button>
+    <p-button label="Modifier mon profil" (onClick)="editProfile()"></p-button>
   </div>
   @defer (when isEdit){ @if (isEdit){
-  <app-shooter-edit></app-shooter-edit>
+  <app-shooter-edit
+    [profile]="shooterProfile"
+    (profileChange)="profileChange($event)"></app-shooter-edit>
   } }
 </div>

@@ -24,4 +24,9 @@ export class ShooterViewComponent implements OnInit {
   public editProfile(): void {
     this.isEdit = !this.isEdit;
   }
+
+  profileChange($event: ShooterProfileDto) {
+    this.shooterProfile = $event;
+    this.isEdit = false;
+  }
 }

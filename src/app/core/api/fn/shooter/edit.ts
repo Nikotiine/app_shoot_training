@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { NewPasswordRequestDto } from '../../models/new-password-request-dto';
-import { ResponseMessage } from '../../models/response-message';
+import { ShooterEditDto } from '../../models/shooter-edit-dto';
+import { ShooterProfileDto } from '../../models/shooter-profile-dto';
 
-export interface NewPassword$Params {
-      body: NewPasswordRequestDto
+export interface Edit$Params {
+      body: ShooterEditDto
 }
 
-export function newPassword(http: HttpClient, rootUrl: string, params: NewPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
-  const rb = new RequestBuilder(rootUrl, newPassword.PATH, 'post');
+export function edit(http: HttpClient, rootUrl: string, params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<ShooterProfileDto>> {
+  const rb = new RequestBuilder(rootUrl, edit.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +24,9 @@ export function newPassword(http: HttpClient, rootUrl: string, params: NewPasswo
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ResponseMessage>;
+      return r as StrictHttpResponse<ShooterProfileDto>;
     })
   );
 }
 
-newPassword.PATH = '/api/shooter/new-password';
+edit.PATH = '/api/shooter/edit';
