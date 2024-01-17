@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RegistrationDto } from '../../models/registration-dto';
 import { ResponseMessage } from '../../models/response-message';
+import { UserRegistrationDto } from '../../models/user-registration-dto';
 
 export interface Register$Params {
-      body: RegistrationDto
+      body: UserRegistrationDto
 }
 
 export function register(http: HttpClient, rootUrl: string, params: Register$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {

@@ -7,11 +7,14 @@ import { Routing } from './core/app/enum/Routing.enum';
 import { AccountActivationComponent } from './main/authentication/account-activation/account-activation.component';
 import { ForgotPasswordComponent } from './main/authentication/forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './main/authentication/new-password/new-password.component';
+import { UserViewComponent } from './main/user/user-view/user-view.component';
+import { userResolver } from './core/app/resolvers/user.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    resolve: [userResolver],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: Routing.HOME, component: HomeComponent },
@@ -28,6 +31,10 @@ export const routes: Routes = [
       {
         path: Routing.NEW_PASSWORD + ':email/activate',
         component: NewPasswordComponent
+      },
+      {
+        path: Routing.SHOOTER_PROFILE,
+        component: UserViewComponent
       }
     ]
   }

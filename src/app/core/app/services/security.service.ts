@@ -2,21 +2,21 @@ import { inject, Injectable, signal } from '@angular/core';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 import { Token } from '../../api/models/token';
-import { UserService } from './user.service';
-import { ShooterProfileDto } from '../../api/models/shooter-profile-dto';
+import { AppUserService } from './app-user.service';
 import { Routing } from '../enum/Routing.enum';
+import { UserProfileDto } from '../../api/models/user-profile-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecurityService {
   private tokenService: TokenService = inject(TokenService);
-  private shooterService: UserService = inject(UserService);
+  private userService: AppUserService = inject(AppUserService);
   private router = inject(Router);
   public authenticate = signal(!!this.tokenService.getToken());
-  public isAuthenticate(profile: ShooterProfileDto): void {
+  public setAuthentication(profile: UserProfileDto): void {
     this.authenticate.set(true);
-    this.shooterService.setProfile(profile);
+    this.userService.setProfile(profile);
     this.router.navigate([Routing.HOME]);
   }
 
@@ -27,10 +27,15 @@ export class SecurityService {
   public logout(): void {
     this.authenticate.set(false);
     this.tokenService.removeToken();
+    this.userService.setProfile({});
     this.router.navigate([Routing.HOME]);
   }
 
   public removeToken(): void {
     this.tokenService.removeToken();
+  }
+
+  public isLogged(): boolean {
+    return !!this.tokenService.getToken();
   }
 }

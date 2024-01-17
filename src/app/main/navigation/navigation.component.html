@@ -1,19 +1,24 @@
-<p-menubar [model]="items">
+@if (!isLogged()){
+<p-menubar [model]="navbarVisitor">
   <ng-template pTemplate="end">
-    @if (!isLogged()){
     <p-button
       label="Login"
       [text]="true"
       severity="secondary"
       icon="pi pi-fw pi-power-off"
       routerLink="{{ Routing.LOGIN }}"></p-button>
-    } @else {
+  </ng-template>
+</p-menubar>
+} @else {
+
+<p-menubar [model]="navbarConnected">
+  <ng-template pTemplate="end">
     <p-button
       label="Logout"
       styleClass="p-button-danger p-button-text"
       (onClick)="logout()"
       routerLink="{{ Routing.HOME }}"
       icon="pi pi-fw pi-power-off"></p-button>
-    }
   </ng-template>
 </p-menubar>
+}
