@@ -3,8 +3,9 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { ToastModule } from 'primeng/toast';
-import { UserService } from '../../core/app/services/user.service';
-import { ShooterProfileDto } from '../../core/api/models/shooter-profile-dto';
+import { AppUserService } from '../../core/app/services/app-user.service';
+
+import { UserProfileDto } from '../../core/api/models/user-profile-dto';
 
 @Component({
   selector: 'app-layout',
@@ -15,9 +16,9 @@ import { ShooterProfileDto } from '../../core/api/models/shooter-profile-dto';
 })
 export class LayoutComponent implements OnInit {
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-  private userService: UserService = inject(UserService);
+  private userService: AppUserService = inject(AppUserService);
   ngOnInit(): void {
-    const userProfile: ShooterProfileDto = this.activatedRoute.snapshot.data[0];
+    const userProfile: UserProfileDto = this.activatedRoute.snapshot.data[0];
     if (userProfile) {
       this.userService.setProfile(userProfile);
     }

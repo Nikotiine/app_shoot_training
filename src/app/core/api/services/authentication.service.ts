@@ -13,8 +13,8 @@ import { login } from '../fn/authentication/login';
 import { Login$Params } from '../fn/authentication/login';
 import { me } from '../fn/authentication/me';
 import { Me$Params } from '../fn/authentication/me';
-import { ShooterProfileDto } from '../models/shooter-profile-dto';
 import { Token } from '../models/token';
+import { UserProfileDto } from '../models/user-profile-dto';
 
 
 /**
@@ -60,7 +60,7 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  me$Response(params?: Me$Params, context?: HttpContext): Observable<StrictHttpResponse<ShooterProfileDto>> {
+  me$Response(params?: Me$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
     return me(this.http, this.rootUrl, params, context);
   }
 
@@ -70,9 +70,9 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  me(params?: Me$Params, context?: HttpContext): Observable<ShooterProfileDto> {
+  me(params?: Me$Params, context?: HttpContext): Observable<UserProfileDto> {
     return this.me$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ShooterProfileDto>): ShooterProfileDto => r.body)
+      map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
     );
   }
 

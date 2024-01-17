@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface ShooterEditDto {
+export interface UserEditDto {
   createdAT?: string;
   email?: string;
   firstName?: string;

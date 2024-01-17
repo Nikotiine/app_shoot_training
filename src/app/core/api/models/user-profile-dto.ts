@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface ShooterProfileDto {
+export interface UserProfileDto {
   createdAT?: string;
   email?: string;
   firstName?: string;

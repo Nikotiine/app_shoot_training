@@ -9,8 +9,8 @@
     <p-button label="Modifier mon profil" (onClick)="editProfile()"></p-button>
   </div>
   @defer (when isEdit){ @if (isEdit){
-  <app-shooter-edit
+  <app-user-edit
     [profile]="shooterProfile"
-    (profileChange)="profileChange($event)"></app-shooter-edit>
+    (profileChange)="profileChange($event)"></app-user-edit>
   } }
 </div>

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ShooterProfileDto } from '../../../core/api/models/shooter-profile-dto';
 import {
   FormBuilder,
   FormGroup,
@@ -8,36 +7,38 @@ import {
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { ShooterEditDto } from '../../../core/api/models/shooter-edit-dto';
-import { ShooterService } from '../../../core/api/services/shooter.service';
+
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
+import { UserService } from '../../../core/api/services/user.service';
+import { UserEditDto } from '../../../core/api/models/user-edit-dto';
 
 @Component({
-  selector: 'app-shooter-edit',
+  selector: 'app-user-edit',
   standalone: true,
   imports: [ReactiveFormsModule, InputTextModule, ButtonModule],
-  templateUrl: './shooter-edit.component.html',
-  styleUrl: './shooter-edit.component.scss'
+  templateUrl: './user-edit.component.html',
+  styleUrl: './user-edit.component.scss'
 })
-export class ShooterEditComponent {
+export class UserEditComponent {
   public isChangePassword: boolean = false;
-  @Input() set profile(profile: ShooterProfileDto) {
+  @Input() set profile(profile: UserProfileDto) {
     this._shooterProfile = profile;
     this.form.controls['firstName'].setValue(profile.firstName);
     this.form.controls['lastName'].setValue(profile.lastName);
   }
-  get profile(): ShooterProfileDto {
+  get profile(): UserProfileDto {
     return this._shooterProfile;
   }
 
-  @Output() profileChange: EventEmitter<ShooterProfileDto> =
-    new EventEmitter<ShooterProfileDto>();
+  @Output() profileChange: EventEmitter<UserProfileDto> =
+    new EventEmitter<UserProfileDto>();
 
-  private _shooterProfile!: ShooterProfileDto;
+  private _shooterProfile!: UserProfileDto;
   public form: FormGroup;
   constructor(
     private readonly fb: FormBuilder,
-    private readonly shooterService: ShooterService,
+    private readonly shooterService: UserService,
     private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
@@ -50,7 +51,7 @@ export class ShooterEditComponent {
   }
 
   public submit(): void {
-    const editProfile: ShooterEditDto = {
+    const editProfile: UserEditDto = {
       firstName: this.form.controls['firstName'].value,
       lastName: this.form.controls['lastName'].value,
       email: this.profile.email
@@ -73,7 +74,7 @@ export class ShooterEditComponent {
           this._shooterProfile = res;
           this.customMessageService.successMessage(
             'Compte',
-            'Profile modifié avcec succes'
+            'Profile modifié avec succes'
           );
           this.profileChange.emit(res);
         },

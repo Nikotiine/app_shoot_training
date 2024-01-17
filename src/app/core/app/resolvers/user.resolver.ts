@@ -3,10 +3,11 @@ import { AuthenticationService } from '../../api/services/authentication.service
 import { inject } from '@angular/core';
 import { SecurityService } from '../services/security.service';
 import { catchError, map } from 'rxjs/operators';
-import { ShooterProfileDto } from '../../api/models/shooter-profile-dto';
-import { of } from 'rxjs';
 
-export const userResolver: ResolveFn<ShooterProfileDto | null | boolean> = (
+import { of } from 'rxjs';
+import { UserProfileDto } from '../../api/models/user-profile-dto';
+
+export const userResolver: ResolveFn<UserProfileDto | null | boolean> = (
   route,
   state
 ) => {

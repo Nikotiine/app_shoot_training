@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface RegistrationDto {
+export interface UserRegistrationDto {
   email: string;
   firstName: string;
   lastName: string;

@@ -7,7 +7,7 @@ import { Routing } from './core/app/enum/Routing.enum';
 import { AccountActivationComponent } from './main/authentication/account-activation/account-activation.component';
 import { ForgotPasswordComponent } from './main/authentication/forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './main/authentication/new-password/new-password.component';
-import { ShooterViewComponent } from './main/shooter/shooter-view/shooter-view.component';
+import { UserViewComponent } from './main/user/user-view/user-view.component';
 import { userResolver } from './core/app/resolvers/user.resolver';
 
 export const routes: Routes = [
@@ -34,7 +34,7 @@ export const routes: Routes = [
       },
       {
         path: Routing.SHOOTER_PROFILE,
-        component: ShooterViewComponent
+        component: UserViewComponent
       }
     ]
   }

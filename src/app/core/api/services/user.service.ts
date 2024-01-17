@@ -9,22 +9,22 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { edit } from '../fn/shooter/edit';
-import { Edit$Params } from '../fn/shooter/edit';
-import { ShooterProfileDto } from '../models/shooter-profile-dto';
+import { edit } from '../fn/user/edit';
+import { Edit$Params } from '../fn/user/edit';
+import { UserProfileDto } from '../models/user-profile-dto';
 
 
 /**
- * Shooter Controller
+ * User Controller
  */
 @Injectable({ providedIn: 'root' })
-export class ShooterService extends BaseService {
+export class UserService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
   /** Path part for operation `edit()` */
-  static readonly EditPath = '/api/shooter/edit';
+  static readonly EditPath = '/api/user/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -32,7 +32,7 @@ export class ShooterService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  edit$Response(params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<ShooterProfileDto>> {
+  edit$Response(params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
     return edit(this.http, this.rootUrl, params, context);
   }
 
@@ -42,9 +42,9 @@ export class ShooterService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  edit(params: Edit$Params, context?: HttpContext): Observable<ShooterProfileDto> {
+  edit(params: Edit$Params, context?: HttpContext): Observable<UserProfileDto> {
     return this.edit$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ShooterProfileDto>): ShooterProfileDto => r.body)
+      map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
     );
   }
 

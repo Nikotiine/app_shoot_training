@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResponseMessage } from '../../models/response-message';
-import { UserRegistrationDto } from '../../models/user-registration-dto';
+import { UserEditDto } from '../../models/user-edit-dto';
+import { UserProfileDto } from '../../models/user-profile-dto';
 
-export interface Register$Params {
-      body: UserRegistrationDto
+export interface Edit$Params {
+      body: UserEditDto
 }
 
-export function register(http: HttpClient, rootUrl: string, params: Register$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
-  const rb = new RequestBuilder(rootUrl, register.PATH, 'post');
+export function edit(http: HttpClient, rootUrl: string, params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
+  const rb = new RequestBuilder(rootUrl, edit.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +24,9 @@ export function register(http: HttpClient, rootUrl: string, params: Register$Par
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ResponseMessage>;
+      return r as StrictHttpResponse<UserProfileDto>;
     })
   );
 }
 
-register.PATH = '/api/registration/register';
+edit.PATH = '/api/user/edit';

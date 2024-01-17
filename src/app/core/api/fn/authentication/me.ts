@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShooterProfileDto } from '../../models/shooter-profile-dto';
+import { UserProfileDto } from '../../models/user-profile-dto';
 
 export interface Me$Params {
 }
 
-export function me(http: HttpClient, rootUrl: string, params?: Me$Params, context?: HttpContext): Observable<StrictHttpResponse<ShooterProfileDto>> {
+export function me(http: HttpClient, rootUrl: string, params?: Me$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
   const rb = new RequestBuilder(rootUrl, me.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function me(http: HttpClient, rootUrl: string, params?: Me$Params, contex
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ShooterProfileDto>;
+      return r as StrictHttpResponse<UserProfileDto>;
     })
   );
 }
