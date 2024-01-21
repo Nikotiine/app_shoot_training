@@ -50,11 +50,12 @@ export class NavigationComponent implements OnInit {
           {
             label: 'Mes info',
             icon: 'pi pi-fw pi-align-left',
-            routerLink: Routing.SHOOTER_PROFILE
+            routerLink: Routing.USER_PROFILE
           },
           {
-            label: 'Right',
-            icon: 'pi pi-fw pi-align-right'
+            label: 'Mes armes',
+            icon: 'pi pi-fw pi-align-right',
+            routerLink: Routing.USER_WEAPON_SETUP_LIST
           },
           {
             label: 'Center',
@@ -67,11 +68,11 @@ export class NavigationComponent implements OnInit {
         ]
       },
       {
-        label: 'Users',
+        label: 'Calculateur balistique',
         icon: 'pi pi-fw pi-user',
         items: [
           {
-            label: 'New',
+            label: 'Reglages',
             icon: 'pi pi-fw pi-user-plus'
           },
           {
@@ -101,32 +102,20 @@ export class NavigationComponent implements OnInit {
         ]
       },
       {
-        label: 'Events',
+        label: 'Entrainement',
         icon: 'pi pi-fw pi-calendar',
         items: [
           {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-pencil',
-            items: [
-              {
-                label: 'Save',
-                icon: 'pi pi-fw pi-calendar-plus'
-              },
-              {
-                label: 'Delete',
-                icon: 'pi pi-fw pi-calendar-minus'
-              }
-            ]
+            label: 'Nouvelle session',
+            icon: 'pi pi-fw pi-pencil'
           },
           {
-            label: 'Archive',
-            icon: 'pi pi-fw pi-calendar-times',
-            items: [
-              {
-                label: 'Remove',
-                icon: 'pi pi-fw pi-calendar-minus'
-              }
-            ]
+            label: 'Session passé',
+            icon: 'pi pi-fw pi-calendar-times'
+          },
+          {
+            label: 'Statistiques',
+            icon: 'pi pi-fw pi-calendar-times'
           }
         ]
       },
@@ -146,11 +135,11 @@ export class NavigationComponent implements OnInit {
       },
 
       {
-        label: 'Menu Hors co',
+        label: 'Calculateur balistique',
         icon: 'pi pi-fw pi-user',
         items: [
           {
-            label: 'New',
+            label: 'Reglage',
             icon: 'pi pi-fw pi-user-plus'
           },
           {

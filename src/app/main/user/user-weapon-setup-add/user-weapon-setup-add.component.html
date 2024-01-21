@@ -1,0 +1,70 @@
+@defer (when weaponFactories.length > 0){
+<div class="flex flex-column">
+  <form [formGroup]="form">
+    <fieldset>
+      <legend>Choisissez votre arme</legend>
+      <div class="flex align-items-center justify-content-between">
+        <label for="weaponFactory">Marque</label>
+        <p-dropdown
+          [options]="weaponFactories"
+          id="weaponFactory"
+          optionLabel="name"
+          class="ml-2"
+          formControlName="weaponFactory"
+          optionValue="id"
+          (onChange)="selectWeaponFactory($event.value)"
+          placeholder="Selectionnez une marque"></p-dropdown>
+        <label for="weaponModel" class="ml-3">Modele</label>
+        <p-dropdown
+          [options]="weaponsWM"
+          class="ml-2"
+          id="weaponModel"
+          optionLabel="model"
+          [disabled]="!weaponFactorySelected"
+          placeholder="Selectionnez un model"></p-dropdown>
+      </div>
+      <div class="mt-2 flex align-items-center justify-content-center">
+        <label for="switchNewWeapon">Je ne trouve pas mon arme</label>
+        <p-inputSwitch
+          class="ml-2"
+          formControlName="weaponNotFound"
+          (onChange)="newWeaponForm($event.checked)"
+          id="switchNewWeapon"></p-inputSwitch>
+      </div>
+      @defer (when isNewWeapon){ @if (isNewWeapon){
+      <app-weapon-add></app-weapon-add>
+      } }
+    </fieldset>
+    <fieldset>
+      <legend>Choisissez votre optique</legend>
+
+      <div class="flex align-items-center justify-content-between">
+        <label for="opticFactory">Marque</label>
+        <p-dropdown
+          [options]="weaponsWM"
+          id="opticFactory"
+          optionLabel="model"
+          placeholder="Selectionnez une marque"></p-dropdown>
+        <label for="opticModel">Modele</label>
+        <p-dropdown
+          [options]="weaponsWM"
+          id="opticModel"
+          optionLabel="model"
+          placeholder="Selectionnez un model"></p-dropdown>
+      </div>
+    </fieldset>
+    <div class="flex align-items-center justify-content-between">
+      <label for="rdsFactory">RDS</label>
+      <p-dropdown
+        [options]="weaponsWM"
+        id="rdsFactory"
+        optionLabel="model"
+        placeholder="Selectionnez une marque"></p-dropdown>
+      <p-dropdown
+        [options]="weaponsWM"
+        optionLabel="model"
+        placeholder="Selectionnez un model"></p-dropdown>
+    </div>
+  </form>
+</div>
+}

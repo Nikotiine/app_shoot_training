@@ -1,0 +1,11 @@
+<div class="text-center">
+  <h1>Mes setup d'armes</h1>
+  <div class="mt-3">
+    <p-button label="Ajouter un setup" (onClick)="addSetup()"></p-button>
+  </div>
+  <p-dialog header="Nouveau setup" [(visible)]="visible">
+    @defer (when visible){
+    <app-user-weapon-setup-add></app-user-weapon-setup-add>
+    }
+  </p-dialog>
+</div>

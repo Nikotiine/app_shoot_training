@@ -9,6 +9,7 @@ import { ForgotPasswordComponent } from './main/authentication/forgot-password/f
 import { NewPasswordComponent } from './main/authentication/new-password/new-password.component';
 import { UserViewComponent } from './main/user/user-view/user-view.component';
 import { userResolver } from './core/app/resolvers/user.resolver';
+import { UserWeaponSetupListComponent } from './main/user/user-weapon-setup-list/user-weapon-setup-list.component';
 
 export const routes: Routes = [
   {
@@ -33,8 +34,12 @@ export const routes: Routes = [
         component: NewPasswordComponent
       },
       {
-        path: Routing.SHOOTER_PROFILE,
+        path: Routing.USER_PROFILE,
         component: UserViewComponent
+      },
+      {
+        path: Routing.USER_WEAPON_SETUP_LIST,
+        component: UserWeaponSetupListComponent
       }
     ]
   }

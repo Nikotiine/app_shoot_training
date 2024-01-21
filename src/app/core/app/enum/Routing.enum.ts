@@ -5,5 +5,6 @@ export enum Routing {
   ACCOUNT_ACTIVATION = 'authentication/account-activation/',
   FORGOT_PASSWORD = 'authentication/forgot-password',
   NEW_PASSWORD = 'authentication/new-password/',
-  SHOOTER_PROFILE = 'shooter/profile'
+  USER_PROFILE = 'user/profile',
+  USER_WEAPON_SETUP_LIST = 'user/setup/list'
 }

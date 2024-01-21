@@ -4,6 +4,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { WeaponService } from './services/weapon.service';
 import { UserService } from './services/user.service';
 import { RegistrationService } from './services/registration.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
@@ -17,6 +18,7 @@ import { AuthenticationService } from './services/authentication.service';
   exports: [],
   declarations: [],
   providers: [
+    WeaponService,
     UserService,
     RegistrationService,
     ForgotPasswordService,
