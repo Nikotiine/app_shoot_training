@@ -12,6 +12,7 @@
           class="ml-2"
           formControlName="weaponFactory"
           optionValue="id"
+          [disabled]="isNewWeapon"
           (onChange)="selectWeaponFactory($event.value)"
           placeholder="Selectionnez une marque"></p-dropdown>
         <label for="weaponModel" class="ml-3">Modele</label>
@@ -32,7 +33,7 @@
           id="switchNewWeapon"></p-inputSwitch>
       </div>
       @defer (when isNewWeapon){ @if (isNewWeapon){
-      <app-weapon-add></app-weapon-add>
+      <app-weapon-add (weaponAdded)="weaponAdded($event)"></app-weapon-add>
       } }
     </fieldset>
     <fieldset>

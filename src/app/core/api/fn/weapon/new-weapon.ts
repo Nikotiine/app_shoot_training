@@ -7,13 +7,13 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { NewWeaponDto } from '../../models/new-weapon-dto';
-import { Weapon } from '../../models/weapon';
+import { WeaponDto } from '../../models/weapon-dto';
 
 export interface NewWeapon$Params {
       body: NewWeaponDto
 }
 
-export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Weapon>> {
+export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDto>> {
   const rb = new RequestBuilder(rootUrl, newWeapon.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -24,7 +24,7 @@ export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$P
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Weapon>;
+      return r as StrictHttpResponse<WeaponDto>;
     })
   );
 }

@@ -74,37 +74,34 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   public createWeaponFactoriesDropdown(weapons: WeaponDto[]): void {
-    const notFoundMyWeaponFactory: WeaponFactoryDto = {
-      id: -1,
-      name: 'Choisir une autre marque'
-    };
+    this.weaponFactories = [];
+
     for (const weapon of weapons) {
       const factory: WeaponFactoryDto = weapon.factory;
       this.weaponFactories.push(factory);
     }
-    this.weaponFactories.push(notFoundMyWeaponFactory);
   }
 
   public createWeaponViewModel(id: number) {
-    console.log(this.weapons);
     const selectedFactory = this.weapons.filter(
       (weapon) => weapon.factory.id === id
     );
-    console.log(selectedFactory);
-    const weaponModelNotFound: WeaponsWM = {
-      id: -1,
-      model: 'Pas dans la liste'
-    };
+
     this.weaponsWM = selectedFactory.map((weapon) => {
       return {
         id: weapon.id,
         model: weapon.model
       };
     });
-    this.weaponsWM.push(weaponModelNotFound);
   }
 
   public newWeaponForm(checked: boolean) {
     this.isNewWeapon = checked;
+  }
+
+  public weaponAdded(newWeapon: WeaponDto): void {
+    this.weapons.push(newWeapon);
+    this.createWeaponFactoriesDropdown(this.weapons);
+    this.isNewWeapon = false;
   }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface WeaponFactoryDto {
-  id: number;
+  id?: number;
   name: string;
 }

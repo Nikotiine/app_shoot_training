@@ -15,7 +15,6 @@ import { getDataCollection } from '../fn/weapon/get-data-collection';
 import { GetDataCollection$Params } from '../fn/weapon/get-data-collection';
 import { newWeapon } from '../fn/weapon/new-weapon';
 import { NewWeapon$Params } from '../fn/weapon/new-weapon';
-import { Weapon } from '../models/weapon';
 import { WeaponDataCollection } from '../models/weapon-data-collection';
 import { WeaponDto } from '../models/weapon-dto';
 
@@ -38,7 +37,7 @@ export class WeaponService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newWeapon$Response(params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Weapon>> {
+  newWeapon$Response(params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDto>> {
     return newWeapon(this.http, this.rootUrl, params, context);
   }
 
@@ -48,9 +47,9 @@ export class WeaponService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newWeapon(params: NewWeapon$Params, context?: HttpContext): Observable<Weapon> {
+  newWeapon(params: NewWeapon$Params, context?: HttpContext): Observable<WeaponDto> {
     return this.newWeapon$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Weapon>): Weapon => r.body)
+      map((r: StrictHttpResponse<WeaponDto>): WeaponDto => r.body)
     );
   }
 
