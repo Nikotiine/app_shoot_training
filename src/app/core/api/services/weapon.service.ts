@@ -11,8 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { getAllWeapon } from '../fn/weapon/get-all-weapon';
 import { GetAllWeapon$Params } from '../fn/weapon/get-all-weapon';
-import { getDataCollection } from '../fn/weapon/get-data-collection';
-import { GetDataCollection$Params } from '../fn/weapon/get-data-collection';
+import { getWeaponDataCollection } from '../fn/weapon/get-weapon-data-collection';
+import { GetWeaponDataCollection$Params } from '../fn/weapon/get-weapon-data-collection';
 import { newWeapon } from '../fn/weapon/new-weapon';
 import { NewWeapon$Params } from '../fn/weapon/new-weapon';
 import { WeaponDataCollection } from '../models/weapon-data-collection';
@@ -53,27 +53,27 @@ export class WeaponService extends BaseService {
     );
   }
 
-  /** Path part for operation `getDataCollection()` */
-  static readonly GetDataCollectionPath = '/api/weapon/data-collection';
+  /** Path part for operation `getWeaponDataCollection()` */
+  static readonly GetWeaponDataCollectionPath = '/api/weapon/data-collection';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getDataCollection()` instead.
+   * To access only the response body, use `getWeaponDataCollection()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDataCollection$Response(params?: GetDataCollection$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDataCollection>> {
-    return getDataCollection(this.http, this.rootUrl, params, context);
+  getWeaponDataCollection$Response(params?: GetWeaponDataCollection$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDataCollection>> {
+    return getWeaponDataCollection(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getDataCollection$Response()` instead.
+   * To access the full response (for headers, for example), `getWeaponDataCollection$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDataCollection(params?: GetDataCollection$Params, context?: HttpContext): Observable<WeaponDataCollection> {
-    return this.getDataCollection$Response(params, context).pipe(
+  getWeaponDataCollection(params?: GetWeaponDataCollection$Params, context?: HttpContext): Observable<WeaponDataCollection> {
+    return this.getWeaponDataCollection$Response(params, context).pipe(
       map((r: StrictHttpResponse<WeaponDataCollection>): WeaponDataCollection => r.body)
     );
   }

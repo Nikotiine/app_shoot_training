@@ -1,7 +1,7 @@
 @defer (when weaponFactories.length > 0){
 <div class="flex flex-column">
   <form [formGroup]="form">
-    <fieldset>
+    <fieldset class="mt-4">
       <legend>Choisissez votre arme</legend>
       <div class="flex align-items-center justify-content-between">
         <label for="weaponFactory">Marque</label>
@@ -12,7 +12,6 @@
           class="ml-2"
           formControlName="weaponFactory"
           optionValue="id"
-          [disabled]="isNewWeapon"
           (onChange)="selectWeaponFactory($event.value)"
           placeholder="Selectionnez une marque"></p-dropdown>
         <label for="weaponModel" class="ml-3">Modele</label>
@@ -20,8 +19,9 @@
           [options]="weaponsWM"
           class="ml-2"
           id="weaponModel"
+          formControlName="weaponModel"
           optionLabel="model"
-          [disabled]="!weaponFactorySelected"
+          (onChange)="weaponSelected()"
           placeholder="Selectionnez un model"></p-dropdown>
       </div>
       <div class="mt-2 flex align-items-center justify-content-center">
@@ -36,14 +36,15 @@
       <app-weapon-add (weaponAdded)="weaponAdded($event)"></app-weapon-add>
       } }
     </fieldset>
-    <fieldset>
+    <fieldset class="mt-2">
       <legend>Choisissez votre optique</legend>
 
       <div class="flex align-items-center justify-content-between">
         <label for="opticFactory">Marque</label>
         <p-dropdown
-          [options]="weaponsWM"
+          [options]="opticsFactories"
           id="opticFactory"
+          formControlName="opticFactory"
           optionLabel="model"
           placeholder="Selectionnez une marque"></p-dropdown>
         <label for="opticModel">Modele</label>
@@ -53,19 +54,32 @@
           optionLabel="model"
           placeholder="Selectionnez un model"></p-dropdown>
       </div>
+      <div class="mt-2 flex align-items-center justify-content-center">
+        <label for="switchNewOptics">Je ne trouve pas mon optique</label>
+        <p-inputSwitch
+          class="ml-2"
+          (onChange)="newOpticsForm($event.checked)"
+          id="switchNewOptics"></p-inputSwitch>
+      </div>
+      @defer (when isNewOptics){ @if (isNewOptics){
+      <app-optics-add></app-optics-add>
+      } }
     </fieldset>
-    <div class="flex align-items-center justify-content-between">
-      <label for="rdsFactory">RDS</label>
-      <p-dropdown
-        [options]="weaponsWM"
-        id="rdsFactory"
-        optionLabel="model"
-        placeholder="Selectionnez une marque"></p-dropdown>
-      <p-dropdown
-        [options]="weaponsWM"
-        optionLabel="model"
-        placeholder="Selectionnez un model"></p-dropdown>
-    </div>
+    <fieldset class="mt-2">
+      <legend>Choisissez votre rds</legend>
+      <div class="flex align-items-center justify-content-between">
+        <label for="rdsFactory">RDS</label>
+        <p-dropdown
+          [options]="weaponsWM"
+          id="rdsFactory"
+          optionLabel="model"
+          placeholder="Selectionnez une marque"></p-dropdown>
+        <p-dropdown
+          [options]="weaponsWM"
+          optionLabel="model"
+          placeholder="Selectionnez un model"></p-dropdown>
+      </div>
+    </fieldset>
   </form>
 </div>
 }

@@ -3,8 +3,16 @@
 export { ActivationCodeDto } from './models/activation-code-dto';
 export { CaliberDto } from './models/caliber-dto';
 export { CredentialsDto } from './models/credentials-dto';
+export { NewOpticsDto } from './models/new-optics-dto';
 export { NewPasswordRequestDto } from './models/new-password-request-dto';
 export { NewWeaponDto } from './models/new-weapon-dto';
+export { OpticsBodyDiameterDto } from './models/optics-body-diameter-dto';
+export { OpticsDataCollection } from './models/optics-data-collection';
+export { OpticsDto } from './models/optics-dto';
+export { OpticsFactoryDto } from './models/optics-factory-dto';
+export { OpticsFocalPlaneDto } from './models/optics-focal-plane-dto';
+export { OpticsOutletDiameterDto } from './models/optics-outlet-diameter-dto';
+export { OpticsUnitDto } from './models/optics-unit-dto';
 export { RefreshCodeRequest } from './models/refresh-code-request';
 export { ResponseMessage } from './models/response-message';
 export { Token } from './models/token';

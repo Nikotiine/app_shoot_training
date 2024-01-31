@@ -1,0 +1,139 @@
+@if (opticsDataCollection){
+
+<form [formGroup]="form">
+  <fieldset>
+    <legend>Ajouter une nouvelle arme</legend>
+
+    <div class="flex flex-column">
+      <div class="mt-2">
+        <label for="opticsFocalPlan">Plan Focal</label>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsFocalPlaneList"
+          id="opticsFocalPlan"
+          optionLabel="focalPlane"
+          class="ml-2"
+          formControlName="opticsFocalPlan"
+          optionValue="id"
+          placeholder="Selectionnez une categorie"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="opticsClickType">Type de click // a changer</label>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsUnitList"
+          id="opticsClickType"
+          optionLabel="type"
+          class="ml-2"
+          formControlName="opticsClickType"
+          optionValue="id"
+          placeholder="Selectionnez un type"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="opticsOutletDiameter">Diametre du tube</label>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsOutletDiameterList"
+          id="opticsOutletDiameter"
+          optionLabel="diameter"
+          class="ml-2"
+          formControlName="opticsOutletDiameter"
+          optionValue="id"
+          placeholder="Selectionnez un diametre"></p-dropdown>
+      </div>
+
+      <div class="mt-2">
+        <label for="opticsBodyDiameter">Diametre de sortie</label>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsBodyDiameterList"
+          id="opticsBodyDiameter"
+          optionLabel="diameter"
+          class="ml-2"
+          formControlName="opticsBodyDiameter"
+          optionValue="id"
+          placeholder="Selectionnez un diametre"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="opticsFactory">Marque</label>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsFactoryList"
+          id="opticsFactory"
+          optionLabel="name"
+          class="ml-2"
+          formControlName="opticsFactory"
+          optionValue="id"
+          placeholder="Selectionnez une marque"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="weaponModel">Modele</label>
+        <input type="text" pInputText formControlName="name" id="weaponModel" />
+      </div>
+
+      <div class="mt-2">
+        <label for="opticsMinZoom">Zoom mini</label>
+        <p-inputNumber
+          inputId="integeronly"
+          id="opticsMinZoom"
+          class="ml-2"
+          formControlName="opticsMinZoom"></p-inputNumber>
+      </div>
+      <div class="mt-2">
+        <label for="opticsMaxZoom">Zoom max</label>
+        <p-inputNumber
+          inputId="integeronly"
+          id="opticsMaxZoom"
+          class="ml-2"
+          formControlName="opticsMaxZoom"></p-inputNumber>
+      </div>
+      <div class="mt-2">
+        <label for="maxElevation">Elevation max</label>
+        <p-inputNumber
+          inputId="integeronly"
+          id="maxElevation"
+          class="ml-2"
+          formControlName="maxElevation"></p-inputNumber>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsUnitList"
+          optionLabel="type"
+          class="ml-2"
+          formControlName="maxElevationUnit"
+          optionValue="id"
+          placeholder="Selectionnez un type"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="maxElevation">Derive max</label>
+        <p-inputNumber
+          inputId="integeronly"
+          id="maxDerivation"
+          class="ml-2"
+          formControlName="maxDerivation"></p-inputNumber>
+        <p-dropdown
+          [options]="opticsDataCollection.opticsUnitList"
+          optionLabel="type"
+          class="ml-2"
+          formControlName="maxDerivationUnit"
+          optionValue="id"
+          placeholder="Selectionnez un type"></p-dropdown>
+      </div>
+      <div class="mt-2 flex align-items-center justify-content-center">
+        <label for="isParallax">Parallaxe reglable ?</label>
+        <p-inputSwitch
+          class="ml-2"
+          id="isParallax"
+          formControlName="isParallax"></p-inputSwitch>
+      </div>
+      <div class="mt-2">
+        <label for="opticsMinParallax"
+          >Reglage mini de la parallaxe (optionel)</label
+        >
+        <p-inputNumber
+          inputId="integeronly"
+          id="opticsMinParallax"
+          formControlName="opticsMinParallax"></p-inputNumber>
+      </div>
+      <p-button
+        label="Valider"
+        class="mt-3"
+        (onClick)="submit()"
+        [disabled]="form.invalid"></p-button>
+    </div>
+  </fieldset>
+</form>
+}

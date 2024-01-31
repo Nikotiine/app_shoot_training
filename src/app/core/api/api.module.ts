@@ -7,6 +7,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { WeaponService } from './services/weapon.service';
 import { UserService } from './services/user.service';
 import { RegistrationService } from './services/registration.service';
+import { OpticsService } from './services/optics.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
 import { AuthenticationService } from './services/authentication.service';
 
@@ -21,6 +22,7 @@ import { AuthenticationService } from './services/authentication.service';
     WeaponService,
     UserService,
     RegistrationService,
+    OpticsService,
     ForgotPasswordService,
     AuthenticationService,
     ApiConfiguration

@@ -18,6 +18,7 @@ import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { WeaponFactoryDto } from '../../../core/api/models/weapon-factory-dto';
 import { WeaponTypeDto } from '../../../core/api/models/weapon-type-dto';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
+import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 
 @Component({
   selector: 'app-weapon-add',
@@ -41,7 +42,8 @@ export class WeaponAddComponent implements OnInit {
   public form: FormGroup;
   constructor(
     private readonly fb: FormBuilder,
-    private readonly weaponService: WeaponService
+    private readonly weaponService: WeaponService,
+    private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
       weaponCaliber: [0, Validators.min(1)],
@@ -52,27 +54,31 @@ export class WeaponAddComponent implements OnInit {
       barrelLength: [null, [Validators.required, Validators.min(1)]],
       isHeavyBarrel: [false],
       barrelStripes: [null],
-      newWeaponFactory: ['']
+      newWeaponFactory: [''],
+      variation: ['']
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadData();
   }
 
   private loadData(): void {
-    this.weaponService.getDataCollection().subscribe({
+    this.weaponService.getWeaponDataCollection().subscribe({
       next: (data) => {
-        console.log(data);
         this.weaponDataCollection = data;
       },
       error: (err) => {
         console.log(err);
+        this.customMessageService.errorMessage(
+          'Gestion des armes',
+          err.error.message
+        );
       }
     });
   }
 
-  submit(): void {
+  public submit(): void {
     const newWeapon: NewWeaponDto = {
       category: this.getWeaponCategoryDto(),
       caliber: this.getCaliberDto(),
@@ -81,20 +87,26 @@ export class WeaponAddComponent implements OnInit {
       model: this.form.controls['weaponModel'].value,
       barrelLength: this.form.controls['barrelLength'].value,
       heavyBarrel: this.form.controls['isHeavyBarrel'].value,
-      barrelStripes: this.form.controls['barrelStripes'].value
+      barrelStripes: this.form.controls['barrelStripes'].value,
+      variation: this.form.controls['variation'].value.toLowerCase()
     };
-    console.log(newWeapon);
     this.weaponService
       .newWeapon({
         body: newWeapon
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
+          this.customMessageService.successMessage(
+            'Gestion des armes',
+            'Nouvelle arme ajouté'
+          );
           this.weaponAdded.emit(res);
         },
         error: (err) => {
-          console.log(err);
+          this.customMessageService.errorMessage(
+            'Gestion des armes',
+            err.error.message
+          );
         }
       });
   }
