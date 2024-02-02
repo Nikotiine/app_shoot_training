@@ -4,24 +4,37 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### Description
 
-## Installation
-1. Cloner le repo :
-   https://github.com/Nikotiine/api_portfolio.git
+Application de calcul ballistique et suivi des seances d'entraiment pour tireur sportifs
+* Enregister vos setup d'arme 
+* Suivre ses seance d'entraimenent
+* Comparaison des resultat avec prise en compte des parametre de tir : munition / meteo ...
+* Reglage de l'elevation de la lunette / dioptre en fonction de la distance 
+* Reglage de la derive en fonction des paremetre du vent
+* Calculateur de Joules
 
+## Installation
+1. Cloner le repo du front-end:
+   https://github.com/Nikotiine/app_shoot_training.git
+2. Cloner le repo du back-end et suivre son readme
+   https://github.com/Nikotiine/api_shoot_training
+3. Installer les dependances
 ```bash
 npm install
 ```
 ## Recuperer les models de l'api
 
-https://github.com/Nikotiine/api_shoot_training
+
 
 ```bash
 ng-openapi-gen --input  http://localhost:8080/v3/api-docs --output src/app/core/api
 
 ```
-## Development server
+## Lancer le serveur de devellopement 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+ng serve
+```
+Allez sur  `http://localhost:4200/`. 
 
 ## Code scaffolding
 
