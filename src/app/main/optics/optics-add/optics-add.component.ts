@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import {
   FormBuilder,
@@ -12,15 +12,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { OpticsDataCollection } from '../../../core/api/models/optics-data-collection';
-
 import { NewOpticsDto } from '../../../core/api/models/new-optics-dto';
 import { OpticsBodyDiameterDto } from '../../../core/api/models/optics-body-diameter-dto';
-
 import { OpticsFactoryDto } from '../../../core/api/models/optics-factory-dto';
 import { OpticsFocalPlaneDto } from '../../../core/api/models/optics-focal-plane-dto';
 import { OpticsOutletDiameterDto } from '../../../core/api/models/optics-outlet-diameter-dto';
 import { OpticsUnitDto } from '../../../core/api/models/optics-unit-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { OpticsDto } from '../../../core/api/models/optics-dto';
 
 @Component({
   selector: 'app-optics-add',
@@ -37,6 +36,9 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
   styleUrl: './optics-add.component.scss'
 })
 export class OpticsAddComponent implements OnInit {
+  @Output() opticsAdded: EventEmitter<OpticsDto> =
+    new EventEmitter<OpticsDto>();
+
   public form: FormGroup;
   public opticsDataCollection!: OpticsDataCollection;
   private readonly opticsUnitMil: string = 'MRAD';
@@ -105,6 +107,7 @@ export class OpticsAddComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         console.log(res);
+        this.opticsAdded.emit(res);
       },
       error: (err) => {
         console.log(err);

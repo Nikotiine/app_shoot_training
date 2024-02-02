@@ -45,24 +45,28 @@
           [options]="opticsFactories"
           id="opticFactory"
           formControlName="opticFactory"
-          optionLabel="model"
+          optionLabel="name"
+          optionValue="id"
+          (onChange)="selectOpticsFactory($event.value)"
           placeholder="Selectionnez une marque"></p-dropdown>
         <label for="opticModel">Modele</label>
         <p-dropdown
-          [options]="weaponsWM"
+          [options]="opticsWM"
           id="opticModel"
           optionLabel="model"
+          formControlName="opticModel"
           placeholder="Selectionnez un model"></p-dropdown>
       </div>
       <div class="mt-2 flex align-items-center justify-content-center">
         <label for="switchNewOptics">Je ne trouve pas mon optique</label>
         <p-inputSwitch
           class="ml-2"
+          formControlName="opticsNotFound"
           (onChange)="newOpticsForm($event.checked)"
           id="switchNewOptics"></p-inputSwitch>
       </div>
       @defer (when isNewOptics){ @if (isNewOptics){
-      <app-optics-add></app-optics-add>
+      <app-optics-add (opticsAdded)="opticsAdded($event)"></app-optics-add>
       } }
     </fieldset>
     <fieldset class="mt-2">

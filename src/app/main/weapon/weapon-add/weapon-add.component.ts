@@ -40,6 +40,7 @@ export class WeaponAddComponent implements OnInit {
 
   public weaponDataCollection!: WeaponDataCollection;
   public form: FormGroup;
+  public isLoading: boolean = true;
   constructor(
     private readonly fb: FormBuilder,
     private readonly weaponService: WeaponService,
@@ -67,6 +68,7 @@ export class WeaponAddComponent implements OnInit {
     this.weaponService.getWeaponDataCollection().subscribe({
       next: (data) => {
         this.weaponDataCollection = data;
+        this.isLoading = false;
       },
       error: (err) => {
         console.log(err);

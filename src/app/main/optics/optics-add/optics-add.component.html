@@ -28,7 +28,7 @@
           placeholder="Selectionnez un type"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsOutletDiameter">Diametre du tube</label>
+        <label for="opticsOutletDiameter">Diametre de sortie</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsOutletDiameterList"
           id="opticsOutletDiameter"
@@ -40,7 +40,7 @@
       </div>
 
       <div class="mt-2">
-        <label for="opticsBodyDiameter">Diametre de sortie</label>
+        <label for="opticsBodyDiameter">Diametre du tube</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsBodyDiameterList"
           id="opticsBodyDiameter"
@@ -83,12 +83,12 @@
           formControlName="opticsMaxZoom"></p-inputNumber>
       </div>
       <div class="mt-2">
-        <label for="maxElevation">Elevation max</label>
+        <label for="opticsMaxElevation">Elevation max</label>
         <p-inputNumber
           inputId="integeronly"
-          id="maxElevation"
+          id="opticsMaxElevation"
           class="ml-2"
-          formControlName="maxElevation"></p-inputNumber>
+          formControlName="opticsMaxElevation"></p-inputNumber>
         <p-dropdown
           [options]="opticsDataCollection.opticsUnitList"
           optionLabel="type"
@@ -98,12 +98,12 @@
           placeholder="Selectionnez un type"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="maxElevation">Derive max</label>
+        <label for="opticsMaxDerivation">Derive max</label>
         <p-inputNumber
           inputId="integeronly"
-          id="maxDerivation"
+          id="opticsMaxDerivation"
           class="ml-2"
-          formControlName="maxDerivation"></p-inputNumber>
+          formControlName="opticsMaxDerivation"></p-inputNumber>
         <p-dropdown
           [options]="opticsDataCollection.opticsUnitList"
           optionLabel="type"

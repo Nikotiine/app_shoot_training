@@ -18,7 +18,7 @@ import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { OpticsFactoryDto } from '../../../core/api/models/optics-factory-dto';
 import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
 
-export interface WeaponsWM {
+export interface DropdownViewModel {
   id: number;
   model: string;
 }
@@ -40,7 +40,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private optics: OpticsDto[] = [];
   public weaponFactories: WeaponFactoryDto[] = [];
   public opticsFactories: OpticsFactoryDto[] = [];
-  public weaponsWM: WeaponsWM[] = [];
+  public weaponsWM: DropdownViewModel[] = [];
+  public opticsWM: DropdownViewModel[] = [];
   public form: FormGroup;
   public isNewWeapon: boolean = false;
   public isNewOptics: boolean = false;
@@ -61,7 +62,12 @@ export class UserWeaponSetupAddComponent implements OnInit {
       opticFactory: new FormControl(
         { value: '', disabled: true },
         Validators.required
-      )
+      ),
+      opticModel: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      opticsNotFound: [false]
     });
   }
 
@@ -69,6 +75,11 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.loadWeaponsList();
   }
 
+  //************************************ WEAPON ************************************
+
+  /**
+   * Charge la liste des armes disponible en bdd et creer le dropdown pour le choix de la marque de l'arme
+   */
   private loadWeaponsList(): void {
     this.weaponService.getAllWeapon().subscribe({
       next: (data) => {
@@ -76,17 +87,15 @@ export class UserWeaponSetupAddComponent implements OnInit {
         this.createWeaponFactoriesDropdown(data);
       },
       error: (err) => {
-        console.log(err);
         this.customMessageService.errorMessage('Mon compte', err.error.message);
       }
     });
   }
 
-  public selectWeaponFactory(factoryId: number): void {
-    this.createWeaponViewModel(factoryId);
-    this.form.controls['weaponModel'].enable();
-  }
-
+  /**
+   * Creer le dropdown pour le choix de la maruqe de l'arme
+   * @param weapons WeaponDto[]
+   */
   private createWeaponFactoriesDropdown(weapons: WeaponDto[]): void {
     this.weaponFactories = [];
 
@@ -96,6 +105,21 @@ export class UserWeaponSetupAddComponent implements OnInit {
     }
   }
 
+  /**
+   * Quand la marque ete selectionné
+   * - Active le dropdown des model
+   * - Cré le view model pour le drop
+   * @param factoryId id de la marque
+   */
+  public selectWeaponFactory(factoryId: number): void {
+    this.createWeaponViewModel(factoryId);
+    this.form.controls['weaponModel'].enable();
+  }
+
+  /**
+   * Transforme l'objet weapon en DropdownViewModel , concatene le nom de l'arme et sa version
+   * @param id de la marque
+   */
   private createWeaponViewModel(id: number): void {
     const selectedFactory = this.weapons.filter(
       (weapon) => weapon.factory.id === id
@@ -109,13 +133,20 @@ export class UserWeaponSetupAddComponent implements OnInit {
     });
   }
 
+  /**
+   * Si l'utilisateur ne trouve pas son model, affiche le formulaiore de creation d'un nouveau model et desactive les dropdown
+   * @param checked event du inputSwitch
+   */
   public newWeaponForm(checked: boolean): void {
     this.isNewWeapon = checked;
-    checked
-      ? this.form.controls['weaponFactory'].disable()
-      : this.form.controls['weaponFactory'].enable();
+    this.switchStateFormControl('weapon', checked);
   }
 
+  /**
+   * Une fois le nouveau model enregistre en bdd il est ajoute a la liste prive des arme et refrachi le dropdown des marque
+   * Ferme le formulaire de creation d'une nouvelle arme et remet le inputSwitch a false
+   * @param newWeapon WeaponDto
+   */
   public weaponAdded(newWeapon: WeaponDto): void {
     this.weapons.push(newWeapon);
     this.createWeaponFactoriesDropdown(this.weapons);
@@ -123,10 +154,15 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.form.controls['weaponNotFound'].setValue(false);
   }
 
+  /**
+   * Quand l'arme est choisi active le dropdown du choix de la marque de l'optique et charge la liste des optique disponible en bdd
+   */
   public weaponSelected(): void {
     this.form.controls['opticFactory'].enable();
     this.loadOpticsList();
   }
+
+  //************************************ OPTICS ************************************
 
   private loadOpticsList() {
     this.opticsService.getAllOptics().subscribe({
@@ -141,8 +177,20 @@ export class UserWeaponSetupAddComponent implements OnInit {
     });
   }
 
+  private createOpticsViewModel(id: number): void {
+    const selectedFactory = this.optics.filter(
+      (optic) => optic.factory.id === id
+    );
+
+    this.opticsWM = selectedFactory.map((optic) => {
+      return {
+        id: optic.id,
+        model: `${optic.name} ${optic.minZoom}-${optic.maxZoom}X${optic.outletDiameter.diameter} - ${optic.focalPlane.focalPlane}`
+      };
+    });
+  }
   private createOpticsFactoriesDropdown(optics: OpticsDto[]): void {
-    this.weaponFactories = [];
+    this.opticsFactories = [];
 
     for (const optic of optics) {
       const factory: OpticsFactoryDto = optic.factory;
@@ -150,8 +198,31 @@ export class UserWeaponSetupAddComponent implements OnInit {
     }
   }
 
-  newOpticsForm(checked: boolean) {
-    console.log(checked);
+  public newOpticsForm(checked: boolean): void {
     this.isNewOptics = checked;
+    this.switchStateFormControl('optic', checked);
+  }
+
+  public opticsAdded(newOptics: OpticsDto): void {
+    this.optics.push(newOptics);
+    this.createOpticsFactoriesDropdown(this.optics);
+    this.isNewOptics = false;
+    this.form.controls['opticsNotFound'].setValue(false);
+  }
+
+  public selectOpticsFactory(factoryId: number): void {
+    this.createOpticsViewModel(factoryId);
+    this.form.controls['opticModel'].enable();
+  }
+
+  //************************************ COMMON ************************************
+  private switchStateFormControl(type: string, newItem: boolean) {
+    if (!newItem) {
+      this.form.controls[type + 'Factory'].enable();
+      this.form.controls[type + 'Model'].enable();
+    } else {
+      this.form.controls[type + 'Factory'].disable();
+      this.form.controls[type + 'Model'].disable();
+    }
   }
 }
