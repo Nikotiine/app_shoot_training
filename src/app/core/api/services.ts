@@ -1,5 +1,6 @@
 export { WeaponService } from './services/weapon.service';
 export { UserService } from './services/user.service';
+export { WeaponSetupService } from './services/weapon-setup.service';
 export { RegistrationService } from './services/registration.service';
 export { OpticsService } from './services/optics.service';
 export { ForgotPasswordService } from './services/forgot-password.service';

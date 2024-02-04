@@ -84,6 +84,10 @@ export class OpticsAddComponent implements OnInit {
     });
   }
 
+  /**
+   * Soumission du formulaire pour une nouvelle optique
+   * en cas de success le EventEmitter envoi la reponse (OpticsDto) au template parent
+   */
   public submit(): void {
     const opticsClickTypeId = this.form.controls['opticsClickType'].value;
     const newOptics: NewOpticsDto = {
@@ -101,16 +105,17 @@ export class OpticsAddComponent implements OnInit {
       parallax: this.form.controls['isParallax'].value,
       valueOfOneClick: this.form.controls['opticsValueOfOneClick'].value
     };
-    console.log(newOptics);
     this.OpticsService.newOptics({
       body: newOptics
     }).subscribe({
       next: (res) => {
-        console.log(res);
+        this.customMessageService.successMessage(
+          'Gestion des optiques',
+          'Nouvelle optique ajoutée'
+        );
         this.opticsAdded.emit(res);
       },
       error: (err) => {
-        console.log(err);
         this.customMessageService.errorMessage('Optique', err.error.message);
       }
     });
@@ -173,11 +178,19 @@ export class OpticsAddComponent implements OnInit {
 
     return this.convertMilToMoa(maxElevation, maxElevationUnitId);
   }
-  private convertMilToMoa(mil: number, unitId: number): number {
+
+  /**
+   * Converti les milliradian en MOA si l'utilisateur chois cette unite (mil) pour l'elevation max et derivation max
+   * Pour garde une logique propoe en base de donnee
+   * @param moa les moa passer en param
+   * @param unitId l id de l unite choisi
+   * @private
+   */
+  private convertMilToMoa(moa: number, unitId: number): number {
     const opticsUnit: OpticsUnitDto = this.getOpticsUnit(unitId);
     if (opticsUnit.type === this.opticsUnitMil) {
-      mil = mil * 3.4377;
+      moa = moa * 3.4377;
     }
-    return mil;
+    return moa;
   }
 }

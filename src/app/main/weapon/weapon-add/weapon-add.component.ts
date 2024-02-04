@@ -64,6 +64,9 @@ export class WeaponAddComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Charge la liste des donnee obligatoire pour creer une nouvelle arme
+   */
   private loadData(): void {
     this.weaponService.getWeaponDataCollection().subscribe({
       next: (data) => {
@@ -80,6 +83,10 @@ export class WeaponAddComponent implements OnInit {
     });
   }
 
+  /**
+   * Envoie du formulaire en bdd
+   * en cas de success le EventEmitter envoi la reponse (WeaponDto) au template parent
+   */
   public submit(): void {
     const newWeapon: NewWeaponDto = {
       category: this.getWeaponCategoryDto(),
