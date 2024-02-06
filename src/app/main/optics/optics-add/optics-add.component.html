@@ -25,7 +25,19 @@
           class="ml-2"
           formControlName="opticsClickType"
           optionValue="id"
+          (onChange)="opticUnitSelected($event.value)"
           placeholder="Selectionnez un type"></p-dropdown>
+      </div>
+      <div class="mt-2">
+        <label for="opticsValueOfOneClick">Valeur d'un click </label>
+        <p-dropdown
+          [options]="opticsClickValues"
+          id="opticsValueOfOneClick"
+          optionLabel="label"
+          class="ml-2"
+          formControlName="opticsValueOfOneClick"
+          optionValue="value"
+          placeholder="Selectionnez une valeur"></p-dropdown>
       </div>
       <div class="mt-2">
         <label for="opticsOutletDiameter">Diametre de sortie</label>

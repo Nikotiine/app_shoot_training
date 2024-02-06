@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
@@ -20,6 +21,11 @@ import { OpticsOutletDiameterDto } from '../../../core/api/models/optics-outlet-
 import { OpticsUnitDto } from '../../../core/api/models/optics-unit-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
+import {
+  OpticsClickValue,
+  OpticsClickValueInterface,
+  OpticsUnit
+} from '../../../core/app/model/OpticsClickValue';
 
 @Component({
   selector: 'app-optics-add',
@@ -42,6 +48,7 @@ export class OpticsAddComponent implements OnInit {
   public form: FormGroup;
   public opticsDataCollection!: OpticsDataCollection;
   private readonly opticsUnitMil: string = 'MRAD';
+  public opticsClickValues: OpticsClickValueInterface[] = [];
 
   constructor(
     private readonly OpticsService: OpticsService,
@@ -62,7 +69,10 @@ export class OpticsAddComponent implements OnInit {
       opticsMaxElevation: [null],
       maxElevationUnit: [0],
       opticsMinParallax: [null],
-      opticsValueOfOneClick: [0],
+      opticsValueOfOneClick: new FormControl(
+        { value: 0, disabled: true },
+        Validators.required
+      ),
       isParallax: [false]
     });
   }
@@ -189,8 +199,21 @@ export class OpticsAddComponent implements OnInit {
   private convertMilToMoa(moa: number, unitId: number): number {
     const opticsUnit: OpticsUnitDto = this.getOpticsUnit(unitId);
     if (opticsUnit.type === this.opticsUnitMil) {
-      moa = moa * 3.4377;
+      moa = Math.round(moa * 3.4377);
     }
     return moa;
+  }
+
+  opticUnitSelected(unitId: number) {
+    const value = this.opticsDataCollection.opticsUnitList.find(
+      (unit) => unit.id === unitId
+    );
+    if (value?.type === OpticsUnit.MOA) {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
+      this.form.controls['opticsValueOfOneClick'].enable();
+    } else {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMil();
+      this.form.controls['opticsValueOfOneClick'].setValue(1);
+    }
   }
 }

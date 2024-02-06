@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -22,6 +22,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { NewUserWeaponSetupDto } from '../../../core/api/models/new-user-weapon-setup-dto';
 import { AppUserService } from '../../../core/app/services/app-user.service';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
+import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 
 export interface DropdownViewModel {
   id: number;
@@ -43,6 +44,9 @@ export interface DropdownViewModel {
   styleUrl: './user-weapon-setup-add.component.scss'
 })
 export class UserWeaponSetupAddComponent implements OnInit {
+  @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
+    new EventEmitter<UserWeaponSetupDto>();
+
   private weapons: WeaponDto[] = [];
   private optics: OpticsDto[] = [];
   public weaponFactories: WeaponFactoryDto[] = [];
@@ -161,6 +165,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.weapons.push(newWeapon);
     this.createWeaponFactoriesDropdown(this.weapons);
     this.isNewWeapon = false;
+    this.switchStateFormControl('weapon', false);
     this.form.controls['weaponNotFound'].setValue(false);
   }
 
@@ -242,6 +247,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.optics.push(newOptics);
     this.createOpticsFactoriesDropdown(this.optics);
     this.isNewOptics = false;
+    this.switchStateFormControl('optic', false);
     this.form.controls['opticsNotFound'].setValue(false);
   }
 
@@ -272,7 +278,6 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   public submit(): void {
-    console.log('submit');
     const newSetup: NewUserWeaponSetupDto = {
       weapon: this.getSelectedWeapon(),
       optics: this.getSelectedOptics(),
@@ -280,17 +285,25 @@ export class UserWeaponSetupAddComponent implements OnInit {
       soundReducer: undefined,
       user: this.appUserService.getProfile()
     };
-    console.log(newSetup);
+
     this.weaponSetupService
       .newSetup({
         body: newSetup
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
+          this.setupAdded.emit(res);
+          this.customMessageService.successMessage(
+            'Setup service',
+            'Nouveau setup enregistrer'
+          );
         },
         error: (err) => {
           console.log(err);
+          this.customMessageService.errorMessage(
+            'Setup service',
+            err.error.message
+          );
         }
       });
   }

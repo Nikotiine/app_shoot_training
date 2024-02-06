@@ -4,41 +4,63 @@ import { DialogModule } from 'primeng/dialog';
 import { UserWeaponSetupAddComponent } from '../user-weapon-setup-add/user-weapon-setup-add.component';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
 import { AppUserService } from '../../../core/app/services/app-user.service';
+import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
+import { TableModule } from 'primeng/table';
+import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 
 @Component({
   selector: 'app-user-weapon-setup-list',
   standalone: true,
-  imports: [ButtonModule, DialogModule, UserWeaponSetupAddComponent],
+  imports: [
+    ButtonModule,
+    DialogModule,
+    UserWeaponSetupAddComponent,
+    TableModule
+  ],
   templateUrl: './user-weapon-setup-list.component.html',
   styleUrl: './user-weapon-setup-list.component.scss'
 })
 export class UserWeaponSetupListComponent implements OnInit {
-  public visible: boolean = false;
+  public isAddNewSetup: boolean = false;
+  public weaponsSetups: UserWeaponSetupDto[] = [];
   private weaponSetupService: WeaponSetupService = inject(WeaponSetupService);
   private appUserService: AppUserService = inject(AppUserService);
-  public addSetup(): void {
-    this.visible = !this.visible;
-  }
+  private customMessageService: CustomMessageService =
+    inject(CustomMessageService);
 
   ngOnInit(): void {
-    this.loadData();
-  }
-
-  private loadData() {
     const userId = this.appUserService.getProfile().id;
     if (userId) {
-      this.weaponSetupService
-        .getAllUserWeaponSetup({
-          id: userId
-        })
-        .subscribe({
-          next: (data) => {
-            console.log(data);
-          },
-          error: (err) => {
-            console.log(err);
-          }
-        });
+      this.loadData(userId);
     }
+  }
+
+  private loadData(id: number): void {
+    this.weaponSetupService
+      .getAllUserWeaponSetup({
+        id: id
+      })
+      .subscribe({
+        next: (data) => {
+          this.weaponsSetups = data;
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            'Setup liste',
+            err.error.message
+          );
+        }
+      });
+  }
+
+  /**
+   * Afficher le formulaire d'ajout de setup
+   */
+  public addSetup(): void {
+    this.isAddNewSetup = !this.isAddNewSetup;
+  }
+
+  setupAdded(newSetup: UserWeaponSetupDto) {
+    this.weaponsSetups.push(newSetup);
   }
 }
