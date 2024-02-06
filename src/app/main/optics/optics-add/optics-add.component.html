@@ -6,7 +6,7 @@
 
     <div class="flex flex-column">
       <div class="mt-2">
-        <label for="opticsFocalPlan">Plan Focal</label>
+        <label for="opticsFocalPlan">Plan Focal (*)</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsFocalPlaneList"
           id="opticsFocalPlan"
@@ -17,7 +17,7 @@
           placeholder="Selectionnez une categorie"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsClickType">Type de click // a changer</label>
+        <label for="opticsClickType">Type de reglage des tourelles (*)</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsUnitList"
           id="opticsClickType"
@@ -29,7 +29,7 @@
           placeholder="Selectionnez un type"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsValueOfOneClick">Valeur d'un click </label>
+        <label for="opticsValueOfOneClick">Valeur d'un click (*)</label>
         <p-dropdown
           [options]="opticsClickValues"
           id="opticsValueOfOneClick"
@@ -40,7 +40,7 @@
           placeholder="Selectionnez une valeur"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsOutletDiameter">Diametre de sortie</label>
+        <label for="opticsOutletDiameter">Diametre de sortie (*)</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsOutletDiameterList"
           id="opticsOutletDiameter"
@@ -52,7 +52,7 @@
       </div>
 
       <div class="mt-2">
-        <label for="opticsBodyDiameter">Diametre du tube</label>
+        <label for="opticsBodyDiameter">Diametre du tube (*)</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsBodyDiameterList"
           id="opticsBodyDiameter"
@@ -63,7 +63,7 @@
           placeholder="Selectionnez un diametre"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsFactory">Marque</label>
+        <label for="opticsFactory">Marque (*)</label>
         <p-dropdown
           [options]="opticsDataCollection.opticsFactoryList"
           id="opticsFactory"
@@ -74,12 +74,12 @@
           placeholder="Selectionnez une marque"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="weaponModel">Modele</label>
+        <label for="weaponModel">Modele (*)</label>
         <input type="text" pInputText formControlName="name" id="weaponModel" />
       </div>
 
       <div class="mt-2">
-        <label for="opticsMinZoom">Zoom mini</label>
+        <label for="opticsMinZoom">Zoom mini (*)</label>
         <p-inputNumber
           inputId="integeronly"
           id="opticsMinZoom"
@@ -87,7 +87,7 @@
           formControlName="opticsMinZoom"></p-inputNumber>
       </div>
       <div class="mt-2">
-        <label for="opticsMaxZoom">Zoom max</label>
+        <label for="opticsMaxZoom">Zoom max (*)</label>
         <p-inputNumber
           inputId="integeronly"
           id="opticsMaxZoom"
@@ -95,7 +95,7 @@
           formControlName="opticsMaxZoom"></p-inputNumber>
       </div>
       <div class="mt-2">
-        <label for="opticsMaxElevation">Elevation max</label>
+        <label for="opticsMaxElevation">Elevation max (*)</label>
         <p-inputNumber
           inputId="integeronly"
           id="opticsMaxElevation"
@@ -110,7 +110,7 @@
           placeholder="Selectionnez un type"></p-dropdown>
       </div>
       <div class="mt-2">
-        <label for="opticsMaxDerivation">Derive max</label>
+        <label for="opticsMaxDerivation">Derive max (*)</label>
         <p-inputNumber
           inputId="integeronly"
           id="opticsMaxDerivation"

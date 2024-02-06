@@ -7,6 +7,7 @@ import { AppUserService } from '../../../core/app/services/app-user.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { TableModule } from 'primeng/table';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-weapon-setup-list',
@@ -15,7 +16,8 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
     ButtonModule,
     DialogModule,
     UserWeaponSetupAddComponent,
-    TableModule
+    TableModule,
+    RouterLink
   ],
   templateUrl: './user-weapon-setup-list.component.html',
   styleUrl: './user-weapon-setup-list.component.scss'

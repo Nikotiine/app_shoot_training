@@ -58,23 +58,24 @@ export class OpticsAddComponent implements OnInit {
     this.form = this.fb.group({
       opticsFactory: [0, Validators.required],
       opticsFocalPlan: [0, Validators.required],
-      opticsClickType: [0, Validators.required],
+      opticsClickType: [2, Validators.required],
       opticsBodyDiameter: [0, Validators.required],
       opticsOutletDiameter: [0, Validators.required],
       name: ['', Validators.required],
       opticsMinZoom: [null, Validators.required],
       opticsMaxZoom: [null],
       opticsMaxDerivation: [null],
-      maxDerivationUnit: [0],
+      maxDerivationUnit: [2],
       opticsMaxElevation: [null],
-      maxElevationUnit: [0],
+      maxElevationUnit: [2],
       opticsMinParallax: [null],
       opticsValueOfOneClick: new FormControl(
-        { value: 0, disabled: true },
+        { value: 0, disabled: false },
         Validators.required
       ),
       isParallax: [false]
     });
+    this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
   }
 
   public ngOnInit(): void {
