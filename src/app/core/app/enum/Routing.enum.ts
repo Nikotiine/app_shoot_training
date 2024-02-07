@@ -6,5 +6,6 @@ export enum Routing {
   FORGOT_PASSWORD = 'authentication/forgot-password',
   NEW_PASSWORD = 'authentication/new-password/',
   USER_PROFILE = 'user/profile',
-  USER_WEAPON_SETUP_LIST = 'user/setup/list'
+  USER_WEAPON_SETUP_LIST = 'user/setup/list',
+  JOULE_CALCULATOR = 'calculator/joule'
 }

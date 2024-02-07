@@ -10,6 +10,7 @@ import { NewPasswordComponent } from './main/authentication/new-password/new-pas
 import { UserViewComponent } from './main/user/user-view/user-view.component';
 import { userResolver } from './core/app/resolvers/user.resolver';
 import { UserWeaponSetupListComponent } from './main/user/user-weapon-setup-list/user-weapon-setup-list.component';
+import { JouleComponent } from './main/calculator/joule/joule.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,10 @@ export const routes: Routes = [
       {
         path: Routing.USER_WEAPON_SETUP_LIST,
         component: UserWeaponSetupListComponent
+      },
+      {
+        path: Routing.JOULE_CALCULATOR,
+        component: JouleComponent
       }
     ]
   }

@@ -80,24 +80,9 @@ export class NavigationComponent implements OnInit {
             icon: 'pi pi-fw pi-user-minus'
           },
           {
-            label: 'Search',
+            label: 'Joules',
             icon: 'pi pi-fw pi-users',
-            items: [
-              {
-                label: 'Filter',
-                icon: 'pi pi-fw pi-filter',
-                items: [
-                  {
-                    label: 'Print',
-                    icon: 'pi pi-fw pi-print'
-                  }
-                ]
-              },
-              {
-                icon: 'pi pi-fw pi-bars',
-                label: 'List'
-              }
-            ]
+            routerLink: Routing.JOULE_CALCULATOR
           }
         ]
       },
@@ -147,24 +132,9 @@ export class NavigationComponent implements OnInit {
             icon: 'pi pi-fw pi-user-minus'
           },
           {
-            label: 'Search',
+            label: 'Joules',
             icon: 'pi pi-fw pi-users',
-            items: [
-              {
-                label: 'Filter',
-                icon: 'pi pi-fw pi-filter',
-                items: [
-                  {
-                    label: 'Print',
-                    icon: 'pi pi-fw pi-print'
-                  }
-                ]
-              },
-              {
-                icon: 'pi pi-fw pi-bars',
-                label: 'List'
-              }
-            ]
+            routerLink: Routing.JOULE_CALCULATOR
           }
         ]
       },
