@@ -74,7 +74,6 @@ export class WeaponAddComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.log(err);
         this.customMessageService.errorMessage(
           'Gestion des armes',
           err.error.message

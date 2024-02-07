@@ -85,11 +85,9 @@ export class OpticsAddComponent implements OnInit {
   private loadDataCollection(): void {
     this.OpticsService.getOpticsDataCollection().subscribe({
       next: (data) => {
-        console.log(data);
         this.opticsDataCollection = data;
       },
       error: (err) => {
-        console.log(err);
         this.customMessageService.errorMessage('Optique', err.error.message);
       }
     });

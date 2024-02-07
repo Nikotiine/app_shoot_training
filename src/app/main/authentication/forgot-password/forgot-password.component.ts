@@ -52,7 +52,6 @@ export class ForgotPasswordComponent {
           }
         },
         error: (err) => {
-          console.log(err);
           this.customMessageService.errorMessage('Compte', err.error.message);
           this.form.controls['email'].setValue(null);
         }

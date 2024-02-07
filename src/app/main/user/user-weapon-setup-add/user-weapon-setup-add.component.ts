@@ -185,7 +185,6 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private loadOpticsList(): void {
     this.opticsService.getAllOptics().subscribe({
       next: (optics) => {
-        console.log(optics);
         this.optics = optics;
         this.createOpticsFactoriesDropdown(optics);
       },
@@ -299,7 +298,6 @@ export class UserWeaponSetupAddComponent implements OnInit {
           );
         },
         error: (err) => {
-          console.log(err);
           this.customMessageService.errorMessage(
             'Setup service',
             err.error.message

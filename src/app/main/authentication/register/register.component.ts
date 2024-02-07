@@ -53,7 +53,6 @@ export class RegisterComponent {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.customMessageService.successMessage(
             'Creation de compte',
             res.message

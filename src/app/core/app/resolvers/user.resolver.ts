@@ -19,6 +19,7 @@ export const userResolver: ResolveFn<UserProfileDto | null | boolean> = (
   if (securityService.isLogged()) {
     return authenticationService.me().pipe(
       catchError((error) => {
+        console.log(error);
         securityService.logout();
         return of(false);
       }),
