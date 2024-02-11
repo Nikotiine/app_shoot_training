@@ -5,12 +5,13 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ### Description
 
 Application de calcul ballistique et suivi des seances d'entraiment pour tireur sportifs
-* Enregister vos setup d'arme 
-* Suivre ses seance d'entraimenent
-* Comparaison des resultat avec prise en compte des parametre de tir : munition / meteo ...
-* Reglage de l'elevation de la lunette / dioptre en fonction de la distance 
-* Reglage de la derive en fonction des paremetre du vent
-* Calculateur de Joules
+* Enregister vos setup d'armes
+* Ajouter des armes ou des optique a la base de données
+* Suivre des seances d'entraimenent (*)
+* Comparaison des resultat avec prise en compte des parametre de tir : munition / meteo ... (*)
+* Reglage de l'elevation de la lunette / dioptre en fonction de la distance (*)
+* Reglage de la derive en fonction des paremetre du vent (*)
+* Calculateur de puissance en Joules
 
 ## Installation
 1. Cloner le repo du front-end:
