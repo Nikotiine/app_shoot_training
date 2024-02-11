@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ActivationCodeDto } from './models/activation-code-dto';
+export { AmmunitionWeightDto } from './models/ammunition-weight-dto';
 export { CaliberDto } from './models/caliber-dto';
 export { CredentialsDto } from './models/credentials-dto';
 export { NewOpticsDto } from './models/new-optics-dto';

@@ -5,3 +5,5 @@ export { RegistrationService } from './services/registration.service';
 export { OpticsService } from './services/optics.service';
 export { ForgotPasswordService } from './services/forgot-password.service';
 export { AuthenticationService } from './services/authentication.service';
+export { CaliberService } from './services/caliber.service';
+export { AmmunitionService } from './services/ammunition.service';

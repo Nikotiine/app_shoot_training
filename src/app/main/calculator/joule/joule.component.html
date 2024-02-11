@@ -1,32 +1,80 @@
 <div class="text-center">
   <h2 class="text-blue-500">Calculateur de puissance (Joules)</h2>
   <form [formGroup]="form">
-    <fieldset class="mt-2">
-      <legend>Parametres</legend>
-      <div class="mt-2">
-        <label for="weight">Poids (*)</label>
-        <p-inputNumber
-          mode="decimal"
-          [maxFractionDigits]="2"
-          inputId="minmaxfraction"
-          id="weight"
-          class="ml-2"
-          formControlName="weight"></p-inputNumber>
-      </div>
-      <div class="mt-2">
-        <label for="speed">Vitesse M/S</label>
-        <p-inputNumber
-          inputId="integeronly"
-          id="speed"
-          formControlName="speed"></p-inputNumber>
-      </div>
-      <div class="mt-3">
-        <p-button
-          label="Calculer"
-          (onClick)="calculate()"
-          [disabled]="form.invalid"></p-button>
-      </div>
-    </fieldset>
+    <div class="mt-2 flex align-items-center justify-content-center">
+      <label for="switchParams">{{legend}}</label>
+      <p-inputSwitch
+        class="ml-2"
+        id="switchParams"
+        (onChange)="switchParam($event.checked)"></p-inputSwitch>
+    </div>
+    <div class="flex justify-content-evenly">
+      <fieldset class="mt-2">
+        <legend>Parametres</legend>
+        @if (predefinedParams){
+
+        <div class="mt-2">
+          <label for="caliber">Calibre (*)</label>
+          <p-dropdown
+            [options]="calibers"
+            optionLabel="caliber"
+            id="caliber"
+            class="ml-2"
+            optionValue="id"
+            formControlName="caliber"
+            (onChange)="caliberSelected($event.value)"
+            placeholder="Choix d'un calibre"></p-dropdown>
+        </div>
+        <div class="mt-2">
+          <label for="preDefineWeight">Poids en grains (*)</label>
+          <p-dropdown
+            [options]="weightsVM"
+            optionLabel="label"
+            class="ml-2"
+            id="preDefineWeight"
+            (onChange)="preDefineWeightSelected($event.value)"
+            optionValue="id"
+            formControlName="weightsVM"
+            placeholder="Choix d'un poids"></p-dropdown>
+        </div>
+
+        } @else {
+        <div class="mt-2">
+          <label for="weight">Poids (*)</label>
+          <p-inputNumber
+            mode="decimal"
+            [maxFractionDigits]="2"
+            inputId="minmaxfraction"
+            id="weight"
+            class="ml-2"
+            formControlName="weight"></p-inputNumber>
+          <p-dropdown
+            [options]="typeOfWeight"
+            optionLabel="label"
+            class="ml-2"
+            id="typeOfWeight"
+            optionValue="label"
+            formControlName="typeOfWeight"
+            placeholder="Choix d'un type"></p-dropdown>
+        </div>
+        }
+
+        <div class="mt-2">
+          <label for="speed">Vitesse M/S (*)</label>
+          <p-inputNumber
+            inputId="integeronly"
+            id="speed"
+            class="ml-2"
+            formControlName="speed"></p-inputNumber>
+        </div>
+        <div class="mt-3">
+          <p-button
+            label="Calculer"
+            (onClick)="calculate()"
+            [disabled]="form.invalid"></p-button>
+        </div>
+      </fieldset>
+    </div>
   </form>
   @defer (when result){
   <div class="mt-5">
