@@ -11,6 +11,9 @@ import { UserViewComponent } from './main/user/user-view/user-view.component';
 import { userResolver } from './core/app/resolvers/user.resolver';
 import { UserWeaponSetupListComponent } from './main/user/user-weapon-setup-list/user-weapon-setup-list.component';
 import { JouleComponent } from './main/calculator/joule/joule.component';
+import { authGuard } from './core/app/guards/auth.guard';
+import { AdminDashboardComponent } from './main/admin/admin-dashboard/admin-dashboard.component';
+import { adminGuard } from './core/app/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -35,12 +38,29 @@ export const routes: Routes = [
         component: NewPasswordComponent
       },
       {
-        path: Routing.USER_PROFILE,
-        component: UserViewComponent
+        path: Routing.USER,
+        canActivate: [authGuard],
+        children: [
+          {
+            path: Routing.USER_PROFILE,
+            component: UserViewComponent,
+            canActivate: [authGuard]
+          },
+          {
+            path: Routing.USER_WEAPON_SETUP_LIST,
+            component: UserWeaponSetupListComponent
+          }
+        ]
       },
       {
-        path: Routing.USER_WEAPON_SETUP_LIST,
-        component: UserWeaponSetupListComponent
+        path: Routing.ADMIN,
+        canActivate: [adminGuard],
+        children: [
+          {
+            path: Routing.ADMIN_DASHBOARD,
+            component: AdminDashboardComponent
+          }
+        ]
       },
       {
         path: Routing.JOULE_CALCULATOR,

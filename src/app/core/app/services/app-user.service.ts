@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 import { UserProfileDto } from '../../api/models/user-profile-dto';
 
@@ -7,9 +7,11 @@ import { UserProfileDto } from '../../api/models/user-profile-dto';
 })
 export class AppUserService {
   private shooter!: UserProfileDto;
+  public isAdmin = signal(false);
 
   public setProfile(profile: UserProfileDto) {
     this.shooter = profile;
+    this.isAdmin.set(this.shooter.role === 'ADMIN');
   }
 
   public getProfile(): UserProfileDto {

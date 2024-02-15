@@ -7,6 +7,7 @@ import { MenuModule } from 'primeng/menu';
 
 import { Routing } from '../../core/app/enum/Routing.enum';
 import { SecurityService } from '../../core/app/services/security.service';
+import { AppUserService } from '../../core/app/services/app-user.service';
 
 @Component({
   selector: 'app-navigation',
@@ -22,13 +23,17 @@ export class NavigationComponent implements OnInit {
   protected readonly Routing = Routing;
 
   private securityService: SecurityService = inject(SecurityService);
+  private userProfileService: AppUserService = inject(AppUserService);
 
   public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
   });
+  private isAdmin: Signal<boolean> = computed(() => {
+    return this.userProfileService.isAdmin();
+  });
 
   public ngOnInit(): void {
-    this.navbarConnected = this.createNavbarConnected();
+    this.navbarConnected = this.createNavbarConnected(this.isAdmin);
     this.navbarVisitor = this.createNavbarVisitor();
   }
 
@@ -36,8 +41,8 @@ export class NavigationComponent implements OnInit {
     this.securityService.logout();
   }
 
-  private createNavbarConnected(): MenuItem[] {
-    return [
+  private createNavbarConnected(isAdmin: Signal<boolean>): MenuItem[] {
+    const navbar: MenuItem[] = [
       {
         label: 'Accueil',
         icon: 'pi pi-home',
@@ -50,12 +55,12 @@ export class NavigationComponent implements OnInit {
           {
             label: 'Mes info',
             icon: 'pi pi-fw pi-align-left',
-            routerLink: Routing.USER_PROFILE
+            routerLink: Routing.USER + '/' + Routing.USER_PROFILE
           },
           {
             label: 'Mes armes',
             icon: 'pi pi-fw pi-align-right',
-            routerLink: Routing.USER_WEAPON_SETUP_LIST
+            routerLink: Routing.USER + '/' + Routing.USER_WEAPON_SETUP_LIST
           },
           {
             label: 'Center',
@@ -103,12 +108,23 @@ export class NavigationComponent implements OnInit {
             icon: 'pi pi-fw pi-calendar-times'
           }
         ]
-      },
-      {
-        label: 'Quit',
-        icon: 'pi pi-fw pi-power-off'
       }
     ];
+    if (isAdmin()) {
+      const adminNavbar: MenuItem = {
+        label: 'Admin',
+        icon: 'pi pi-lock-open',
+        items: [
+          {
+            label: 'Dashboard',
+            icon: 'pi pi-sliders-h',
+            routerLink: Routing.ADMIN + '/' + Routing.ADMIN_DASHBOARD
+          }
+        ]
+      };
+      navbar.push(adminNavbar);
+    }
+    return navbar;
   }
 
   private createNavbarVisitor(): MenuItem[] {
