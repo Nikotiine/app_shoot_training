@@ -15,9 +15,10 @@ export class SecurityService {
   private router = inject(Router);
   public authenticate = signal(!!this.tokenService.getToken());
   public setAuthentication(profile: UserProfileDto): void {
-    this.authenticate.set(true);
     this.userService.setProfile(profile);
+    console.log('set profile user');
     this.router.navigate([Routing.HOME]);
+    this.authenticate.set(true);
   }
 
   public saveToken(token: Token): void {

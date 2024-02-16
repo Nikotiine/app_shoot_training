@@ -3,19 +3,24 @@ import { inject } from '@angular/core';
 import { SecurityService } from '../services/security.service';
 import { AuthenticationService } from '../../api/services/authentication.service';
 import { AppUserService } from '../services/app-user.service';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { Routing } from '../enum/Routing.enum';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authenticationService: AuthenticationService = inject(
     AuthenticationService
   );
+  const router = inject(Router);
   if (!inject(SecurityService).isLogged()) {
-    return inject(Router).navigate(['/authentication/login']);
+    return router.navigate(['/authentication/login']);
   }
   if (!inject(AppUserService).getProfile()) {
     return authenticationService.me().pipe(
       map((user) => {
         return !!user;
+      }),
+      catchError(() => {
+        return router.navigate(['/' + Routing.HOME]);
       })
     );
   } else {

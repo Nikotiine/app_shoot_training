@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface UserEditDto {
+  active?: boolean;
   createdAT?: string;
   email?: string;
   firstName?: string;

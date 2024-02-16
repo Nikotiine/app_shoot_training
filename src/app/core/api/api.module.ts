@@ -11,8 +11,9 @@ import { RegistrationService } from './services/registration.service';
 import { OpticsService } from './services/optics.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
 import { AuthenticationService } from './services/authentication.service';
-import { CaliberService } from './services/caliber.service';
 import { AmmunitionService } from './services/ammunition.service';
+import { CaliberService } from './services/caliber.service';
+import { AdminService } from './services/admin.service';
 
 /**
  * Module that provides all services and configuration.
@@ -29,8 +30,9 @@ import { AmmunitionService } from './services/ammunition.service';
     OpticsService,
     ForgotPasswordService,
     AuthenticationService,
-    CaliberService,
     AmmunitionService,
+    CaliberService,
+    AdminService,
     ApiConfiguration
   ],
 })

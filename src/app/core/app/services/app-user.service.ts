@@ -11,6 +11,7 @@ export class AppUserService {
 
   public setProfile(profile: UserProfileDto) {
     this.shooter = profile;
+    console.log(this.shooter.role === 'ADMIN');
     this.isAdmin.set(this.shooter.role === 'ADMIN');
   }
 

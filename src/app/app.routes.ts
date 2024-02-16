@@ -43,8 +43,7 @@ export const routes: Routes = [
         children: [
           {
             path: Routing.USER_PROFILE,
-            component: UserViewComponent,
-            canActivate: [authGuard]
+            component: UserViewComponent
           },
           {
             path: Routing.USER_WEAPON_SETUP_LIST,

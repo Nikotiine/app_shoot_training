@@ -7,12 +7,17 @@
       severity="secondary"
       icon="pi pi-fw pi-power-off"
       routerLink="{{ Routing.LOGIN }}"></p-button>
-  </ng-template>
-</p-menubar>
-} @else {
-
+  </ng-template> </p-menubar
+>} @else {
 <p-menubar [model]="navbarConnected">
   <ng-template pTemplate="end">
+    @if (isAdmin()){
+    <p-button
+      label="Admin"
+      styleClass="p-button-secondary p-button-text"
+      routerLink="{{ Routing.ADMIN + '/'+Routing.ADMIN_DASHBOARD }}"
+      icon="pi pi-power-off"></p-button
+    >}
     <p-button
       label="Logout"
       styleClass="p-button-danger p-button-text"

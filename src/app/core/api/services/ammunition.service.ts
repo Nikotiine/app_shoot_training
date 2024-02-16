@@ -9,9 +9,12 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AmmunitionDto } from '../models/ammunition-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
 import { getWeightByCaliber } from '../fn/ammunition/get-weight-by-caliber';
 import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-caliber';
+import { newAmmunition } from '../fn/ammunition/new-ammunition';
+import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
 
 
 /**
@@ -21,6 +24,31 @@ import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-calibe
 export class AmmunitionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `newAmmunition()` */
+  static readonly NewAmmunitionPath = '/api/ammunition/new';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `newAmmunition()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newAmmunition$Response(params?: NewAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
+    return newAmmunition(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `newAmmunition$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newAmmunition(params?: NewAmmunition$Params, context?: HttpContext): Observable<AmmunitionDto> {
+    return this.newAmmunition$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionDto>): AmmunitionDto => r.body)
+    );
   }
 
   /** Path part for operation `getWeightByCaliber()` */

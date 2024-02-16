@@ -19,7 +19,6 @@ import { AppUserService } from '../../core/app/services/app-user.service';
 export class NavigationComponent implements OnInit {
   public navbarConnected: MenuItem[] = [];
   public navbarVisitor: MenuItem[] = [];
-
   protected readonly Routing = Routing;
 
   private securityService: SecurityService = inject(SecurityService);
@@ -28,21 +27,21 @@ export class NavigationComponent implements OnInit {
   public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
   });
-  private isAdmin: Signal<boolean> = computed(() => {
+  public isAdmin: Signal<boolean> = computed(() => {
     return this.userProfileService.isAdmin();
   });
 
   public ngOnInit(): void {
-    this.navbarConnected = this.createNavbarConnected(this.isAdmin);
     this.navbarVisitor = this.createNavbarVisitor();
+    this.navbarConnected = this.createNavbarConnected();
   }
 
   public logout(): void {
     this.securityService.logout();
   }
 
-  private createNavbarConnected(isAdmin: Signal<boolean>): MenuItem[] {
-    const navbar: MenuItem[] = [
+  private createNavbarConnected(): MenuItem[] {
+    return [
       {
         label: 'Accueil',
         icon: 'pi pi-home',
@@ -110,21 +109,6 @@ export class NavigationComponent implements OnInit {
         ]
       }
     ];
-    if (isAdmin()) {
-      const adminNavbar: MenuItem = {
-        label: 'Admin',
-        icon: 'pi pi-lock-open',
-        items: [
-          {
-            label: 'Dashboard',
-            icon: 'pi pi-sliders-h',
-            routerLink: Routing.ADMIN + '/' + Routing.ADMIN_DASHBOARD
-          }
-        ]
-      };
-      navbar.push(adminNavbar);
-    }
-    return navbar;
   }
 
   private createNavbarVisitor(): MenuItem[] {
