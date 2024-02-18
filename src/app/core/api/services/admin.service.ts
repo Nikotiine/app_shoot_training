@@ -9,7 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { AdminDashboardDataCollection } from '../models/admin-dashboard-data-collection';
+import { AdminDashboardDto } from '../models/admin-dashboard-dto';
 import { getDataForDashboard } from '../fn/admin/get-data-for-dashboard';
 import { GetDataForDashboard$Params } from '../fn/admin/get-data-for-dashboard';
 
@@ -32,7 +32,7 @@ export class AdminService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDataForDashboard$Response(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDataCollection>> {
+  getDataForDashboard$Response(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDto>> {
     return getDataForDashboard(this.http, this.rootUrl, params, context);
   }
 
@@ -42,9 +42,9 @@ export class AdminService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDataForDashboard(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<AdminDashboardDataCollection> {
+  getDataForDashboard(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<AdminDashboardDto> {
     return this.getDataForDashboard$Response(params, context).pipe(
-      map((r: StrictHttpResponse<AdminDashboardDataCollection>): AdminDashboardDataCollection => r.body)
+      map((r: StrictHttpResponse<AdminDashboardDto>): AdminDashboardDto => r.body)
     );
   }
 

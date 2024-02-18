@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminDashboardDataCollection } from '../../models/admin-dashboard-data-collection';
+import { AdminDashboardDto } from '../../models/admin-dashboard-dto';
 
 export interface GetDataForDashboard$Params {
 }
 
-export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDataCollection>> {
+export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDto>> {
   const rb = new RequestBuilder(rootUrl, getDataForDashboard.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AdminDashboardDataCollection>;
+      return r as StrictHttpResponse<AdminDashboardDto>;
     })
   );
 }

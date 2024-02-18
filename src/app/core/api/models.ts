@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ActivationCodeDto } from './models/activation-code-dto';
-export { AdminDashboardDataCollection } from './models/admin-dashboard-data-collection';
+export { AdminDashboardDto } from './models/admin-dashboard-dto';
 export { AmmunitionDto } from './models/ammunition-dto';
 export { AmmunitionFactoryDto } from './models/ammunition-factory-dto';
 export { AmmunitionWeightDto } from './models/ammunition-weight-dto';

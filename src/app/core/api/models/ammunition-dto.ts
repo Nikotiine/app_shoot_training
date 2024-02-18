@@ -7,6 +7,7 @@ export interface AmmunitionDto {
   active?: boolean;
   ballisticCoefficient?: number;
   caliber: CaliberDto;
+  createdAT?: string;
   factory: AmmunitionFactoryDto;
   id: number;
   initialSpeed?: number;
