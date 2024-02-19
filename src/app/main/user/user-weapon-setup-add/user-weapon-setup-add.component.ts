@@ -47,6 +47,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
   @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
     new EventEmitter<UserWeaponSetupDto>();
 
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   private weapons: WeaponDto[] = [];
   private optics: OpticsDto[] = [];
   public weaponFactories: WeaponFactoryDto[] = [];
@@ -315,5 +316,9 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private getSelectedOptics() {
     const opticsId = this.form.controls['opticModel'].value;
     return <OpticsDto>this.optics.find((optics) => optics.id === opticsId);
+  }
+
+  onCancel() {
+    this.cancel.emit();
   }
 }

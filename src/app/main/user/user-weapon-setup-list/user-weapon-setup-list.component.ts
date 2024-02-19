@@ -30,7 +30,7 @@ export class UserWeaponSetupListComponent implements OnInit {
   private customMessageService: CustomMessageService =
     inject(CustomMessageService);
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const userId = this.appUserService.getProfile().id;
     if (userId) {
       this.loadData(userId);
@@ -62,7 +62,8 @@ export class UserWeaponSetupListComponent implements OnInit {
     this.isAddNewSetup = !this.isAddNewSetup;
   }
 
-  setupAdded(newSetup: UserWeaponSetupDto) {
+  public setupAdded(newSetup: UserWeaponSetupDto): void {
     this.weaponsSetups.push(newSetup);
+    this.isAddNewSetup = false;
   }
 }

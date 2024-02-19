@@ -2,101 +2,122 @@
 
 <form [formGroup]="form">
   <fieldset class="mt-2">
-    <legend class="text-blue-500 text-2xl">Ajouter une nouvelle arme</legend>
+    <legend class="text-blue-500">Ajouter une nouvelle arme</legend>
 
-    <div class="flex flex-column">
-      <div class="mt-2">
-        <label for="weaponCategory">Categorie (*)</label>
-        <p-dropdown
-          [options]="weaponDataCollection.weaponCategoryList"
-          id="weaponCategory"
-          optionLabel="category"
-          class="ml-2"
-          formControlName="weaponCategory"
-          optionValue="id"
-          placeholder="Selectionnez une categorie"></p-dropdown>
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label for="weaponCategory">Catégorie</label>
+        <div>
+          <p-dropdown
+            [options]="weaponDataCollection.weaponCategoryList"
+            id="weaponCategory"
+            optionLabel="category"
+            class="ml-2"
+            [style]="{'width':'100%'}"
+            formControlName="weaponCategory"
+            optionValue="id"
+            placeholder="Selectionnez une categorie"></p-dropdown>
+        </div>
       </div>
-      <div class="mt-2">
-        <label for="weaponType">Type d'arme (*)</label>
-        <p-dropdown
-          [options]="weaponDataCollection.weaponTypeList"
-          id="weaponType"
-          optionLabel="type"
-          class="ml-2"
-          formControlName="weaponType"
-          optionValue="id"
-          placeholder="Selectionnez une type d'arme"></p-dropdown>
+      <div class="field col-12 md:col-6">
+        <label for="weaponType">Type d'arme</label>
+        <div>
+          <p-dropdown
+            [options]="weaponDataCollection.weaponTypeList"
+            id="weaponType"
+            optionLabel="type"
+            class="ml-2"
+            [style]="{'width':'100%'}"
+            formControlName="weaponType"
+            optionValue="id"
+            placeholder="Selectionnez une type d'arme"></p-dropdown>
+        </div>
       </div>
-      <div class="mt-2">
-        <label for="weaponCaliber">Calibre (*)</label>
-        <p-dropdown
-          [options]="weaponDataCollection.caliberList"
-          id="weaponCaliber"
-          optionLabel="caliber"
-          class="ml-2"
-          formControlName="weaponCaliber"
-          optionValue="id"
-          placeholder="Selectionnez un calibre"></p-dropdown>
-      </div>
-
-      <div class="mt-2">
-        <label for="weaponFactory">Marque (*)</label>
-        <p-dropdown
-          [options]="weaponDataCollection.weaponFactoryList"
-          id="weaponFactory"
-          optionLabel="name"
-          class="ml-2"
-          formControlName="weaponFactory"
-          optionValue="id"
-          placeholder="Selectionnez une marque"></p-dropdown>
+      <div class="field col-12 md:col-6">
+        <label for="weaponCaliber">Calibre</label>
+        <div>
+          <p-dropdown
+            [options]="weaponDataCollection.caliberList"
+            id="weaponCaliber"
+            optionLabel="caliber"
+            [style]="{'width':'100%'}"
+            class="ml-2"
+            formControlName="weaponCaliber"
+            optionValue="id"
+            placeholder="Selectionnez un calibre"></p-dropdown>
+        </div>
       </div>
 
-      <div class="mt-2">
-        <label for="weaponModel">Modele (*)</label>
+      <div class="field col-12 md:col-6">
+        <label for="weaponFactory">Marque</label>
+        <div>
+          <p-dropdown
+            [options]="weaponDataCollection.weaponFactoryList"
+            id="weaponFactory"
+            optionLabel="name"
+            class="ml-2"
+            [style]="{'width':'100%'}"
+            formControlName="weaponFactory"
+            optionValue="id"
+            placeholder="Selectionnez une marque"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="weaponModel">Modèle</label>
         <input
           type="text"
           pInputText
+          class="w-full"
           formControlName="weaponModel"
           id="weaponModel" />
       </div>
-      <div class="mt-2">
+      <div class="field col-12 md:col-6">
         <label for="weaponModel">Variante (optionel)</label>
         <input
           type="text"
           pInputText
+          class="w-full"
           formControlName="variation"
           id="weaponVariation" />
       </div>
-      <div class="mt-2">
-        <label for="barrelLength">Longueur du canon (en cm) (*)</label>
-        <p-inputNumber
-          mode="decimal"
-          suffix=" cm"
-          [max]="200"
-          [maxFractionDigits]="1"
-          inputId="minmaxfraction"
-          id="barrelLength"
-          formControlName="barrelLength"></p-inputNumber>
+      <div class="field col">
+        <label for="barrelLength">Longueur du canon (en cm)</label>
+        <div>
+          <p-inputNumber
+            mode="decimal"
+            suffix=" cm"
+            [max]="200"
+            [maxFractionDigits]="1"
+            inputId="minmaxfraction"
+            id="barrelLength"
+            formControlName="barrelLength"></p-inputNumber>
+        </div>
       </div>
-      <div class="mt-2 flex align-items-center justify-content-center">
+      <div class="field col">
         <label for="isHeavyBarrel">Canon lourd ?</label>
-        <p-inputSwitch
-          class="ml-2"
-          formControlName="isHeavyBarrel"
-          id="isHeavyBarrel"></p-inputSwitch>
+        <div>
+          <p-inputSwitch
+            class="ml-2"
+            formControlName="isHeavyBarrel"
+            id="isHeavyBarrel"></p-inputSwitch>
+        </div>
       </div>
-      <div class="mt-2">
+      <div class="field col">
         <label for="barrelStripes">Pas de rayure du canon (optionel)</label>
         <p-inputNumber
           inputId="integeronly"
           id="barrelStripes"
+          class="w-full"
           formControlName="barrelStripes"></p-inputNumber>
       </div>
-      <p-button
-        label="Valider"
-        class="mt-3"
-        (onClick)="submit()"
-        [disabled]="form.invalid"></p-button>
+      <div class="field col-12">
+        <p-button
+          label="Valider"
+          class="mt-3"
+          (onClick)="submit()"
+          [disabled]="form.invalid"></p-button>
+      </div>
     </div>
   </fieldset>
 </form>
