@@ -11,6 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { AmmunitionDto } from '../models/ammunition-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
+import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
+import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
 import { getWeightByCaliber } from '../fn/ammunition/get-weight-by-caliber';
 import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-caliber';
 import { newAmmunition } from '../fn/ammunition/new-ammunition';
@@ -73,6 +75,31 @@ export class AmmunitionService extends BaseService {
   getWeightByCaliber(params: GetWeightByCaliber$Params, context?: HttpContext): Observable<Array<AmmunitionWeightDto>> {
     return this.getWeightByCaliber$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<AmmunitionWeightDto>>): Array<AmmunitionWeightDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllAmmunition()` */
+  static readonly GetAllAmmunitionPath = '/api/ammunition/all';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAmmunition()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAmmunition$Response(params?: GetAllAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+    return getAllAmmunition(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAmmunition$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAmmunition(params?: GetAllAmmunition$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
+    return this.getAllAmmunition$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
     );
   }
 

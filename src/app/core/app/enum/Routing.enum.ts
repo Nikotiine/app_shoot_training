@@ -10,5 +10,9 @@ export enum Routing {
   USER_WEAPON_SETUP_LIST = 'setup/list',
   JOULE_CALCULATOR = 'calculator/joule',
   ADMIN = 'admin',
-  ADMIN_DASHBOARD = 'dashboard'
+  ADMIN_DASHBOARD = 'dashboard',
+  ADMIN_USERS_LIST = 'users/list',
+  ADMIN_WEAPONS_LIST = 'weapons/list',
+  ADMIN_OPTICS_LIST = 'optics/list',
+  ADMIN_AMMUNITION_LIST = 'ammunition/list'
 }

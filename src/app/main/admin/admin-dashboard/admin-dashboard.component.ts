@@ -3,8 +3,11 @@ import { AdminService } from '../../../core/api/services/admin.service';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { AdminDashboardDto } from '../../../core/api/models/admin-dashboard-dto';
+
 import { DatePipe } from '@angular/common';
+import { Routing } from '../../../core/app/enum/Routing.enum';
+import { Router } from '@angular/router';
+import { AdminDashboardDataInformation } from '../../../core/api/models/admin-dashboard-data-information';
 
 export interface AdminCardViewModel {
   title: string;
@@ -12,7 +15,9 @@ export interface AdminCardViewModel {
   nameOrFactory: string | undefined;
   firstNameOrModel: string | undefined;
   createdAt: string | undefined;
+  routerLink: string;
 }
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -24,6 +29,7 @@ export class AdminDashboardComponent implements OnInit {
   private readonly adminService: AdminService = inject(AdminService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly router: Router = inject(Router);
   public cards: AdminCardViewModel[] = [];
   ngOnInit(): void {
     this.loadData();
@@ -41,7 +47,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  private createCardViewModel(data: AdminDashboardDto) {
+  private createCardViewModel(data: AdminDashboardDataInformation) {
     this.cards = [
       {
         title:
@@ -49,14 +55,16 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalUsers,
         nameOrFactory: data.lastUserEntry.lastName,
         firstNameOrModel: data.lastUserEntry.firstName,
-        createdAt: data.lastUserEntry.createdAT
+        createdAt: data.lastUserEntry.createdAT,
+        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_USERS_LIST
       },
       {
         title: data.totalOptics > 1 ? 'Armes enregistrées' : 'Arme enregistrée',
         totalEntry: data.totalWeapons,
         nameOrFactory: data.lastWeaponEntry.factory.name,
         firstNameOrModel: data.lastWeaponEntry.model,
-        createdAt: data.lastWeaponEntry.createdAT
+        createdAt: data.lastWeaponEntry.createdAT,
+        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_WEAPONS_LIST
       },
       {
         title:
@@ -66,15 +74,20 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalOptics,
         nameOrFactory: data.lastOpticEntry.factory.name,
         firstNameOrModel: data.lastOpticEntry.name,
-        createdAt: data.lastOpticEntry.createdAT
+        createdAt: data.lastOpticEntry.createdAT,
+        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_OPTICS_LIST
       },
       {
         title: 'Munitions enregistrées',
         totalEntry: data.totalAmmunition ?? 0,
         nameOrFactory: data.lastAmmunitionEntry?.factory.name,
         firstNameOrModel: data.lastAmmunitionEntry?.name,
-        createdAt: data.lastAmmunitionEntry?.createdAT
+        createdAt: data.lastAmmunitionEntry?.createdAT,
+        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
       }
     ];
+  }
+  public navigateTo(url: string): void {
+    this.router.navigate([url]);
   }
 }

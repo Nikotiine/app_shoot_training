@@ -16,7 +16,6 @@ export class SecurityService {
   public authenticate = signal(!!this.tokenService.getToken());
   public setAuthentication(profile: UserProfileDto): void {
     this.userService.setProfile(profile);
-    console.log('set profile user');
     this.router.navigate([Routing.HOME]);
     this.authenticate.set(true);
   }
@@ -29,7 +28,7 @@ export class SecurityService {
     this.authenticate.set(false);
     this.tokenService.removeToken();
     this.userService.setProfile({});
-    this.router.navigate([Routing.HOME]);
+    // this.router.navigate([Routing.HOME]);
   }
 
   public removeToken(): void {

@@ -15,7 +15,10 @@
         {{card.nameOrFactory}} -- {{card.firstNameOrModel}}
       </p>
       <ng-template pTemplate="footer">
-        <p-button label="Detail" icon="pi pi-check"></p-button>
+        <p-button
+          label="Gestion"
+          icon="pi pi-search"
+          (onClick)="navigateTo(card.routerLink)"></p-button>
       </ng-template>
     </p-card>
     }

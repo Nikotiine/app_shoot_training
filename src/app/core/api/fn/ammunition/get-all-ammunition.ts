@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminDashboardDataInformation } from '../../models/admin-dashboard-data-information';
+import { AmmunitionDto } from '../../models/ammunition-dto';
 
-export interface GetDataForDashboard$Params {
+export interface GetAllAmmunition$Params {
 }
 
-export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDataInformation>> {
-  const rb = new RequestBuilder(rootUrl, getDataForDashboard.PATH, 'get');
+export function getAllAmmunition(http: HttpClient, rootUrl: string, params?: GetAllAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllAmmunition.PATH, 'get');
   if (params) {
   }
 
@@ -21,9 +21,9 @@ export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AdminDashboardDataInformation>;
+      return r as StrictHttpResponse<Array<AmmunitionDto>>;
     })
   );
 }
 
-getDataForDashboard.PATH = '/api/admin/dashboard';
+getAllAmmunition.PATH = '/api/ammunition/all';

@@ -9,9 +9,12 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { AdminDashboardDto } from '../models/admin-dashboard-dto';
+import { AdminDashboardDataInformation } from '../models/admin-dashboard-data-information';
+import { getAllUsers } from '../fn/admin/get-all-users';
+import { GetAllUsers$Params } from '../fn/admin/get-all-users';
 import { getDataForDashboard } from '../fn/admin/get-data-for-dashboard';
 import { GetDataForDashboard$Params } from '../fn/admin/get-data-for-dashboard';
+import { UserProfileDto } from '../models/user-profile-dto';
 
 
 /**
@@ -23,6 +26,31 @@ export class AdminService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `getAllUsers()` */
+  static readonly GetAllUsersPath = '/api/admin/user';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllUsers()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllUsers$Response(params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+    return getAllUsers(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllUsers$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllUsers(params?: GetAllUsers$Params, context?: HttpContext): Observable<Array<UserProfileDto>> {
+    return this.getAllUsers$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserProfileDto>>): Array<UserProfileDto> => r.body)
+    );
+  }
+
   /** Path part for operation `getDataForDashboard()` */
   static readonly GetDataForDashboardPath = '/api/admin/dashboard';
 
@@ -32,7 +60,7 @@ export class AdminService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDataForDashboard$Response(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDto>> {
+  getDataForDashboard$Response(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDataInformation>> {
     return getDataForDashboard(this.http, this.rootUrl, params, context);
   }
 
@@ -42,9 +70,9 @@ export class AdminService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDataForDashboard(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<AdminDashboardDto> {
+  getDataForDashboard(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<AdminDashboardDataInformation> {
     return this.getDataForDashboard$Response(params, context).pipe(
-      map((r: StrictHttpResponse<AdminDashboardDto>): AdminDashboardDto => r.body)
+      map((r: StrictHttpResponse<AdminDashboardDataInformation>): AdminDashboardDataInformation => r.body)
     );
   }
 

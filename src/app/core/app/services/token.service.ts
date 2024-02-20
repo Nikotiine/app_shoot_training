@@ -10,14 +10,15 @@ export class TokenService {
   private cookieService: CookieService = inject(CookieService);
 
   public saveToken(token: Token) {
-    this.cookieService.set(this.cookie_token_key, token.token);
+    this.cookieService.set(this.cookie_token_key, token.token, { path: '/' });
   }
 
   public getToken(): string | null {
+    console.log(this.cookieService.get(this.cookie_token_key));
     return this.cookieService.get(this.cookie_token_key);
   }
 
   public removeToken(): void {
-    this.cookieService.delete(this.cookie_token_key);
+    this.cookieService.delete(this.cookie_token_key, '/');
   }
 }

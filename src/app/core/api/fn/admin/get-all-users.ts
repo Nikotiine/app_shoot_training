@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminDashboardDataInformation } from '../../models/admin-dashboard-data-information';
+import { UserProfileDto } from '../../models/user-profile-dto';
 
-export interface GetDataForDashboard$Params {
+export interface GetAllUsers$Params {
 }
 
-export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: GetDataForDashboard$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDashboardDataInformation>> {
-  const rb = new RequestBuilder(rootUrl, getDataForDashboard.PATH, 'get');
+export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllUsers.PATH, 'get');
   if (params) {
   }
 
@@ -21,9 +21,9 @@ export function getDataForDashboard(http: HttpClient, rootUrl: string, params?: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AdminDashboardDataInformation>;
+      return r as StrictHttpResponse<Array<UserProfileDto>>;
     })
   );
 }
 
-getDataForDashboard.PATH = '/api/admin/dashboard';
+getAllUsers.PATH = '/api/admin/user';

@@ -8,6 +8,7 @@ import { MenuModule } from 'primeng/menu';
 import { Routing } from '../../core/app/enum/Routing.enum';
 import { SecurityService } from '../../core/app/services/security.service';
 import { AppUserService } from '../../core/app/services/app-user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation',
@@ -21,8 +22,9 @@ export class NavigationComponent implements OnInit {
   public navbarVisitor: MenuItem[] = [];
   protected readonly Routing = Routing;
 
-  private securityService: SecurityService = inject(SecurityService);
-  private userProfileService: AppUserService = inject(AppUserService);
+  private readonly securityService: SecurityService = inject(SecurityService);
+  private readonly userProfileService: AppUserService = inject(AppUserService);
+  private readonly router: Router = inject(Router);
 
   public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
@@ -38,6 +40,7 @@ export class NavigationComponent implements OnInit {
 
   public logout(): void {
     this.securityService.logout();
+    this.router.navigate([Routing.HOME]);
   }
 
   private createNavbarConnected(): MenuItem[] {

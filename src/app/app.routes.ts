@@ -14,6 +14,10 @@ import { JouleComponent } from './main/calculator/joule/joule.component';
 import { authGuard } from './core/app/guards/auth.guard';
 import { AdminDashboardComponent } from './main/admin/admin-dashboard/admin-dashboard.component';
 import { adminGuard } from './core/app/guards/admin.guard';
+import { AdminUsersListComponent } from './main/admin/admin-users-list/admin-users-list.component';
+import { AdminWeaponsListComponent } from './main/admin/admin-weapons-list/admin-weapons-list.component';
+import { AdminOpticsListComponent } from './main/admin/admin-optics-list/admin-optics-list.component';
+import { AdminAmmunitionListComponent } from './main/admin/admin-ammunition-list/admin-ammunition-list.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +62,22 @@ export const routes: Routes = [
           {
             path: Routing.ADMIN_DASHBOARD,
             component: AdminDashboardComponent
+          },
+          {
+            path: Routing.ADMIN_USERS_LIST,
+            component: AdminUsersListComponent
+          },
+          {
+            path: Routing.ADMIN_WEAPONS_LIST,
+            component: AdminWeaponsListComponent
+          },
+          {
+            path: Routing.ADMIN_OPTICS_LIST,
+            component: AdminOpticsListComponent
+          },
+          {
+            path: Routing.ADMIN_AMMUNITION_LIST,
+            component: AdminAmmunitionListComponent
           }
         ]
       },
