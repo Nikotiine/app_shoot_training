@@ -8,12 +8,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UserProfileDto } from '../../models/user-profile-dto';
 
-export interface GetAllUsers$Params {
+export interface EditUserRole$Params {
+      body: UserProfileDto
 }
 
-export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllUsers.PATH, 'get');
+export function editUserRole(http: HttpClient, rootUrl: string, params: EditUserRole$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+  const rb = new RequestBuilder(rootUrl, editUserRole.PATH, 'post');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -26,4 +28,4 @@ export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUs
   );
 }
 
-getAllUsers.PATH = '/api/admin/user/all';
+editUserRole.PATH = '/api/admin/user/edit-role';

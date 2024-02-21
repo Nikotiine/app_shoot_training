@@ -6,5 +6,5 @@ export { OpticsService } from './services/optics.service';
 export { ForgotPasswordService } from './services/forgot-password.service';
 export { AuthenticationService } from './services/authentication.service';
 export { AmmunitionService } from './services/ammunition.service';
-export { CaliberService } from './services/caliber.service';
 export { AdminService } from './services/admin.service';
+export { CaliberService } from './services/caliber.service';

@@ -8,7 +8,7 @@ import {
   withInterceptors
 } from '@angular/common/http';
 import { apiInterceptor } from './core/app/api.interceptor';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
@@ -16,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([apiInterceptor])),
     importProvidersFrom([BrowserAnimationsModule]),
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 };

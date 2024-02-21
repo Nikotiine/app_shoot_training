@@ -10,6 +10,10 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AdminDashboardDataInformation } from '../models/admin-dashboard-data-information';
+import { disableUser } from '../fn/admin/disable-user';
+import { DisableUser$Params } from '../fn/admin/disable-user';
+import { editUserRole } from '../fn/admin/edit-user-role';
+import { EditUserRole$Params } from '../fn/admin/edit-user-role';
 import { getAllUsers } from '../fn/admin/get-all-users';
 import { GetAllUsers$Params } from '../fn/admin/get-all-users';
 import { getDataForDashboard } from '../fn/admin/get-data-for-dashboard';
@@ -26,8 +30,58 @@ export class AdminService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `editUserRole()` */
+  static readonly EditUserRolePath = '/api/admin/user/edit-role';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `editUserRole()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editUserRole$Response(params: EditUserRole$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+    return editUserRole(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `editUserRole$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editUserRole(params: EditUserRole$Params, context?: HttpContext): Observable<Array<UserProfileDto>> {
+    return this.editUserRole$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserProfileDto>>): Array<UserProfileDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `disableUser()` */
+  static readonly DisableUserPath = '/api/admin/user/disable-profile';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `disableUser()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  disableUser$Response(params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+    return disableUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `disableUser$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  disableUser(params: DisableUser$Params, context?: HttpContext): Observable<Array<UserProfileDto>> {
+    return this.disableUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserProfileDto>>): Array<UserProfileDto> => r.body)
+    );
+  }
+
   /** Path part for operation `getAllUsers()` */
-  static readonly GetAllUsersPath = '/api/admin/user';
+  static readonly GetAllUsersPath = '/api/admin/user/all';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

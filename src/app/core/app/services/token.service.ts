@@ -14,7 +14,6 @@ export class TokenService {
   }
 
   public getToken(): string | null {
-    console.log(this.cookieService.get(this.cookie_token_key));
     return this.cookieService.get(this.cookie_token_key);
   }
 

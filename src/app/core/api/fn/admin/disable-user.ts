@@ -8,12 +8,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UserProfileDto } from '../../models/user-profile-dto';
 
-export interface GetAllUsers$Params {
+export interface DisableUser$Params {
+      body: UserProfileDto
 }
 
-export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllUsers.PATH, 'get');
+export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'post');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -26,4 +28,4 @@ export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUs
   );
 }
 
-getAllUsers.PATH = '/api/admin/user/all';
+disableUser.PATH = '/api/admin/user/disable-profile';

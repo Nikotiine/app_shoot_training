@@ -6,11 +6,18 @@ import { ToastModule } from 'primeng/toast';
 import { AppUserService } from '../../core/app/services/app-user.service';
 
 import { UserProfileDto } from '../../core/api/models/user-profile-dto';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, MenubarModule, NavigationComponent, ToastModule],
+  imports: [
+    RouterOutlet,
+    MenubarModule,
+    NavigationComponent,
+    ToastModule,
+    ConfirmDialogModule
+  ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
