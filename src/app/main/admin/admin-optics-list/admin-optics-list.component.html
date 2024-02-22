@@ -29,3 +29,9 @@
     </ng-template>
   </p-table>
 </div>
+<div class="mt-2 text-center">
+  <p-button label="Ajouter" icon="pi pi-plus" (onClick)="add()"></p-button>
+  @defer (when visible){ @if (visible){
+  <app-optics-add (opticsAdded)="opticAdded($event)"></app-optics-add>
+  } }
+</div>

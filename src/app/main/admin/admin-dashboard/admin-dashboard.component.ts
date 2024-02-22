@@ -58,7 +58,8 @@ export class AdminDashboardComponent implements OnInit {
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_USERS_LIST
       },
       {
-        title: data.totalOptics > 1 ? 'Armes enregistrées' : 'Arme enregistrée',
+        title:
+          data.totalWeapons > 1 ? 'Armes enregistrées' : 'Arme enregistrée',
         totalEntry: data.totalWeapons,
         nameOrFactory: data.lastWeaponEntry.factory.name,
         firstNameOrModel: data.lastWeaponEntry.model,
