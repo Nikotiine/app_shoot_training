@@ -1,1 +1,31 @@
-<p>admin-optics-list works!</p>
+<div class="mt-5">
+  <p-table [value]="optics" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Marque - Model</th>
+        <th>Plan Focal</th>
+        <th>Caracteristique</th>
+        <th>Type de graduation</th>
+        <th>Ajouter le</th>
+        <th class="text-center">Modifier</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-optic>
+      <tr>
+        <td>{{ optic.focalPlane.focalPlane }}</td>
+        <td>{{ optic.factory.name }} - {{ optic.name }}</td>
+        <td>
+          {{ optic.minZoom}}-{{optic.maxZoom}}X{{optic.outletDiameter.diameter}}
+        </td>
+        <td>{{optic.opticsUnit.type}}</td>
+        <td>{{ optic.createdAT | date:'dd MMM yyyy' }}</td>
+        <td class="text-center">
+          <p-button
+            label="Editer"
+            icon="pi pi-user-edit"
+            [text]="true"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

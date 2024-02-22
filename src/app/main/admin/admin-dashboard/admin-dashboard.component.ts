@@ -31,18 +31,17 @@ export class AdminDashboardComponent implements OnInit {
     inject(CustomMessageService);
   private readonly router: Router = inject(Router);
   public cards: AdminCardViewModel[] = [];
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadData();
   }
 
   private loadData() {
     this.adminService.getDataForDashboard().subscribe({
       next: (data) => {
-        console.log(data);
         this.createCardViewModel(data);
       },
       error: (err) => {
-        console.log(err);
+        this.customMessageService.errorMessage('Admin', err.error.message);
       }
     });
   }
