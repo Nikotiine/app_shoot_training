@@ -20,6 +20,7 @@
             {{ user.role }}
             <p-button
               icon="pi pi-user-edit"
+              severity="warning"
               [text]="true"
               (onClick)="changeRole(user.id)"></p-button>
           </div>
@@ -28,9 +29,10 @@
           <div class="flex align-items-center">
             {{ user.active ? 'Actif':'Desactivé' }}
             <p-button
-              icon="pi pi-user-edit"
+              icon="pi pi-ban"
+              severity="danger"
               [text]="true"
-              (onClick)="disableUser(user.id)"></p-button>
+              (onClick)="confirm($event,user.id)"></p-button>
           </div>
         </td>
       </tr>

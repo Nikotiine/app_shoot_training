@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AdminService } from '../../../core/api/services/admin.service';
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
-import { SharedModule } from 'primeng/api';
+import { ConfirmationService, SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -32,6 +32,8 @@ export class AdminUsersListComponent implements OnInit {
   private readonly appUserService: AppUserService = inject(AppUserService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly confirmationService: ConfirmationService =
+    inject(ConfirmationService);
 
   private selectedUser: UserProfileDto | null = null;
   public users: UserProfileDto[] = [];
@@ -43,18 +45,17 @@ export class AdminUsersListComponent implements OnInit {
       role: [UserRoleEnum.USER]
     });
   }
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadUsers();
   }
 
   private loadUsers(): void {
     this.adminService.getAllUsers().subscribe({
       next: (users) => {
-        console.log(users);
         this.users = users;
       },
       error: (err) => {
-        console.log(err);
+        this.customMessageService.errorMessage('Admin', err.error.message);
       }
     });
   }
@@ -82,16 +83,41 @@ export class AdminUsersListComponent implements OnInit {
         })
         .subscribe({
           next: (res) => {
-            console.log(res);
+            this.users = res;
+            this.visible = !this.visible;
+            this.customMessageService.successMessage(
+              'Admin',
+              'Role utilisateur modifier'
+            );
           },
           error: (err) => {
-            console.log(err);
+            this.customMessageService.errorMessage('Admin', err.error.message);
           }
         });
     }
   }
 
-  disableUser(id: number) {
+  private disableUser(user: UserProfileDto): void {
+    user.active = false;
+    this.adminService
+      .disableUser({
+        body: user
+      })
+      .subscribe({
+        next: (res) => {
+          this.users = res;
+          this.customMessageService.successMessage(
+            'Admin',
+            'Utilisateur desactivé'
+          );
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage('Admin', err.error.message);
+        }
+      });
+  }
+
+  public confirm(event: Event, id: number): void {
     const user = this.getUserById(id);
     if (user.email === this.appUserService.getProfile().email) {
       this.customMessageService.errorMessage(
@@ -99,22 +125,20 @@ export class AdminUsersListComponent implements OnInit {
         'Vous ne pouvez pas vous desactiver'
       );
     } else {
-      user.active = false;
-      this.adminService
-        .disableUser({
-          body: user
-        })
-        .subscribe({
-          next: (res) => {
-            console.log(res);
-          },
-          error: (err) => {
-            console.log(err);
-          }
-        });
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Supprimer ce profil ?',
+        header: 'Administration',
+        icon: 'pi pi-exclamation-triangle',
+        acceptIcon: 'none',
+        rejectIcon: 'none',
+        rejectButtonStyleClass: 'p-button-text',
+        accept: () => {
+          this.disableUser(user);
+        }
+      });
     }
   }
-
   private getUserById(id: number): UserProfileDto {
     return <UserProfileDto>this.users.find((user) => user.id === id);
   }

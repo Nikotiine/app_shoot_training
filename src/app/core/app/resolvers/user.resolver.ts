@@ -22,7 +22,8 @@ export const userResolver: ResolveFn<UserProfileDto | null | boolean> = (
   if (securityService.isLogged()) {
     return authenticationService.me().pipe(
       map((res) => res),
-      catchError(() => {
+      catchError((e) => {
+        console.log(e);
         securityService.logout();
         return router.navigate(['/' + Routing.HOME]);
       })
