@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface AmmunitionFactoryDto {
-  id: number;
+export interface NewAmmunitionFactoryDto {
   name: string;
 }

@@ -10,10 +10,10 @@ import { AmmunitionDto } from '../../models/ammunition-dto';
 import { NewAmmunitionDto } from '../../models/new-ammunition-dto';
 
 export interface NewAmmunition$Params {
-      body?: NewAmmunitionDto
+      body: NewAmmunitionDto
 }
 
-export function newAmmunition(http: HttpClient, rootUrl: string, params?: NewAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
+export function newAmmunition(http: HttpClient, rootUrl: string, params: NewAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
   const rb = new RequestBuilder(rootUrl, newAmmunition.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -29,4 +29,4 @@ export function newAmmunition(http: HttpClient, rootUrl: string, params?: NewAmm
   );
 }
 
-newAmmunition.PATH = '/api/ammunition/new';
+newAmmunition.PATH = '/api/ammunition/save/ammunition';

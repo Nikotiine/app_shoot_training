@@ -2,16 +2,20 @@
 /* eslint-disable */
 export { ActivationCodeDto } from './models/activation-code-dto';
 export { AdminDashboardDataInformation } from './models/admin-dashboard-data-information';
+export { AmmunitionDataCollection } from './models/ammunition-data-collection';
 export { AmmunitionDto } from './models/ammunition-dto';
 export { AmmunitionFactoryDto } from './models/ammunition-factory-dto';
 export { AmmunitionWeightDto } from './models/ammunition-weight-dto';
 export { CaliberDto } from './models/caliber-dto';
 export { CredentialsDto } from './models/credentials-dto';
 export { NewAmmunitionDto } from './models/new-ammunition-dto';
+export { NewAmmunitionFactoryDto } from './models/new-ammunition-factory-dto';
 export { NewOpticsDto } from './models/new-optics-dto';
+export { NewOpticsFactoryDto } from './models/new-optics-factory-dto';
 export { NewPasswordRequestDto } from './models/new-password-request-dto';
 export { NewUserWeaponSetupDto } from './models/new-user-weapon-setup-dto';
 export { NewWeaponDto } from './models/new-weapon-dto';
+export { NewWeaponFactoryDto } from './models/new-weapon-factory-dto';
 export { OpticsBodyDiameterDto } from './models/optics-body-diameter-dto';
 export { OpticsDataCollection } from './models/optics-data-collection';
 export { OpticsDto } from './models/optics-dto';

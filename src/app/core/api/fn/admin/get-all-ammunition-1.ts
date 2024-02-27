@@ -6,17 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { NewWeaponDto } from '../../models/new-weapon-dto';
-import { WeaponDto } from '../../models/weapon-dto';
+import { AmmunitionDto } from '../../models/ammunition-dto';
 
-export interface NewWeapon$Params {
-      body: NewWeaponDto
+export interface GetAllAmmunition1$Params {
 }
 
-export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDto>> {
-  const rb = new RequestBuilder(rootUrl, newWeapon.PATH, 'post');
+export function getAllAmmunition1(http: HttpClient, rootUrl: string, params?: GetAllAmmunition1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllAmmunition1.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -24,9 +21,9 @@ export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$P
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<WeaponDto>;
+      return r as StrictHttpResponse<Array<AmmunitionDto>>;
     })
   );
 }
 
-newWeapon.PATH = '/api/weapon/save/weapon';
+getAllAmmunition1.PATH = '/api/admin/ammunition/all';

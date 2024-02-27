@@ -13,10 +13,13 @@ import { getAllWeapon } from '../fn/weapon/get-all-weapon';
 import { GetAllWeapon$Params } from '../fn/weapon/get-all-weapon';
 import { getWeaponDataCollection } from '../fn/weapon/get-weapon-data-collection';
 import { GetWeaponDataCollection$Params } from '../fn/weapon/get-weapon-data-collection';
+import { newFactory } from '../fn/weapon/new-factory';
+import { NewFactory$Params } from '../fn/weapon/new-factory';
 import { newWeapon } from '../fn/weapon/new-weapon';
 import { NewWeapon$Params } from '../fn/weapon/new-weapon';
 import { WeaponDataCollection } from '../models/weapon-data-collection';
 import { WeaponDto } from '../models/weapon-dto';
+import { WeaponFactoryDto } from '../models/weapon-factory-dto';
 
 
 /**
@@ -29,7 +32,7 @@ export class WeaponService extends BaseService {
   }
 
   /** Path part for operation `newWeapon()` */
-  static readonly NewWeaponPath = '/api/weapon/new';
+  static readonly NewWeaponPath = '/api/weapon/save/weapon';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -50,6 +53,31 @@ export class WeaponService extends BaseService {
   newWeapon(params: NewWeapon$Params, context?: HttpContext): Observable<WeaponDto> {
     return this.newWeapon$Response(params, context).pipe(
       map((r: StrictHttpResponse<WeaponDto>): WeaponDto => r.body)
+    );
+  }
+
+  /** Path part for operation `newFactory()` */
+  static readonly NewFactoryPath = '/api/weapon/save/factory';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `newFactory()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newFactory$Response(params: NewFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponFactoryDto>> {
+    return newFactory(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `newFactory$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newFactory(params: NewFactory$Params, context?: HttpContext): Observable<WeaponFactoryDto> {
+    return this.newFactory$Response(params, context).pipe(
+      map((r: StrictHttpResponse<WeaponFactoryDto>): WeaponFactoryDto => r.body)
     );
   }
 

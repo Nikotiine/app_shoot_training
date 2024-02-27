@@ -26,4 +26,4 @@ export function getAllAmmunition(http: HttpClient, rootUrl: string, params?: Get
   );
 }
 
-getAllAmmunition.PATH = '/api/ammunition/all';
+getAllAmmunition.PATH = '/api/ammunition/all/ammunition';

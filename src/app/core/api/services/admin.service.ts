@@ -10,15 +10,24 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AdminDashboardDataInformation } from '../models/admin-dashboard-data-information';
+import { AmmunitionDto } from '../models/ammunition-dto';
 import { disableUser } from '../fn/admin/disable-user';
 import { DisableUser$Params } from '../fn/admin/disable-user';
 import { editUserRole } from '../fn/admin/edit-user-role';
 import { EditUserRole$Params } from '../fn/admin/edit-user-role';
+import { getAllAmmunition1 } from '../fn/admin/get-all-ammunition-1';
+import { GetAllAmmunition1$Params } from '../fn/admin/get-all-ammunition-1';
+import { getAllOptics1 } from '../fn/admin/get-all-optics-1';
+import { GetAllOptics1$Params } from '../fn/admin/get-all-optics-1';
 import { getAllUsers } from '../fn/admin/get-all-users';
 import { GetAllUsers$Params } from '../fn/admin/get-all-users';
+import { getAllWeapons } from '../fn/admin/get-all-weapons';
+import { GetAllWeapons$Params } from '../fn/admin/get-all-weapons';
 import { getDataForDashboard } from '../fn/admin/get-data-for-dashboard';
 import { GetDataForDashboard$Params } from '../fn/admin/get-data-for-dashboard';
+import { OpticsDto } from '../models/optics-dto';
 import { UserProfileDto } from '../models/user-profile-dto';
+import { WeaponDto } from '../models/weapon-dto';
 
 
 /**
@@ -80,6 +89,31 @@ export class AdminService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAllWeapons()` */
+  static readonly GetAllWeaponsPath = '/api/admin/weapons/all';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllWeapons()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllWeapons$Response(params?: GetAllWeapons$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
+    return getAllWeapons(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllWeapons$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllWeapons(params?: GetAllWeapons$Params, context?: HttpContext): Observable<Array<WeaponDto>> {
+    return this.getAllWeapons$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WeaponDto>>): Array<WeaponDto> => r.body)
+    );
+  }
+
   /** Path part for operation `getAllUsers()` */
   static readonly GetAllUsersPath = '/api/admin/user/all';
 
@@ -105,6 +139,31 @@ export class AdminService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAllOptics1()` */
+  static readonly GetAllOptics1Path = '/api/admin/optics/all';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllOptics1()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllOptics1$Response(params?: GetAllOptics1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsDto>>> {
+    return getAllOptics1(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllOptics1$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllOptics1(params?: GetAllOptics1$Params, context?: HttpContext): Observable<Array<OpticsDto>> {
+    return this.getAllOptics1$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsDto>>): Array<OpticsDto> => r.body)
+    );
+  }
+
   /** Path part for operation `getDataForDashboard()` */
   static readonly GetDataForDashboardPath = '/api/admin/dashboard';
 
@@ -127,6 +186,31 @@ export class AdminService extends BaseService {
   getDataForDashboard(params?: GetDataForDashboard$Params, context?: HttpContext): Observable<AdminDashboardDataInformation> {
     return this.getDataForDashboard$Response(params, context).pipe(
       map((r: StrictHttpResponse<AdminDashboardDataInformation>): AdminDashboardDataInformation => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllAmmunition1()` */
+  static readonly GetAllAmmunition1Path = '/api/admin/ammunition/all';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAmmunition1()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAmmunition1$Response(params?: GetAllAmmunition1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+    return getAllAmmunition1(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAmmunition1$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAmmunition1(params?: GetAllAmmunition1$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
+    return this.getAllAmmunition1$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
     );
   }
 

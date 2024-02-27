@@ -9,14 +9,22 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AmmunitionDataCollection } from '../models/ammunition-data-collection';
 import { AmmunitionDto } from '../models/ammunition-dto';
+import { AmmunitionFactoryDto } from '../models/ammunition-factory-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
 import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
 import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
+import { getAllFactories } from '../fn/ammunition/get-all-factories';
+import { GetAllFactories$Params } from '../fn/ammunition/get-all-factories';
+import { getDataCollection } from '../fn/ammunition/get-data-collection';
+import { GetDataCollection$Params } from '../fn/ammunition/get-data-collection';
 import { getWeightByCaliber } from '../fn/ammunition/get-weight-by-caliber';
 import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-caliber';
 import { newAmmunition } from '../fn/ammunition/new-ammunition';
 import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
+import { newFactory1 } from '../fn/ammunition/new-factory-1';
+import { NewFactory1$Params } from '../fn/ammunition/new-factory-1';
 
 
 /**
@@ -28,8 +36,33 @@ export class AmmunitionService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `newFactory1()` */
+  static readonly NewFactory1Path = '/api/ammunition/save/factory';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `newFactory1()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newFactory1$Response(params: NewFactory1$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionFactoryDto>> {
+    return newFactory1(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `newFactory1$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newFactory1(params: NewFactory1$Params, context?: HttpContext): Observable<AmmunitionFactoryDto> {
+    return this.newFactory1$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionFactoryDto>): AmmunitionFactoryDto => r.body)
+    );
+  }
+
   /** Path part for operation `newAmmunition()` */
-  static readonly NewAmmunitionPath = '/api/ammunition/new';
+  static readonly NewAmmunitionPath = '/api/ammunition/save/ammunition';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -37,7 +70,7 @@ export class AmmunitionService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newAmmunition$Response(params?: NewAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
+  newAmmunition$Response(params: NewAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
     return newAmmunition(this.http, this.rootUrl, params, context);
   }
 
@@ -47,7 +80,7 @@ export class AmmunitionService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newAmmunition(params?: NewAmmunition$Params, context?: HttpContext): Observable<AmmunitionDto> {
+  newAmmunition(params: NewAmmunition$Params, context?: HttpContext): Observable<AmmunitionDto> {
     return this.newAmmunition$Response(params, context).pipe(
       map((r: StrictHttpResponse<AmmunitionDto>): AmmunitionDto => r.body)
     );
@@ -78,8 +111,58 @@ export class AmmunitionService extends BaseService {
     );
   }
 
+  /** Path part for operation `getDataCollection()` */
+  static readonly GetDataCollectionPath = '/api/ammunition/data-collection';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getDataCollection()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getDataCollection$Response(params?: GetDataCollection$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDataCollection>> {
+    return getDataCollection(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getDataCollection$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getDataCollection(params?: GetDataCollection$Params, context?: HttpContext): Observable<AmmunitionDataCollection> {
+    return this.getDataCollection$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionDataCollection>): AmmunitionDataCollection => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllFactories()` */
+  static readonly GetAllFactoriesPath = '/api/ammunition/all/factory';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllFactories()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllFactories$Response(params?: GetAllFactories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionFactoryDto>>> {
+    return getAllFactories(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllFactories$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllFactories(params?: GetAllFactories$Params, context?: HttpContext): Observable<Array<AmmunitionFactoryDto>> {
+    return this.getAllFactories$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionFactoryDto>>): Array<AmmunitionFactoryDto> => r.body)
+    );
+  }
+
   /** Path part for operation `getAllAmmunition()` */
-  static readonly GetAllAmmunitionPath = '/api/ammunition/all';
+  static readonly GetAllAmmunitionPath = '/api/ammunition/all/ammunition';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

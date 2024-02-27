@@ -29,4 +29,4 @@ export function newOptics(http: HttpClient, rootUrl: string, params: NewOptics$P
   );
 }
 
-newOptics.PATH = '/api/optics/new';
+newOptics.PATH = '/api/optics/save/optics';
