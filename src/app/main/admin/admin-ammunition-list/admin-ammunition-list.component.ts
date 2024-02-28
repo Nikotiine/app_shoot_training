@@ -32,12 +32,10 @@ export class AdminAmmunitionListComponent implements OnInit {
     inject(AmmunitionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly caliberService: CaliberService = inject(CaliberService);
 
   public ammunition: AmmunitionDto[] = [];
   public newAmmunitionForm: boolean = false;
   public ammunitionFactories: AmmunitionFactoryDto[] = [];
-  public calibers: CaliberDto[] = [];
   ngOnInit(): void {
     this.loadAmmunition();
   }
@@ -45,13 +43,11 @@ export class AdminAmmunitionListComponent implements OnInit {
   private loadAmmunition(): void {
     forkJoin([
       this.ammunitionService.getAllAmmunition(),
-      this.ammunitionService.getAllFactories(),
-      this.caliberService.getAllCalibers()
+      this.ammunitionService.getAllFactories()
     ]).subscribe({
       next: (data) => {
         this.ammunition = data[0];
         this.ammunitionFactories = data[1];
-        this.calibers = data[2];
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);
@@ -60,7 +56,6 @@ export class AdminAmmunitionListComponent implements OnInit {
   }
 
   public addAmmunition(): void {
-    console.log('rr');
     this.newAmmunitionForm = !this.newAmmunitionForm;
   }
 

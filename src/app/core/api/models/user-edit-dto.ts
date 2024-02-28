@@ -2,7 +2,7 @@
 /* eslint-disable */
 export interface UserEditDto {
   active?: boolean;
-  createdAT?: string;
+  createdAt?: string;
   email?: string;
   firstName?: string;
   id?: number;

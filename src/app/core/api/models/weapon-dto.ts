@@ -10,7 +10,7 @@ export interface WeaponDto {
   barrelStripes?: number;
   caliber: CaliberDto;
   category: WeaponCategoryDto;
-  createdAT?: string;
+  createdAt?: string;
   factory: WeaponFactoryDto;
   heavyBarrel?: boolean;
   id: number;

@@ -35,7 +35,7 @@ export class AdminDashboardComponent implements OnInit {
     this.loadData();
   }
 
-  private loadData() {
+  private loadData(): void {
     this.adminService.getDataForDashboard().subscribe({
       next: (data) => {
         this.createCardViewModel(data);
@@ -46,7 +46,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  private createCardViewModel(data: AdminDashboardDataInformation) {
+  private createCardViewModel(data: AdminDashboardDataInformation): void {
     this.cards = [
       {
         title:
@@ -54,7 +54,7 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalUsers,
         nameOrFactory: data.lastUserEntry.lastName,
         firstNameOrModel: data.lastUserEntry.firstName,
-        createdAt: data.lastUserEntry.createdAT,
+        createdAt: data.lastUserEntry.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_USERS_LIST
       },
       {
@@ -63,7 +63,7 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalWeapons,
         nameOrFactory: data.lastWeaponEntry.factory.name,
         firstNameOrModel: data.lastWeaponEntry.model,
-        createdAt: data.lastWeaponEntry.createdAT,
+        createdAt: data.lastWeaponEntry.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_WEAPONS_LIST
       },
       {
@@ -74,7 +74,7 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalOptics,
         nameOrFactory: data.lastOpticEntry.factory.name,
         firstNameOrModel: data.lastOpticEntry.name,
-        createdAt: data.lastOpticEntry.createdAT,
+        createdAt: data.lastOpticEntry.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_OPTICS_LIST
       },
       {
@@ -82,7 +82,15 @@ export class AdminDashboardComponent implements OnInit {
         totalEntry: data.totalAmmunition ?? 0,
         nameOrFactory: data.lastAmmunitionEntry?.factory.name,
         firstNameOrModel: data.lastAmmunitionEntry?.name,
-        createdAt: data.lastAmmunitionEntry?.createdAT,
+        createdAt: data.lastAmmunitionEntry?.createdAt,
+        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
+      },
+      {
+        title: 'Calibres enregistrées',
+        totalEntry: data.totalCaliber ?? 0,
+        nameOrFactory: data.lastCaliberEntry.caliber,
+        firstNameOrModel: '',
+        createdAt: data.lastCaliberEntry.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
       }
     ];

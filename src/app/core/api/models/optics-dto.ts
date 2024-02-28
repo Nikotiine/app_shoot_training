@@ -8,7 +8,7 @@ import { OpticsUnitDto } from '../models/optics-unit-dto';
 export interface OpticsDto {
   active?: boolean;
   bodyDiameter: OpticsBodyDiameterDto;
-  createdAT?: string;
+  createdAt?: string;
   factory: OpticsFactoryDto;
   focalPlane: OpticsFocalPlaneDto;
   id: number;
