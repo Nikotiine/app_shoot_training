@@ -10,8 +10,7 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 import { AccordionModule } from 'primeng/accordion';
 import { forkJoin } from 'rxjs';
 import { AmmunitionFactoryDto } from '../../../core/api/models/ammunition-factory-dto';
-import { CaliberService } from '../../../core/api/services/caliber.service';
-import { CaliberDto } from '../../../core/api/models/caliber-dto';
+import { AddFactoryComponent } from '../../ammunition/ammuntio-factory-add/add-factory.component';
 
 @Component({
   selector: 'app-admin-ammunition-list',
@@ -22,7 +21,8 @@ import { CaliberDto } from '../../../core/api/models/caliber-dto';
     SharedModule,
     TableModule,
     AmmunitionAddComponent,
-    AccordionModule
+    AccordionModule,
+    AddFactoryComponent
   ],
   templateUrl: './admin-ammunition-list.component.html',
   styleUrl: './admin-ammunition-list.component.scss'
@@ -35,6 +35,7 @@ export class AdminAmmunitionListComponent implements OnInit {
 
   public ammunition: AmmunitionDto[] = [];
   public newAmmunitionForm: boolean = false;
+  public newAmmunitionFactoryForm: boolean = false;
   public ammunitionFactories: AmmunitionFactoryDto[] = [];
   ngOnInit(): void {
     this.loadAmmunition();
@@ -62,5 +63,14 @@ export class AdminAmmunitionListComponent implements OnInit {
   public newAmmunition(newAmmunition: AmmunitionDto): void {
     this.ammunition.push(newAmmunition);
     this.newAmmunitionForm = false;
+  }
+
+  public addFactory(): void {
+    this.newAmmunitionFactoryForm = !this.newAmmunitionFactoryForm;
+  }
+
+  public newFactory(newFactory: AmmunitionFactoryDto): void {
+    this.newAmmunitionFactoryForm = false;
+    this.ammunitionFactories.push(newFactory);
   }
 }

@@ -23,8 +23,8 @@ import { getWeightByCaliber } from '../fn/ammunition/get-weight-by-caliber';
 import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-caliber';
 import { newAmmunition } from '../fn/ammunition/new-ammunition';
 import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
-import { newFactory1 } from '../fn/ammunition/new-factory-1';
-import { NewFactory1$Params } from '../fn/ammunition/new-factory-1';
+import { newAmmunitionFactory } from '../fn/ammunition/new-ammunition-factory';
+import { NewAmmunitionFactory$Params } from '../fn/ammunition/new-ammunition-factory';
 
 
 /**
@@ -36,27 +36,27 @@ export class AmmunitionService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `newFactory1()` */
-  static readonly NewFactory1Path = '/api/ammunition/save/factory';
+  /** Path part for operation `newAmmunitionFactory()` */
+  static readonly NewAmmunitionFactoryPath = '/api/ammunition/save/factory';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `newFactory1()` instead.
+   * To access only the response body, use `newAmmunitionFactory()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newFactory1$Response(params: NewFactory1$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionFactoryDto>> {
-    return newFactory1(this.http, this.rootUrl, params, context);
+  newAmmunitionFactory$Response(params: NewAmmunitionFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionFactoryDto>> {
+    return newAmmunitionFactory(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `newFactory1$Response()` instead.
+   * To access the full response (for headers, for example), `newAmmunitionFactory$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  newFactory1(params: NewFactory1$Params, context?: HttpContext): Observable<AmmunitionFactoryDto> {
-    return this.newFactory1$Response(params, context).pipe(
+  newAmmunitionFactory(params: NewAmmunitionFactory$Params, context?: HttpContext): Observable<AmmunitionFactoryDto> {
+    return this.newAmmunitionFactory$Response(params, context).pipe(
       map((r: StrictHttpResponse<AmmunitionFactoryDto>): AmmunitionFactoryDto => r.body)
     );
   }

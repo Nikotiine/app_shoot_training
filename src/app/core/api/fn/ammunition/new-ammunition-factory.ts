@@ -9,12 +9,12 @@ import { RequestBuilder } from '../../request-builder';
 import { AmmunitionFactoryDto } from '../../models/ammunition-factory-dto';
 import { NewAmmunitionFactoryDto } from '../../models/new-ammunition-factory-dto';
 
-export interface NewFactory1$Params {
+export interface NewAmmunitionFactory$Params {
       body: NewAmmunitionFactoryDto
 }
 
-export function newFactory1(http: HttpClient, rootUrl: string, params: NewFactory1$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionFactoryDto>> {
-  const rb = new RequestBuilder(rootUrl, newFactory1.PATH, 'post');
+export function newAmmunitionFactory(http: HttpClient, rootUrl: string, params: NewAmmunitionFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionFactoryDto>> {
+  const rb = new RequestBuilder(rootUrl, newAmmunitionFactory.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function newFactory1(http: HttpClient, rootUrl: string, params: NewFactor
   );
 }
 
-newFactory1.PATH = '/api/ammunition/save/factory';
+newAmmunitionFactory.PATH = '/api/ammunition/save/factory';
