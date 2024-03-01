@@ -31,6 +31,7 @@ export class AdminDashboardComponent implements OnInit {
     inject(CustomMessageService);
   private readonly router: Router = inject(Router);
   public cards: AdminCardViewModel[] = [];
+
   public ngOnInit(): void {
     this.loadData();
   }
@@ -83,14 +84,6 @@ export class AdminDashboardComponent implements OnInit {
         nameOrFactory: data.lastAmmunitionEntry?.factory.name,
         firstNameOrModel: data.lastAmmunitionEntry?.name,
         createdAt: data.lastAmmunitionEntry?.createdAt,
-        routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
-      },
-      {
-        title: 'Calibres enregistrées',
-        totalEntry: data.totalCaliber ?? 0,
-        nameOrFactory: data.lastCaliberEntry.caliber,
-        firstNameOrModel: '',
-        createdAt: data.lastCaliberEntry.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
       }
     ];

@@ -1,0 +1,6 @@
+export enum FactoryType {
+  WEAPON = 'WEAPON',
+  AMMUNITION = 'AMMUNITION',
+  OPTICS = 'OPTICS',
+  SOUND_REDUCER = 'SOUND_REDUCER'
+}

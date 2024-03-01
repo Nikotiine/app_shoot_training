@@ -13,11 +13,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
-import { AmmunitionFactoryDto } from '../../../core/api/models/ammunition-factory-dto';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
 import { NewAmmunitionDto } from '../../../core/api/models/new-ammunition-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { FactoryDto } from '../../../core/api/models/factory-dto';
 
 @Component({
   selector: 'app-ammunition-add',
@@ -38,7 +38,7 @@ export class AmmunitionAddComponent implements OnInit {
     new EventEmitter<AmmunitionDto>();
   public form: FormGroup;
   public calibers: CaliberDto[] = [];
-  public factories: AmmunitionFactoryDto[] = [];
+  public factories: FactoryDto[] = [];
   public weights: AmmunitionWeightDto[] = [];
 
   constructor(
@@ -111,11 +111,9 @@ export class AmmunitionAddComponent implements OnInit {
       });
   }
 
-  private getAmmunitionFactory(): AmmunitionFactoryDto {
+  private getAmmunitionFactory(): FactoryDto {
     const id = this.form.controls['factory'].value;
-    return <AmmunitionFactoryDto>(
-      this.factories.find((factory) => factory.id === id)
-    );
+    return <FactoryDto>this.factories.find((factory) => factory.id === id);
   }
 
   private getAmmunitionWeight(): AmmunitionWeightDto {

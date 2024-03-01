@@ -15,10 +15,11 @@ import { ButtonModule } from 'primeng/button';
 import { NewWeaponDto } from '../../../core/api/models/new-weapon-dto';
 import { WeaponCategoryDto } from '../../../core/api/models/weapon-category-dto';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
-import { WeaponFactoryDto } from '../../../core/api/models/weapon-factory-dto';
+
 import { WeaponTypeDto } from '../../../core/api/models/weapon-type-dto';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { FactoryDto } from '../../../core/api/models/factory-dto';
 
 @Component({
   selector: 'app-weapon-add',
@@ -137,10 +138,10 @@ export class WeaponAddComponent implements OnInit {
     );
   }
 
-  private getWeaponFactoryDto(): WeaponFactoryDto {
+  private getWeaponFactoryDto(): FactoryDto {
     const id = this.form.controls['weaponFactory'].value;
 
-    return <WeaponFactoryDto>(
+    return <FactoryDto>(
       this.weaponDataCollection.weaponFactoryList.find(
         (factory) => factory.id === id
       )

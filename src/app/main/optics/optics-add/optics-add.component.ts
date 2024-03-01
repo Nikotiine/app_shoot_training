@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OpticsDataCollection } from '../../../core/api/models/optics-data-collection';
 import { NewOpticsDto } from '../../../core/api/models/new-optics-dto';
 import { OpticsBodyDiameterDto } from '../../../core/api/models/optics-body-diameter-dto';
-import { OpticsFactoryDto } from '../../../core/api/models/optics-factory-dto';
+
 import { OpticsFocalPlaneDto } from '../../../core/api/models/optics-focal-plane-dto';
 import { OpticsOutletDiameterDto } from '../../../core/api/models/optics-outlet-diameter-dto';
 import { OpticsUnitDto } from '../../../core/api/models/optics-unit-dto';
@@ -26,6 +26,7 @@ import {
   OpticsClickValueInterface,
   OpticsUnit
 } from '../../../core/app/model/OpticsClickValue';
+import { FactoryDto } from '../../../core/api/models/factory-dto';
 
 @Component({
   selector: 'app-optics-add',
@@ -147,9 +148,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
-  private getOpticsFactory(): OpticsFactoryDto {
+  private getOpticsFactory(): FactoryDto {
     const id = this.form.controls['opticsFactory'].value;
-    return <OpticsFactoryDto>(
+    return <FactoryDto>(
       this.opticsDataCollection.opticsFactoryList.find(
         (factory) => factory.id === id
       )
@@ -197,7 +198,7 @@ export class OpticsAddComponent implements OnInit {
    */
   private convertMilToMoa(moa: number, unitId: number): number {
     const opticsUnit: OpticsUnitDto = this.getOpticsUnit(unitId);
-    if (opticsUnit.type === this.opticsUnitMil) {
+    if (opticsUnit.label === this.opticsUnitMil) {
       moa = Math.round(moa * 3.4377);
     }
     return moa;
@@ -207,7 +208,7 @@ export class OpticsAddComponent implements OnInit {
     const value = this.opticsDataCollection.opticsUnitList.find(
       (unit) => unit.id === unitId
     );
-    if (value?.type === OpticsUnit.MOA) {
+    if (value?.label === OpticsUnit.MOA) {
       this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
       this.form.controls['opticsValueOfOneClick'].enable();
     } else {

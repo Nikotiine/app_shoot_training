@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
 import { CaliberDto } from '../models/caliber-dto';
+import { FactoryDto } from '../models/factory-dto';
 import { WeaponCategoryDto } from '../models/weapon-category-dto';
-import { WeaponFactoryDto } from '../models/weapon-factory-dto';
 import { WeaponTypeDto } from '../models/weapon-type-dto';
 export interface WeaponDataCollection {
   caliberList: Array<CaliberDto>;
   weaponCategoryList: Array<WeaponCategoryDto>;
-  weaponFactoryList: Array<WeaponFactoryDto>;
+  weaponFactoryList: Array<FactoryDto>;
   weaponTypeList: Array<WeaponTypeDto>;
 }

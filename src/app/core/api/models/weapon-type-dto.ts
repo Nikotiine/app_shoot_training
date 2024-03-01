@@ -2,5 +2,5 @@
 /* eslint-disable */
 export interface WeaponTypeDto {
   id: number;
-  type: string;
+  label: string;
 }

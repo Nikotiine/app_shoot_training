@@ -9,13 +9,13 @@ import {
 import { DropdownModule } from 'primeng/dropdown';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { WeaponService } from '../../../core/api/services/weapon.service';
-import { WeaponFactoryDto } from '../../../core/api/models/weapon-factory-dto';
+
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { WeaponAddComponent } from '../../weapon/weapon-add/weapon-add.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
-import { OpticsFactoryDto } from '../../../core/api/models/optics-factory-dto';
+
 import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -23,6 +23,7 @@ import { NewUserWeaponSetupDto } from '../../../core/api/models/new-user-weapon-
 import { AppUserService } from '../../../core/app/services/app-user.service';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
+import { FactoryDto } from '../../../core/api/models/factory-dto';
 
 export interface DropdownViewModel {
   id: number;
@@ -50,8 +51,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   private weapons: WeaponDto[] = [];
   private optics: OpticsDto[] = [];
-  public weaponFactories: WeaponFactoryDto[] = [];
-  public opticsFactories: OpticsFactoryDto[] = [];
+  public weaponFactories: FactoryDto[] = [];
+  public opticsFactories: FactoryDto[] = [];
   public weaponsWM: DropdownViewModel[] = [];
   public opticsWM: DropdownViewModel[] = [];
   public form: FormGroup;
@@ -115,7 +116,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.weaponFactories = [];
 
     for (const weapon of weapons) {
-      const factory: WeaponFactoryDto = weapon.factory;
+      const factory: FactoryDto = weapon.factory;
       this.weaponFactories.push(factory);
     }
   }
@@ -206,7 +207,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.opticsFactories = [];
 
     for (const optic of optics) {
-      const factory: OpticsFactoryDto = optic.factory;
+      const factory: FactoryDto = optic.factory;
       this.opticsFactories.push(factory);
     }
   }
@@ -224,7 +225,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     this.opticsWM = selectedFactory.map((optic) => {
       return {
         id: optic.id,
-        model: `${optic.name} ${optic.minZoom}-${optic.maxZoom}X${optic.outletDiameter.diameter} - ${optic.focalPlane.focalPlane}`
+        model: `${optic.name} ${optic.minZoom}-${optic.maxZoom}X${optic.outletDiameter.label} - ${optic.focalPlane.label}`
       };
     });
   }

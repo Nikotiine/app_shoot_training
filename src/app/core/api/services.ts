@@ -4,6 +4,7 @@ export { WeaponSetupService } from './services/weapon-setup.service';
 export { RegistrationService } from './services/registration.service';
 export { OpticsService } from './services/optics.service';
 export { ForgotPasswordService } from './services/forgot-password.service';
+export { FactoryService } from './services/factory.service';
 export { AuthenticationService } from './services/authentication.service';
 export { AmmunitionService } from './services/ammunition.service';
 export { AdminService } from './services/admin.service';

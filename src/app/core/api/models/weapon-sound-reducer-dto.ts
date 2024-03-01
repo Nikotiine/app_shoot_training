@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import { CaliberDto } from '../models/caliber-dto';
-import { WeaponSoundReducerFactoryDto } from '../models/weapon-sound-reducer-factory-dto';
+import { FactoryDto } from '../models/factory-dto';
 export interface WeaponSoundReducerDto {
   caliber: CaliberDto;
   diameter: number;
-  factory?: WeaponSoundReducerFactoryDto;
+  factory?: FactoryDto;
   id: number;
   length: number;
   model: string;

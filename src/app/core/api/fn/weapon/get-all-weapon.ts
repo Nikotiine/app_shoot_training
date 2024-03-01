@@ -26,4 +26,4 @@ export function getAllWeapon(http: HttpClient, rootUrl: string, params?: GetAllW
   );
 }
 
-getAllWeapon.PATH = '/api/weapon/all';
+getAllWeapon.PATH = '/api/weapon/all/weapon';

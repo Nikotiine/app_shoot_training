@@ -10,6 +10,7 @@ import { WeaponSetupService } from './services/weapon-setup.service';
 import { RegistrationService } from './services/registration.service';
 import { OpticsService } from './services/optics.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
+import { FactoryService } from './services/factory.service';
 import { AuthenticationService } from './services/authentication.service';
 import { AmmunitionService } from './services/ammunition.service';
 import { AdminService } from './services/admin.service';
@@ -29,6 +30,7 @@ import { CaliberService } from './services/caliber.service';
     RegistrationService,
     OpticsService,
     ForgotPasswordService,
+    FactoryService,
     AuthenticationService,
     AmmunitionService,
     AdminService,

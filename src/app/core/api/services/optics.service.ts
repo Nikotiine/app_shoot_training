@@ -15,11 +15,8 @@ import { getOpticsDataCollection } from '../fn/optics/get-optics-data-collection
 import { GetOpticsDataCollection$Params } from '../fn/optics/get-optics-data-collection';
 import { newOptics } from '../fn/optics/new-optics';
 import { NewOptics$Params } from '../fn/optics/new-optics';
-import { newOpticsFactory } from '../fn/optics/new-optics-factory';
-import { NewOpticsFactory$Params } from '../fn/optics/new-optics-factory';
 import { OpticsDataCollection } from '../models/optics-data-collection';
 import { OpticsDto } from '../models/optics-dto';
-import { OpticsFactoryDto } from '../models/optics-factory-dto';
 
 
 /**
@@ -53,31 +50,6 @@ export class OpticsService extends BaseService {
   newOptics(params: NewOptics$Params, context?: HttpContext): Observable<OpticsDto> {
     return this.newOptics$Response(params, context).pipe(
       map((r: StrictHttpResponse<OpticsDto>): OpticsDto => r.body)
-    );
-  }
-
-  /** Path part for operation `newOpticsFactory()` */
-  static readonly NewOpticsFactoryPath = '/api/optics/save/factory';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `newOpticsFactory()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  newOpticsFactory$Response(params: NewOpticsFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<OpticsFactoryDto>> {
-    return newOpticsFactory(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `newOpticsFactory$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  newOpticsFactory(params: NewOpticsFactory$Params, context?: HttpContext): Observable<OpticsFactoryDto> {
-    return this.newOpticsFactory$Response(params, context).pipe(
-      map((r: StrictHttpResponse<OpticsFactoryDto>): OpticsFactoryDto => r.body)
     );
   }
 

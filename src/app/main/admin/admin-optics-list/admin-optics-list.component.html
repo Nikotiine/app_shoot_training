@@ -12,13 +12,13 @@
     </ng-template>
     <ng-template pTemplate="body" let-optic>
       <tr>
-        <td>{{ optic.focalPlane.focalPlane }}</td>
+        <td>{{ optic.focalPlane.label }}</td>
         <td>{{ optic.factory.name }} - {{ optic.name }}</td>
         <td>
-          {{ optic.minZoom}}-{{optic.maxZoom}}X{{optic.outletDiameter.diameter}}
+          {{ optic.minZoom}}-{{optic.maxZoom}}X{{optic.outletDiameter.label}}
         </td>
-        <td>{{optic.opticsUnit.type}}</td>
-        <td>{{ optic.createdAT | date:'dd MMM yyyy' }}</td>
+        <td>{{optic.opticsUnit.label}}</td>
+        <td>{{ optic.createdAt | date:'dd MMM yyyy' }}</td>
         <td class="text-center">
           <p-button
             label="Editer"

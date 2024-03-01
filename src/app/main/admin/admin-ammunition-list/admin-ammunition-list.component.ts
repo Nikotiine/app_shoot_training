@@ -8,9 +8,11 @@ import { AmmunitionService } from '../../../core/api/services/ammunition.service
 import { AmmunitionAddComponent } from '../../ammunition/ammunition-add/ammunition-add.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { AccordionModule } from 'primeng/accordion';
-import { forkJoin } from 'rxjs';
-import { AmmunitionFactoryDto } from '../../../core/api/models/ammunition-factory-dto';
-import { AddFactoryComponent } from '../../ammunition/ammuntio-factory-add/add-factory.component';
+
+import { TabViewModule } from 'primeng/tabview';
+import { CaliberTableListComponent } from '../caliber-table-list/caliber-table-list.component';
+import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
+import { FactoryTableListComponent } from '../factory-table-list/factory-table-list.component';
 
 @Component({
   selector: 'app-admin-ammunition-list',
@@ -22,7 +24,9 @@ import { AddFactoryComponent } from '../../ammunition/ammuntio-factory-add/add-f
     TableModule,
     AmmunitionAddComponent,
     AccordionModule,
-    AddFactoryComponent
+    TabViewModule,
+    CaliberTableListComponent,
+    FactoryTableListComponent
   ],
   templateUrl: './admin-ammunition-list.component.html',
   styleUrl: './admin-ammunition-list.component.scss'
@@ -35,20 +39,15 @@ export class AdminAmmunitionListComponent implements OnInit {
 
   public ammunition: AmmunitionDto[] = [];
   public newAmmunitionForm: boolean = false;
-  public newAmmunitionFactoryForm: boolean = false;
-  public ammunitionFactories: AmmunitionFactoryDto[] = [];
+
   ngOnInit(): void {
     this.loadAmmunition();
   }
 
   private loadAmmunition(): void {
-    forkJoin([
-      this.ammunitionService.getAllAmmunition(),
-      this.ammunitionService.getAllFactories()
-    ]).subscribe({
+    this.ammunitionService.getAllAmmunition().subscribe({
       next: (data) => {
-        this.ammunition = data[0];
-        this.ammunitionFactories = data[1];
+        this.ammunition = data;
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);
@@ -65,12 +64,5 @@ export class AdminAmmunitionListComponent implements OnInit {
     this.newAmmunitionForm = false;
   }
 
-  public addFactory(): void {
-    this.newAmmunitionFactoryForm = !this.newAmmunitionFactoryForm;
-  }
-
-  public newFactory(newFactory: AmmunitionFactoryDto): void {
-    this.newAmmunitionFactoryForm = false;
-    this.ammunitionFactories.push(newFactory);
-  }
+  protected readonly FactoryType = FactoryType;
 }

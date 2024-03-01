@@ -2,5 +2,5 @@
 /* eslint-disable */
 export interface OpticsUnitDto {
   id: number;
-  type: string;
+  label: string;
 }

@@ -25,12 +25,12 @@
     </ng-template>
     <ng-template pTemplate="body" let-setup>
       <tr>
-        <td>{{setup.weapon.caliber.caliber}}</td>
+        <td>{{setup.weapon.caliber.label}}</td>
         <td>{{ setup.weapon.factory.name }}</td>
         <td>{{ setup.weapon.model }} - {{setup.weapon.variation}}</td>
         <td>
           {{ setup.optics.name }} /
-          {{setup.optics.minZoom}}-{{setup.optics.maxZoom}}X{{setup.optics.outletDiameter.diameter}}
+          {{setup.optics.minZoom}}-{{setup.optics.maxZoom}}X{{setup.optics.outletDiameter.label}}
         </td>
         <td>{{ setup.soundReducer ? setup.soundReducer.model : 'no rds' }}</td>
         <td class="text-center">

@@ -8,11 +8,11 @@ import { RequestBuilder } from '../../request-builder';
 
 import { FactoryDto } from '../../models/factory-dto';
 
-export interface GetAllFactories$Params {
+export interface GetAllWeaponFactory$Params {
 }
 
-export function getAllFactories(http: HttpClient, rootUrl: string, params?: GetAllFactories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FactoryDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllFactories.PATH, 'get');
+export function getAllWeaponFactory(http: HttpClient, rootUrl: string, params?: GetAllWeaponFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FactoryDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllWeaponFactory.PATH, 'get');
   if (params) {
   }
 
@@ -26,4 +26,4 @@ export function getAllFactories(http: HttpClient, rootUrl: string, params?: GetA
   );
 }
 
-getAllFactories.PATH = '/api/ammunition/all/factory';
+getAllWeaponFactory.PATH = '/api/weapon/all/factory';

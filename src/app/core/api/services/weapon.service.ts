@@ -9,17 +9,17 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { FactoryDto } from '../models/factory-dto';
 import { getAllWeapon } from '../fn/weapon/get-all-weapon';
 import { GetAllWeapon$Params } from '../fn/weapon/get-all-weapon';
+import { getAllWeaponFactory } from '../fn/weapon/get-all-weapon-factory';
+import { GetAllWeaponFactory$Params } from '../fn/weapon/get-all-weapon-factory';
 import { getWeaponDataCollection } from '../fn/weapon/get-weapon-data-collection';
 import { GetWeaponDataCollection$Params } from '../fn/weapon/get-weapon-data-collection';
-import { newFactory } from '../fn/weapon/new-factory';
-import { NewFactory$Params } from '../fn/weapon/new-factory';
 import { newWeapon } from '../fn/weapon/new-weapon';
 import { NewWeapon$Params } from '../fn/weapon/new-weapon';
 import { WeaponDataCollection } from '../models/weapon-data-collection';
 import { WeaponDto } from '../models/weapon-dto';
-import { WeaponFactoryDto } from '../models/weapon-factory-dto';
 
 
 /**
@@ -56,31 +56,6 @@ export class WeaponService extends BaseService {
     );
   }
 
-  /** Path part for operation `newFactory()` */
-  static readonly NewFactoryPath = '/api/weapon/save/factory';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `newFactory()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  newFactory$Response(params: NewFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponFactoryDto>> {
-    return newFactory(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `newFactory$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  newFactory(params: NewFactory$Params, context?: HttpContext): Observable<WeaponFactoryDto> {
-    return this.newFactory$Response(params, context).pipe(
-      map((r: StrictHttpResponse<WeaponFactoryDto>): WeaponFactoryDto => r.body)
-    );
-  }
-
   /** Path part for operation `getWeaponDataCollection()` */
   static readonly GetWeaponDataCollectionPath = '/api/weapon/data-collection';
 
@@ -107,7 +82,7 @@ export class WeaponService extends BaseService {
   }
 
   /** Path part for operation `getAllWeapon()` */
-  static readonly GetAllWeaponPath = '/api/weapon/all';
+  static readonly GetAllWeaponPath = '/api/weapon/all/weapon';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -128,6 +103,31 @@ export class WeaponService extends BaseService {
   getAllWeapon(params?: GetAllWeapon$Params, context?: HttpContext): Observable<Array<WeaponDto>> {
     return this.getAllWeapon$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<WeaponDto>>): Array<WeaponDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllWeaponFactory()` */
+  static readonly GetAllWeaponFactoryPath = '/api/weapon/all/factory';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllWeaponFactory()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllWeaponFactory$Response(params?: GetAllWeaponFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FactoryDto>>> {
+    return getAllWeaponFactory(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllWeaponFactory$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllWeaponFactory(params?: GetAllWeaponFactory$Params, context?: HttpContext): Observable<Array<FactoryDto>> {
+    return this.getAllWeaponFactory$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<FactoryDto>>): Array<FactoryDto> => r.body)
     );
   }
 

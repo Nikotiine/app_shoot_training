@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import { CaliberDto } from '../models/caliber-dto';
+import { FactoryDto } from '../models/factory-dto';
 import { WeaponCategoryDto } from '../models/weapon-category-dto';
-import { WeaponFactoryDto } from '../models/weapon-factory-dto';
 import { WeaponTypeDto } from '../models/weapon-type-dto';
 export interface WeaponDto {
   active?: boolean;
@@ -11,7 +11,7 @@ export interface WeaponDto {
   caliber: CaliberDto;
   category: WeaponCategoryDto;
   createdAt?: string;
-  factory: WeaponFactoryDto;
+  factory: FactoryDto;
   heavyBarrel?: boolean;
   id: number;
   model: string;

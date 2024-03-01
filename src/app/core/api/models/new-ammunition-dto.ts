@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
-import { AmmunitionFactoryDto } from '../models/ammunition-factory-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
 import { CaliberDto } from '../models/caliber-dto';
+import { FactoryDto } from '../models/factory-dto';
 export interface NewAmmunitionDto {
   ballisticCoefficient?: number;
   caliber: CaliberDto;
-  factory: AmmunitionFactoryDto;
+  factory: FactoryDto;
   initialSpeed?: number;
   name: string;
   weight: AmmunitionWeightDto;
