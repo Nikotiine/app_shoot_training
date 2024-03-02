@@ -13,6 +13,8 @@ import { CaliberTableListComponent } from '../caliber-table-list/caliber-table-l
 import { FactoryTableListComponent } from '../factory-table-list/factory-table-list.component';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
+import { Routing } from '../../../core/app/enum/Routing.enum';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-weapons-list',
@@ -25,7 +27,8 @@ import { FactoryDto } from '../../../core/api/models/factory-dto';
     WeaponAddComponent,
     TabViewModule,
     CaliberTableListComponent,
-    FactoryTableListComponent
+    FactoryTableListComponent,
+    RouterLink
   ],
   templateUrl: './admin-weapons-list.component.html',
   styleUrl: './admin-weapons-list.component.scss'
@@ -66,4 +69,5 @@ export class AdminWeaponsListComponent implements OnInit {
   }
 
   protected readonly FactoryType = FactoryType;
+  protected readonly Routing = Routing;
 }

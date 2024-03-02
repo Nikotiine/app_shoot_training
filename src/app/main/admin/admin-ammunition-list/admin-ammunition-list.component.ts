@@ -13,6 +13,8 @@ import { TabViewModule } from 'primeng/tabview';
 import { CaliberTableListComponent } from '../caliber-table-list/caliber-table-list.component';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { FactoryTableListComponent } from '../factory-table-list/factory-table-list.component';
+import { Routing } from '../../../core/app/enum/Routing.enum';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-ammunition-list',
@@ -26,7 +28,8 @@ import { FactoryTableListComponent } from '../factory-table-list/factory-table-l
     AccordionModule,
     TabViewModule,
     CaliberTableListComponent,
-    FactoryTableListComponent
+    FactoryTableListComponent,
+    RouterLink
   ],
   templateUrl: './admin-ammunition-list.component.html',
   styleUrl: './admin-ammunition-list.component.scss'
@@ -65,4 +68,5 @@ export class AdminAmmunitionListComponent implements OnInit {
   }
 
   protected readonly FactoryType = FactoryType;
+  protected readonly Routing = Routing;
 }

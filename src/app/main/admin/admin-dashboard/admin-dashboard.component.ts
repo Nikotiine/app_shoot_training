@@ -36,6 +36,9 @@ export class AdminDashboardComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Charge les donnee a afficher sur le dashboard admin
+   */
   private loadData(): void {
     this.adminService.getDataForDashboard().subscribe({
       next: (data) => {
@@ -47,6 +50,10 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Creer les card du dashboard
+   * @param data AdminDashboardDataInformation
+   */
   private createCardViewModel(data: AdminDashboardDataInformation): void {
     this.cards = [
       {
@@ -88,6 +95,11 @@ export class AdminDashboardComponent implements OnInit {
       }
     ];
   }
+
+  /**
+   * Permet de naviquer entre les differente card
+   * @param url string
+   */
   public navigateTo(url: string): void {
     this.router.navigate([url]);
   }

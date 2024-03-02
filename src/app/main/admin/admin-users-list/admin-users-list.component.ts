@@ -11,6 +11,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { AppUserService } from '../../../core/app/services/app-user.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { RouterLink } from '@angular/router';
+import { Routing } from '../../../core/app/enum/Routing.enum';
 
 @Component({
   selector: 'app-admin-users-list',
@@ -22,7 +24,8 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
     ButtonModule,
     DialogModule,
     DropdownModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './admin-users-list.component.html',
   styleUrl: './admin-users-list.component.scss'
@@ -49,6 +52,9 @@ export class AdminUsersListComponent implements OnInit {
     this.loadUsers();
   }
 
+  /**
+   * Charge la liste des utilisateurs depuis la bade de données
+   */
   private loadUsers(): void {
     this.adminService.getAllUsers().subscribe({
       next: (users) => {
@@ -60,6 +66,11 @@ export class AdminUsersListComponent implements OnInit {
     });
   }
 
+  /**
+   * Verifie avant de changer le role que l'utilisateur courant n'est pas le meme que l'utilisateur edité
+   * Affiche la boite de dialogue si utilisateur courant != utilisateur edité
+   * @param id du profil utilisateur
+   */
   public changeRole(id: number): void {
     const user = this.getUserById(id);
     if (user.email === this.appUserService.getProfile().email) {
@@ -74,6 +85,9 @@ export class AdminUsersListComponent implements OnInit {
     }
   }
 
+  /**
+   * Soumission du formulaire pour le changmement de role de l'utilisateur
+   */
   public submitChangeRole(): void {
     if (this.selectedUser) {
       this.selectedUser.role = this.form.controls['role'].value;
@@ -97,6 +111,10 @@ export class AdminUsersListComponent implements OnInit {
     }
   }
 
+  /**
+   * Soumission du formulaire de desactivation du profil
+   * @param user UserProfileDto
+   */
   private disableUser(user: UserProfileDto): void {
     user.active = false;
     this.adminService
@@ -117,6 +135,12 @@ export class AdminUsersListComponent implements OnInit {
       });
   }
 
+  /**
+   * Verifie que l'utlisateur courant n'est pas le meme que l'utilisateur qui sera descativé
+   * Si diffent affiche une boite de dialogue pour confirmer
+   * @param event Event de ConfirmationService
+   * @param id de l utilisateur en cours de desactivation
+   */
   public confirm(event: Event, id: number): void {
     const user = this.getUserById(id);
     if (user.email === this.appUserService.getProfile().email) {
@@ -139,7 +163,15 @@ export class AdminUsersListComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * Permet de retrouve l utitisateur selectionner parmis le tableau d'utitisateurs
+   * @param id de l'utitisateur
+   * return UserProfileDto
+   */
   private getUserById(id: number): UserProfileDto {
     return <UserProfileDto>this.users.find((user) => user.id === id);
   }
+
+  protected readonly Routing = Routing;
 }
