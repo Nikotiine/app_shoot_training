@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
+import { CaliberDto } from '../models/caliber-dto';
 export interface AmmunitionWeightDto {
-  grains: number;
-  grams: number;
+  active: boolean;
+  calibers?: Array<CaliberDto>;
+  createdAt: string;
+  grains?: number;
+  grams?: number;
   id: number;
 }

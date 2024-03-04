@@ -7,6 +7,10 @@ import { TableModule } from 'primeng/table';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
+import { TabViewModule } from 'primeng/tabview';
+import { FactoryAddComponent } from '../../factory/factory-add/factory-add.component';
+import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
+import { FactoryTableListComponent } from '../../factory/factory-table-list/factory-table-list.component';
 
 @Component({
   selector: 'app-admin-optics-list',
@@ -16,7 +20,10 @@ import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component
     DatePipe,
     SharedModule,
     TableModule,
-    OpticsAddComponent
+    OpticsAddComponent,
+    TabViewModule,
+    FactoryAddComponent,
+    FactoryTableListComponent
   ],
   templateUrl: './admin-optics-list.component.html',
   styleUrl: './admin-optics-list.component.scss'
@@ -50,4 +57,6 @@ export class AdminOpticsListComponent implements OnInit {
     this.optics.push(newOptics);
     this.visible = false;
   }
+
+  protected readonly FactoryType = FactoryType;
 }

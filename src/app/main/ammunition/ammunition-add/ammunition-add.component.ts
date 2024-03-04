@@ -18,6 +18,10 @@ import { NewAmmunitionDto } from '../../../core/api/models/new-ammunition-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
+import { CaliberService } from '../../../core/api/services/caliber.service';
+import { FactoryService } from '../../../core/api/services/factory.service';
+import { forkJoin } from 'rxjs';
+import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 
 @Component({
   selector: 'app-ammunition-add',
@@ -44,7 +48,9 @@ export class AmmunitionAddComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly ammunitionService: AmmunitionService,
-    private readonly customMessageService: CustomMessageService
+    private readonly customMessageService: CustomMessageService,
+    private readonly caliberService: CaliberService,
+    private readonly factoryService: FactoryService
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -60,10 +66,15 @@ export class AmmunitionAddComponent implements OnInit {
   }
 
   private loadData(): void {
-    this.ammunitionService.getDataCollection().subscribe({
+    forkJoin([
+      this.caliberService.getAllCalibers(),
+      this.factoryService.getAllFactoryByType({
+        type: FactoryType.AMMUNITION
+      })
+    ]).subscribe({
       next: (data) => {
-        this.calibers = data.caliberList;
-        this.factories = data.factoryList;
+        this.calibers = data[0];
+        this.factories = data[1];
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);

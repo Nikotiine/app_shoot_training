@@ -1,0 +1,13 @@
+<form [formGroup]="form">
+  <div>
+    <p-dropdown
+      [options]="calibers"
+      id="calibers"
+      formControlName="caliber"
+      optionLabel="label"
+      [style]="{'width':'25%','margin-bottom':'0.3rem'}"
+      optionValue="id"
+      (onChange)="sendId($event.value)"
+      placeholder="Filtrer par calibre"></p-dropdown>
+  </div>
+</form>

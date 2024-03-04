@@ -9,9 +9,10 @@ import {
 } from '@angular/forms';
 import { FactoryService } from '../../../core/api/services/factory.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { NewFactoryDto } from '../../../core/api/models/new-factory-dto';
+
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { FactoryCreateDto } from '../../../core/api/models/factory-create-dto';
 
 @Component({
   selector: 'app-factory-add',
@@ -45,7 +46,7 @@ export class FactoryAddComponent {
   }
 
   public submit(): void {
-    const newFactory: NewFactoryDto = {
+    const newFactory: FactoryCreateDto = {
       name: this.form.controls['name'].value,
       type: this.factory
     };

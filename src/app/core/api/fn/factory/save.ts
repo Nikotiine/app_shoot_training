@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { FactoryCreateDto } from '../../models/factory-create-dto';
 import { FactoryDto } from '../../models/factory-dto';
-import { NewFactoryDto } from '../../models/new-factory-dto';
 
 export interface Save$Params {
-      body: NewFactoryDto
+      body: FactoryCreateDto
 }
 
 export function save(http: HttpClient, rootUrl: string, params: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryDto>> {

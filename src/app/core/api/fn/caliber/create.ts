@@ -6,14 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { FactoryDto } from '../../models/factory-dto';
+import { CaliberCreateDto } from '../../models/caliber-create-dto';
+import { CaliberDto } from '../../models/caliber-dto';
 
-export interface GetAllFactories$Params {
+export interface Create$Params {
+      body: CaliberCreateDto
 }
 
-export function getAllFactories(http: HttpClient, rootUrl: string, params?: GetAllFactories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FactoryDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllFactories.PATH, 'get');
+export function create(http: HttpClient, rootUrl: string, params: Create$Params, context?: HttpContext): Observable<StrictHttpResponse<CaliberDto>> {
+  const rb = new RequestBuilder(rootUrl, create.PATH, 'post');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -21,9 +24,9 @@ export function getAllFactories(http: HttpClient, rootUrl: string, params?: GetA
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<FactoryDto>>;
+      return r as StrictHttpResponse<CaliberDto>;
     })
   );
 }
 
-getAllFactories.PATH = '/api/ammunition/all/factory';
+create.PATH = '/api/caliber/save';

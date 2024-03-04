@@ -7,14 +7,20 @@
 </div>
 <div class="mt-5">
   <h2 class="text-center text-blue-500 text-2xl">Gestion des munitions</h2>
-  @if (ammunition.length > 0) {
+
   <p-tabView>
-    <p-tabPanel header="{{ammunition.length}} Munitions enregistrées">
+    <p-tabPanel header="{{totalAmmunition()}} Munitions enregistrées">
       @if (!newAmmunitionForm){
-      <p-table [value]="ammunition" [tableStyle]="{ 'min-width': '50rem' }">
+      <app-caliber-dropdown
+        [initDropdown]="currentCaliberId()"
+        (selectedCaliber)="filterByCaliber($event)"></app-caliber-dropdown>
+      <p-table
+        [value]="filteredAmmunition"
+        [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template pTemplate="header">
           <tr>
             <th>Id</th>
+            <th>Calibre</th>
             <th>Marque</th>
             <th>Model</th>
             <th>Vitesse initiale</th>
@@ -26,6 +32,7 @@
         <ng-template pTemplate="body" let-ammo>
           <tr>
             <td>{{ ammo.id }}</td>
+            <td>{{ ammo.caliber.label }}</td>
             <td>{{ ammo.factory.name }}</td>
             <td>{{ ammo.name }}</td>
             <td>{{ ammo.initialSpeed}} m/s</td>
@@ -64,7 +71,10 @@
         <app-caliber-table-list></app-caliber-table-list>
       </ng-template>
     </p-tabPanel>
+    <p-tabPanel header="Poids des munitions">
+      <ng-template pTemplate="content">
+        <app-ammunition-weight-list></app-ammunition-weight-list>
+      </ng-template>
+    </p-tabPanel>
   </p-tabView>
-
-  }
 </div>

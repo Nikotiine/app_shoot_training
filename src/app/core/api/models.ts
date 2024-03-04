@@ -2,14 +2,14 @@
 /* eslint-disable */
 export { ActivationCodeDto } from './models/activation-code-dto';
 export { AdminDashboardDataInformation } from './models/admin-dashboard-data-information';
-export { AmmunitionDataCollection } from './models/ammunition-data-collection';
 export { AmmunitionDto } from './models/ammunition-dto';
 export { AmmunitionWeightDto } from './models/ammunition-weight-dto';
+export { CaliberCreateDto } from './models/caliber-create-dto';
 export { CaliberDto } from './models/caliber-dto';
 export { CredentialsDto } from './models/credentials-dto';
+export { FactoryCreateDto } from './models/factory-create-dto';
 export { FactoryDto } from './models/factory-dto';
 export { NewAmmunitionDto } from './models/new-ammunition-dto';
-export { NewFactoryDto } from './models/new-factory-dto';
 export { NewOpticsDto } from './models/new-optics-dto';
 export { NewPasswordRequestDto } from './models/new-password-request-dto';
 export { NewUserWeaponSetupDto } from './models/new-user-weapon-setup-dto';

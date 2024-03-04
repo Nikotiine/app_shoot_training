@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { FactoryDto } from '../../models/factory-dto';
+import { AmmunitionWeightDto } from '../../models/ammunition-weight-dto';
 
-export interface GetAllWeaponFactory$Params {
+export interface GetAllWeight$Params {
 }
 
-export function getAllWeaponFactory(http: HttpClient, rootUrl: string, params?: GetAllWeaponFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FactoryDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllWeaponFactory.PATH, 'get');
+export function getAllWeight(http: HttpClient, rootUrl: string, params?: GetAllWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionWeightDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllWeight.PATH, 'get');
   if (params) {
   }
 
@@ -21,9 +21,9 @@ export function getAllWeaponFactory(http: HttpClient, rootUrl: string, params?: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<FactoryDto>>;
+      return r as StrictHttpResponse<Array<AmmunitionWeightDto>>;
     })
   );
 }
 
-getAllWeaponFactory.PATH = '/api/weapon/all/factory';
+getAllWeight.PATH = '/api/ammunition/all/weight';
