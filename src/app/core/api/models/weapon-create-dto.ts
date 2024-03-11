@@ -4,7 +4,7 @@ import { CaliberDto } from '../models/caliber-dto';
 import { FactoryDto } from '../models/factory-dto';
 import { WeaponCategoryDto } from '../models/weapon-category-dto';
 import { WeaponTypeDto } from '../models/weapon-type-dto';
-export interface NewWeaponDto {
+export interface WeaponCreateDto {
   barrelLength: number;
   barrelStripes?: number;
   caliber: CaliberDto;

@@ -31,7 +31,6 @@ export class CaliberAddComponent {
   });
 
   public submit(): void {
-    console.log('su');
     const newCaliber: CaliberCreateDto = {
       label: this.form.controls['label'].value
     };

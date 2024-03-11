@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { NewWeaponDto } from '../../models/new-weapon-dto';
+import { WeaponCreateDto } from '../../models/weapon-create-dto';
 import { WeaponDto } from '../../models/weapon-dto';
 
 export interface NewWeapon$Params {
-      body: NewWeaponDto
+      body: WeaponCreateDto
 }
 
 export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDto>> {

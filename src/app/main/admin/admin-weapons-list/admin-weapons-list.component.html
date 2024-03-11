@@ -12,7 +12,7 @@
 
       <app-caliber-dropdown
         [initDropdown]="currentCaliberId()"
-        (selectedCaliber)="filterByCaliber($event)"></app-caliber-dropdown>
+        (selectedCaliber)="filterByCaliber($event.id)"></app-caliber-dropdown>
       <p-table
         [value]="filteredWeapons"
         [tableStyle]="{ 'min-width': '50rem' }">

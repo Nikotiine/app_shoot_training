@@ -12,14 +12,13 @@ import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ButtonModule } from 'primeng/button';
-import { NewWeaponDto } from '../../../core/api/models/new-weapon-dto';
 import { WeaponCategoryDto } from '../../../core/api/models/weapon-category-dto';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
-
 import { WeaponTypeDto } from '../../../core/api/models/weapon-type-dto';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
+import { WeaponCreateDto } from '../../../core/api/models/weapon-create-dto';
 
 @Component({
   selector: 'app-weapon-add',
@@ -88,7 +87,7 @@ export class WeaponAddComponent implements OnInit {
    * en cas de success le EventEmitter envoi la reponse (WeaponDto) au template parent
    */
   public submit(): void {
-    const newWeapon: NewWeaponDto = {
+    const newWeapon: WeaponCreateDto = {
       category: this.getWeaponCategoryDto(),
       caliber: this.getCaliberDto(),
       factory: this.getWeaponFactoryDto(),

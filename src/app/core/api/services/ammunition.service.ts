@@ -19,6 +19,8 @@ import { getWeightByCaliber } from '../fn/ammunition/get-weight-by-caliber';
 import { GetWeightByCaliber$Params } from '../fn/ammunition/get-weight-by-caliber';
 import { newAmmunition } from '../fn/ammunition/new-ammunition';
 import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
+import { newWeight } from '../fn/ammunition/new-weight';
+import { NewWeight$Params } from '../fn/ammunition/new-weight';
 
 
 /**
@@ -28,6 +30,31 @@ import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
 export class AmmunitionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `newWeight()` */
+  static readonly NewWeightPath = '/api/ammunition/save/weight';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `newWeight()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newWeight$Response(params: NewWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionWeightDto>> {
+    return newWeight(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `newWeight$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  newWeight(params: NewWeight$Params, context?: HttpContext): Observable<AmmunitionWeightDto> {
+    return this.newWeight$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionWeightDto>): AmmunitionWeightDto => r.body)
+    );
   }
 
   /** Path part for operation `newAmmunition()` */

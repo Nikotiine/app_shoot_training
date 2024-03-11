@@ -1,9 +1,14 @@
 <div class="mt-2">
   <app-caliber-dropdown
     [initDropdown]="0"
-    (selectedCaliber)="loadAmmunitionWeights($event)"></app-caliber-dropdown>
+    [disable]="disableDropdown()"
+    (selectedCaliber)="loadAmmunitionWeights($event.id)"></app-caliber-dropdown>
+
   <div class="mt-5">
-    @if (weights.length > 0){
+    <h2 class="text-blue-500 text-center">
+      {{result()}} {{result() <2 ? 'resultat' : 'resultats'}}
+    </h2>
+    @if (result() > 0 && !visible){
     <p-table [value]="weights" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
@@ -34,5 +39,16 @@
       </ng-template>
     </p-table>
     }
+    <div class="mt-2 text-center">
+      <p-button
+        label="{{ visible ? 'Annuler' : 'Ajouter' }}"
+        icon="pi {{visible ? 'pi-times' : 'pi-plus'}}"
+        (onClick)="add()"></p-button>
+    </div>
+    @defer (when visible){ @if (visible){
+    <app-ammunition-weight-add
+      (newWeight)="newWeight($event)"
+      [availableWeight]="weights"></app-ammunition-weight-add>
+    } }
   </div>
 </div>

@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserWeaponSetupCreateDto } from '../../models/user-weapon-setup-create-dto';
-import { UserWeaponSetupDto } from '../../models/user-weapon-setup-dto';
+import { AmmunitionWeightCreateDto } from '../../models/ammunition-weight-create-dto';
+import { AmmunitionWeightDto } from '../../models/ammunition-weight-dto';
 
-export interface NewSetup$Params {
-      body: UserWeaponSetupCreateDto
+export interface NewWeight$Params {
+      body: AmmunitionWeightCreateDto
 }
 
-export function newSetup(http: HttpClient, rootUrl: string, params: NewSetup$Params, context?: HttpContext): Observable<StrictHttpResponse<UserWeaponSetupDto>> {
-  const rb = new RequestBuilder(rootUrl, newSetup.PATH, 'post');
+export function newWeight(http: HttpClient, rootUrl: string, params: NewWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionWeightDto>> {
+  const rb = new RequestBuilder(rootUrl, newWeight.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +24,9 @@ export function newSetup(http: HttpClient, rootUrl: string, params: NewSetup$Par
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserWeaponSetupDto>;
+      return r as StrictHttpResponse<AmmunitionWeightDto>;
     })
   );
 }
 
-newSetup.PATH = '/api/setup/new';
+newWeight.PATH = '/api/ammunition/save/weight';

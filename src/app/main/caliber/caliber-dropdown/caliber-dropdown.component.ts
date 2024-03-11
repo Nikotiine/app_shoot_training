@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal
+} from '@angular/core';
 import { CaliberService } from '../../../core/api/services/caliber.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -21,12 +28,27 @@ export class CaliberDropdownComponent {
       this.form.controls['caliber'].setValue(caliberId);
     }
   }
+  @Input() set disable(disable: boolean) {
+    disable
+      ? this.form.controls['caliber'].disable()
+      : this.form.controls['caliber'].enable();
+  }
+
+  @Input() set placeholder(placeholder: string) {
+    if (placeholder) {
+      this.customPlaceholder.set(placeholder);
+    }
+  }
   get id(): number {
     return this._id;
   }
 
-  @Output() selectedCaliber: EventEmitter<number> = new EventEmitter<number>();
+  @Output() selectedCaliber: EventEmitter<CaliberDto> =
+    new EventEmitter<CaliberDto>();
+
   private _id: number = 0;
+  public customPlaceholder = signal('Filter par calibre');
+
   private readonly caliberService: CaliberService = inject(CaliberService);
 
   // Init du formulaire.
@@ -58,6 +80,7 @@ export class CaliberDropdownComponent {
    * @param id
    */
   sendId(id: number) {
-    this.selectedCaliber.emit(id);
+    const caliber = this.calibers.find((c) => c.id === id);
+    this.selectedCaliber.emit(caliber);
   }
 }

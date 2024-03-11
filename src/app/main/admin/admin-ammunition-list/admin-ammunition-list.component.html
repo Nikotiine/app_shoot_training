@@ -11,9 +11,11 @@
   <p-tabView>
     <p-tabPanel header="{{totalAmmunition()}} Munitions enregistrées">
       @if (!newAmmunitionForm){
-      <app-caliber-dropdown
-        [initDropdown]="currentCaliberId()"
-        (selectedCaliber)="filterByCaliber($event)"></app-caliber-dropdown>
+      <div class="w-3">
+        <app-caliber-dropdown
+          [initDropdown]="currentCaliberId()"
+          (selectedCaliber)="filterByCaliber($event.id)"></app-caliber-dropdown>
+      </div>
       <p-table
         [value]="filteredAmmunition"
         [tableStyle]="{ 'min-width': '50rem' }">

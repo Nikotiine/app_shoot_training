@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { NewOpticsDto } from '../../models/new-optics-dto';
+import { OpticsCreateDto } from '../../models/optics-create-dto';
 import { OpticsDto } from '../../models/optics-dto';
 
 export interface NewOptics$Params {
-      body: NewOpticsDto
+      body: OpticsCreateDto
 }
 
 export function newOptics(http: HttpClient, rootUrl: string, params: NewOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<OpticsDto>> {

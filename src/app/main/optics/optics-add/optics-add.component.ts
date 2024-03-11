@@ -13,9 +13,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { OpticsDataCollection } from '../../../core/api/models/optics-data-collection';
-import { NewOpticsDto } from '../../../core/api/models/new-optics-dto';
 import { OpticsBodyDiameterDto } from '../../../core/api/models/optics-body-diameter-dto';
-
 import { OpticsFocalPlaneDto } from '../../../core/api/models/optics-focal-plane-dto';
 import { OpticsOutletDiameterDto } from '../../../core/api/models/optics-outlet-diameter-dto';
 import { OpticsUnitDto } from '../../../core/api/models/optics-unit-dto';
@@ -27,6 +25,7 @@ import {
   OpticsUnit
 } from '../../../core/app/model/OpticsClickValue';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
+import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
 
 @Component({
   selector: 'app-optics-add',
@@ -100,7 +99,7 @@ export class OpticsAddComponent implements OnInit {
    */
   public submit(): void {
     const opticsClickTypeId = this.form.controls['opticsClickType'].value;
-    const newOptics: NewOpticsDto = {
+    const newOptics: OpticsCreateDto = {
       bodyDiameter: this.getOpticsBodyDiameter(),
       opticsUnit: this.getOpticsUnit(opticsClickTypeId),
       factory: this.getOpticsFactory(),

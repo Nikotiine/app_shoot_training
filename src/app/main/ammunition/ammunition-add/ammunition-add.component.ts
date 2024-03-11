@@ -14,7 +14,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
-import { NewAmmunitionDto } from '../../../core/api/models/new-ammunition-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
@@ -22,6 +21,7 @@ import { CaliberService } from '../../../core/api/services/caliber.service';
 import { FactoryService } from '../../../core/api/services/factory.service';
 import { forkJoin } from 'rxjs';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
+import { AmmunitionCreateDto } from '../../../core/api/models/ammunition-create-dto';
 
 @Component({
   selector: 'app-ammunition-add',
@@ -83,7 +83,7 @@ export class AmmunitionAddComponent implements OnInit {
   }
 
   public submit(): void {
-    const newAmmunition: NewAmmunitionDto = {
+    const newAmmunition: AmmunitionCreateDto = {
       name: this.form.controls['name'].value,
       factory: this.getAmmunitionFactory(),
       weight: this.getAmmunitionWeight(),

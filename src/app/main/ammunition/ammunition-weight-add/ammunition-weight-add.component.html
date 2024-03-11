@@ -1,0 +1,49 @@
+<form [formGroup]="form">
+  <fieldset class="mt-2">
+    <legend class="text-blue-500">Ajouter un nouveau poid d'ogive</legend>
+
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label for="caliber">Choix du calibre</label>
+
+        <p-multiSelect
+          [options]="calibers"
+          id="caliber"
+          formControlName="selectedCalibers"
+          optionLabel="label"
+          [style]="{'width':'100%'}"
+          placeholder="Selectionnez"></p-multiSelect>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="weight">Poids</label>
+        <div class="flex">
+          <p-inputNumber
+            mode="decimal"
+            [maxFractionDigits]="2"
+            inputId="minmaxfraction"
+            id="weight"
+            class="w-12"
+            [style]="{'width':'100%'}"
+            formControlName="weight"></p-inputNumber>
+          <p-dropdown
+            [options]="typesOfWeight"
+            optionLabel="label"
+            class="ml-2"
+            id="typeOfWeight"
+            optionValue="label"
+            [style]="{'width':'100%'}"
+            formControlName="typeOfWeight"
+            placeholder="Choix d'un type"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <p-button
+          label="Valider"
+          class="mt-3"
+          (onClick)="submit()"
+          [disabled]="form.invalid"></p-button>
+      </div>
+    </div>
+  </fieldset>
+</form>

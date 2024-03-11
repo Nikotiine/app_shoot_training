@@ -19,11 +19,12 @@ import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { NewUserWeaponSetupDto } from '../../../core/api/models/new-user-weapon-setup-dto';
+
 import { AppUserService } from '../../../core/app/services/app-user.service';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
+import { UserWeaponSetupCreateDto } from '../../../core/api/models/user-weapon-setup-create-dto';
 
 export interface DropdownViewModel {
   id: number;
@@ -279,7 +280,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   public submit(): void {
-    const newSetup: NewUserWeaponSetupDto = {
+    const newSetup: UserWeaponSetupCreateDto = {
       weapon: this.getSelectedWeapon(),
       optics: this.getSelectedOptics(),
       slopeRail: this.form.controls['slopeRail'].value,
