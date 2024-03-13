@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { AmmunitionService } from '../../../core/api/services/ammunition.service';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -23,8 +16,7 @@ import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import {
   AmmunitionWeightService,
-  GrainsAndGrams,
-  WeightViewModel
+  GrainsAndGrams
 } from '../../../core/app/services/ammunition-weight.service';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -32,6 +24,8 @@ import { CaliberService } from '../../../core/api/services/caliber.service';
 import { AmmunitionWeightCreateDto } from '../../../core/api/models/ammunition-weight-create-dto';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { forkJoin } from 'rxjs';
+import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
 
 @Component({
   selector: 'app-ammunition-weight-add',
@@ -53,20 +47,17 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 export class AmmunitionWeightAddComponent implements OnInit {
   @Output() newWeight: EventEmitter<AmmunitionWeightDto> =
     new EventEmitter<AmmunitionWeightDto>();
-  private _weights: AmmunitionWeightDto[] = [];
-
-  @Input() set availableWeight(weights: AmmunitionWeightDto[]) {
-    this._weights = weights;
-  }
 
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
   private readonly ammunitionWeightService: AmmunitionWeightService = inject(
     AmmunitionWeightService
   );
-  private caliberService: CaliberService = inject(CaliberService);
-  private customMessageService: CustomMessageService =
+  private readonly caliberService: CaliberService = inject(CaliberService);
+  private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+
+  private _weights: AmmunitionWeightDto[] = [];
 
   public form: FormGroup = inject(FormBuilder).group({
     weight: [null, Validators.required],
@@ -77,7 +68,7 @@ export class AmmunitionWeightAddComponent implements OnInit {
   public typesOfWeight: WeightViewModel[] =
     this.ammunitionWeightService.getTypesOfWeight();
   public calibers: CaliberDto[] = [];
-  public submit() {
+  public submit(): void {
     const weight = this.form.controls['weight'].value;
     const typeOfWeight = this.form.controls['typeOfWeight'].value;
     const grainAndGram = this.ammunitionWeightService.convert(
@@ -108,13 +99,17 @@ export class AmmunitionWeightAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCalibers();
+    this.loadData();
   }
 
-  private loadCalibers() {
-    this.caliberService.getAllCalibers().subscribe({
-      next: (calibers) => {
-        this.calibers = calibers;
+  private loadData(): void {
+    forkJoin([
+      this.caliberService.getAllCalibers(),
+      this.ammunitionService.getAllWeight()
+    ]).subscribe({
+      next: (data) => {
+        this.calibers = data[0];
+        this._weights = data[1];
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);
@@ -125,13 +120,13 @@ export class AmmunitionWeightAddComponent implements OnInit {
   private verifyWeights(grainAndGram: GrainsAndGrams): boolean {
     let isExist: boolean = false;
     const grains = grainAndGram.grains;
-    console.log(this._weights);
     if (grains < 1) {
       this.customMessageService.errorMessage(
         'Nouveau poids',
         'Le poids en grain est trop leger'
       );
-      isExist = true;
+      this.form.controls['weight'].setValue(null);
+      return true;
     }
     for (const weight of this._weights) {
       if (weight.grains === grains) {
@@ -140,6 +135,7 @@ export class AmmunitionWeightAddComponent implements OnInit {
           'Ce poids existe deja'
         );
         isExist = true;
+        this.form.controls['weight'].setValue(null);
       }
     }
     return isExist;

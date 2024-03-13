@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AmmunitionWeight } from '../enum/AmmunitionWeight.enum';
-export interface WeightViewModel {
-  id: number;
-  label: string;
-}
+import { WeightViewModel } from '../model/WeightViewModel';
+import { AmmunitionWeightDto } from '../../api/models/ammunition-weight-dto';
+
 export interface GrainsAndGrams {
   grains: number;
   grams: number;
@@ -54,5 +53,19 @@ export class AmmunitionWeightService {
 
   private convertGramToGrain(gram: number) {
     return gram / 0.06479891;
+  }
+
+  /**
+   * Creer le view model pour le drop down des poids predifini suivant le calibre
+   * Afficher le poind en grains et le poids en gramme
+   * @param weights AmmunitionWeightDto[]
+   */
+  public createWeightVM(weights: AmmunitionWeightDto[]): WeightViewModel[] {
+    return weights.map((weight) => {
+      return {
+        id: weight.id,
+        label: `${weight.grains} grains - ${weight.grams?.toFixed(2)} grammes`
+      };
+    });
   }
 }

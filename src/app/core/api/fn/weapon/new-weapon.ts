@@ -29,4 +29,4 @@ export function newWeapon(http: HttpClient, rootUrl: string, params: NewWeapon$P
   );
 }
 
-newWeapon.PATH = '/api/weapon/save/weapon';
+newWeapon.PATH = '/api/weapon/save';

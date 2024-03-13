@@ -1,4 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,7 +28,7 @@ import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { WeaponCreateDto } from '../../../core/api/models/weapon-create-dto';
 
 @Component({
-  selector: 'app-weapon-add',
+  selector: 'app-weapon-form',
   standalone: true,
   imports: [
     DropdownModule,
@@ -31,34 +38,43 @@ import { WeaponCreateDto } from '../../../core/api/models/weapon-create-dto';
     InputSwitchModule,
     ButtonModule
   ],
-  templateUrl: './weapon-add.component.html',
-  styleUrl: './weapon-add.component.scss'
+  templateUrl: './weapon-form.component.html',
+  styleUrl: './weapon-form.component.scss'
 })
-export class WeaponAddComponent implements OnInit {
+export class WeaponFormComponent implements OnInit {
   @Output() weaponAdded: EventEmitter<WeaponDto> =
     new EventEmitter<WeaponDto>();
+  @Output() weaponEdited: EventEmitter<WeaponDto> =
+    new EventEmitter<WeaponDto>();
 
-  public weaponDataCollection!: WeaponDataCollection;
-  public form: FormGroup;
-  public isLoading: boolean = true;
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly weaponService: WeaponService,
-    private readonly customMessageService: CustomMessageService
-  ) {
-    this.form = this.fb.group({
-      weaponCaliber: [0, Validators.min(1)],
-      weaponCategory: [0, Validators.min(1)],
-      weaponType: [0, Validators.min(1)],
-      weaponFactory: [0],
-      weaponModel: ['', Validators.required],
-      barrelLength: [null, [Validators.required, Validators.min(1)]],
-      isHeavyBarrel: [false],
-      barrelStripes: [null],
-      newWeaponFactory: [''],
-      variation: ['']
-    });
+  private _editedWeapon!: WeaponDto;
+
+  @Input() set weaponForm(weapon: WeaponDto | null) {
+    console.log(weapon);
+    this._isEditWeapon = !!weapon;
+    if (weapon) {
+      this._editedWeapon = weapon;
+      this.autoCompleteForm(weapon);
+    }
   }
+  public weaponDataCollection!: WeaponDataCollection;
+  public form: FormGroup = inject(FormBuilder).group({
+    weaponCaliber: [0, Validators.min(1)],
+    weaponCategory: [0, Validators.min(1)],
+    weaponType: [0, Validators.min(1)],
+    weaponFactory: [0],
+    weaponModel: ['', Validators.required],
+    barrelLength: [null, [Validators.required, Validators.min(1)]],
+    isHeavyBarrel: [false],
+    barrelStripes: [null],
+    newWeaponFactory: [''],
+    variation: ['']
+  });
+  public isLoading: boolean = true;
+  private _isEditWeapon = false;
+  private readonly weaponService: WeaponService = inject(WeaponService);
+  private readonly customMessageService: CustomMessageService =
+    inject(CustomMessageService);
 
   public ngOnInit(): void {
     this.loadData();
@@ -87,7 +103,7 @@ export class WeaponAddComponent implements OnInit {
    * en cas de success le EventEmitter envoi la reponse (WeaponDto) au template parent
    */
   public submit(): void {
-    const newWeapon: WeaponCreateDto = {
+    const weapon: WeaponCreateDto = {
       category: this.getWeaponCategoryDto(),
       caliber: this.getCaliberDto(),
       factory: this.getWeaponFactoryDto(),
@@ -98,25 +114,11 @@ export class WeaponAddComponent implements OnInit {
       barrelStripes: this.form.controls['barrelStripes'].value,
       variation: this.form.controls['variation'].value.toLowerCase()
     };
-    this.weaponService
-      .newWeapon({
-        body: newWeapon
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            'Gestion des armes',
-            'Nouvelle arme ajouté'
-          );
-          this.weaponAdded.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            'Gestion des armes',
-            err.error.message
-          );
-        }
-      });
+    if (!this._isEditWeapon) {
+      this.createNewWeapon(weapon);
+    } else {
+      this.editWeapon(weapon);
+    }
   }
 
   private getWeaponCategoryDto(): WeaponCategoryDto {
@@ -153,5 +155,67 @@ export class WeaponAddComponent implements OnInit {
     return <WeaponTypeDto>(
       this.weaponDataCollection.weaponTypeList.find((type) => type.id === id)
     );
+  }
+
+  private autoCompleteForm(weapon: WeaponDto): void {
+    this.form.controls['weaponCaliber'].setValue(weapon.caliber.id);
+    this.form.controls['weaponCategory'].setValue(weapon.category.id);
+    this.form.controls['weaponType'].setValue(weapon.type.id);
+    this.form.controls['weaponFactory'].setValue(weapon.factory.id);
+    this.form.controls['weaponModel'].setValue(weapon.model);
+    this.form.controls['barrelLength'].setValue(weapon.barrelLength);
+    this.form.controls['isHeavyBarrel'].setValue(weapon.heavyBarrel);
+    this.form.controls['barrelStripes'].setValue(weapon.barrelStripes);
+    this.form.controls['variation'].setValue(weapon.variation);
+  }
+
+  private createNewWeapon(newWeapon: WeaponCreateDto) {
+    this.weaponService
+      .newWeapon({
+        body: newWeapon
+      })
+      .subscribe({
+        next: (res) => {
+          this.customMessageService.successMessage(
+            'Gestion des armes',
+            'Nouvelle arme ajoutée'
+          );
+          this.weaponAdded.emit(res);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            'Gestion des armes',
+            err.error.message
+          );
+        }
+      });
+  }
+
+  private editWeapon(weapon: WeaponCreateDto) {
+    const editWeapon: WeaponDto = {
+      ...weapon,
+      id: this._editedWeapon.id,
+      active: this._editedWeapon.active,
+      createdAt: this._editedWeapon.createdAt
+    };
+    this.weaponService
+      .editWeapon({
+        body: editWeapon
+      })
+      .subscribe({
+        next: (res) => {
+          this.customMessageService.successMessage(
+            'Gestion des armes',
+            'Arme correctement modifiée'
+          );
+          this.weaponEdited.emit(res);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            'Gestion des armes',
+            err.error.message
+          );
+        }
+      });
   }
 }

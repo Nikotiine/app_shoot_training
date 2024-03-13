@@ -43,7 +43,7 @@
       </div>
 
       @defer (when isNewWeapon){ @if (isNewWeapon){
-      <app-weapon-add (weaponAdded)="weaponAdded($event)"></app-weapon-add>
+      <app-weapon-form (weaponAdded)="weaponAdded($event)"></app-weapon-form>
       } }
     </fieldset>
 

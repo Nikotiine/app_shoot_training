@@ -22,6 +22,8 @@ import { FactoryService } from '../../../core/api/services/factory.service';
 import { forkJoin } from 'rxjs';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { AmmunitionCreateDto } from '../../../core/api/models/ammunition-create-dto';
+import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
+import { AmmunitionWeightService } from '../../../core/app/services/ammunition-weight.service';
 
 @Component({
   selector: 'app-ammunition-add',
@@ -43,14 +45,16 @@ export class AmmunitionAddComponent implements OnInit {
   public form: FormGroup;
   public calibers: CaliberDto[] = [];
   public factories: FactoryDto[] = [];
-  public weights: AmmunitionWeightDto[] = [];
+  public weights: WeightViewModel[] = [];
+  private _weights: AmmunitionWeightDto[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly ammunitionService: AmmunitionService,
     private readonly customMessageService: CustomMessageService,
     private readonly caliberService: CaliberService,
-    private readonly factoryService: FactoryService
+    private readonly factoryService: FactoryService,
+    private readonly ammunitionWeightService: AmmunitionWeightService
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -113,7 +117,8 @@ export class AmmunitionAddComponent implements OnInit {
       })
       .subscribe({
         next: (weight) => {
-          this.weights = weight;
+          this.weights = this.ammunitionWeightService.createWeightVM(weight);
+          this._weights = weight;
           this.form.controls['weight'].enable();
         },
         error: (err) => {
@@ -129,7 +134,9 @@ export class AmmunitionAddComponent implements OnInit {
 
   private getAmmunitionWeight(): AmmunitionWeightDto {
     const id = this.form.controls['weight'].value;
-    return <AmmunitionWeightDto>this.weights.find((weight) => weight.id === id);
+    return <AmmunitionWeightDto>(
+      this._weights.find((weight) => weight.id === id)
+    );
   }
 
   private getCaliber(): CaliberDto {

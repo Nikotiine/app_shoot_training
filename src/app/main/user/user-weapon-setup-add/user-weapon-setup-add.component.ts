@@ -11,7 +11,7 @@ import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { WeaponService } from '../../../core/api/services/weapon.service';
 
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { WeaponAddComponent } from '../../weapon/weapon-add/weapon-add.component';
+import { WeaponFormComponent } from '../../weapon/weapon-add/weapon-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
@@ -37,7 +37,7 @@ export interface DropdownViewModel {
     ReactiveFormsModule,
     DropdownModule,
     InputSwitchModule,
-    WeaponAddComponent,
+    WeaponFormComponent,
     OpticsAddComponent,
     ButtonModule,
     InputNumberModule

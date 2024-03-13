@@ -15,11 +15,8 @@ import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
+import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
 
-export interface WeightViewModel {
-  id: number;
-  label: string;
-}
 @Component({
   selector: 'app-joule',
   standalone: true,

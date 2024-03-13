@@ -8,12 +8,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { WeaponDto } from '../../models/weapon-dto';
 
-export interface GetAllWeapon$Params {
+export interface Disable$Params {
+      body: WeaponDto
 }
 
-export function getAllWeapon(http: HttpClient, rootUrl: string, params?: GetAllWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllWeapon.PATH, 'get');
+export function disable(http: HttpClient, rootUrl: string, params: Disable$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
+  const rb = new RequestBuilder(rootUrl, disable.PATH, 'delete');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -26,4 +28,4 @@ export function getAllWeapon(http: HttpClient, rootUrl: string, params?: GetAllW
   );
 }
 
-getAllWeapon.PATH = '/api/weapon/all';
+disable.PATH = '/api/weapon/delete';

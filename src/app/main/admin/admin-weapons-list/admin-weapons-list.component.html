@@ -24,6 +24,7 @@
             <th>Calibre</th>
             <th>Longueur du canon</th>
             <th>Ajouter le</th>
+            <th>Status</th>
             <th class="text-center">Modifier</th>
           </tr>
         </ng-template>
@@ -35,10 +36,21 @@
             <td>{{ weapon.caliber.label }}</td>
             <td>{{ weapon.barrelLength }}</td>
             <td>{{ weapon.createdAt | date:'dd MMM yyyy' }}</td>
+            <td>
+              <div class="flex align-items-center">
+                {{weapon.active? 'Active' : 'Désactivée' }}
+                <p-button
+                  icon="pi pi-ban"
+                  severity="danger"
+                  [text]="true"
+                  (onClick)="confirm($event,weapon)"></p-button>
+              </div>
+            </td>
             <td class="text-center">
               <p-button
                 label="Editer"
                 icon="pi pi-user-edit"
+                (onClick)="editWeapon(weapon)"
                 [text]="true"></p-button>
             </td>
           </tr>
@@ -51,7 +63,10 @@
           icon="pi {{newWeaponForm ? 'pi-times' : 'pi-plus'}}"
           (onClick)="add()"></p-button>
         @defer (when newWeaponForm){ @if (newWeaponForm){
-        <app-weapon-add (weaponAdded)="weaponAdded($event)"></app-weapon-add>
+        <app-weapon-form
+          (weaponAdded)="weaponAdded($event)"
+          (weaponEdited)="weaponEdited($event)"
+          [weaponForm]="weaponToEdit()"></app-weapon-form>
         } }
       </div>
     </p-tabPanel>
