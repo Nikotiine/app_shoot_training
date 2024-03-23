@@ -59,10 +59,10 @@
           icon="pi {{newOpticsForm ? 'pi-times' : 'pi-plus'}}"
           (onClick)="add()"></p-button>
         @defer (when newOpticsForm){ @if (newOpticsForm){
-        <app-optics-add
+        <app-optics-form
           (opticsAdded)="opticAdded($event)"
           (opticsEdited)="opticEdited($event)"
-          [opticForm]="opticsToEdit()"></app-optics-add>
+          [opticForm]="opticsToEdit()"></app-optics-form>
         } }
       </div>
     </p-tabPanel>

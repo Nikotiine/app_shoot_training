@@ -12,7 +12,7 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
+import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
 import { TabViewModule } from 'primeng/tabview';
 import { FactoryAddComponent } from '../../factory/factory-add/factory-add.component';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
@@ -29,7 +29,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
     DatePipe,
     SharedModule,
     TableModule,
-    OpticsAddComponent,
+    OpticsFormComponent,
     TabViewModule,
     FactoryAddComponent,
     FactoryTableListComponent,
@@ -42,9 +42,8 @@ export class AdminOpticsListComponent implements OnInit {
   private readonly opticsService: OpticsService = inject(OpticsService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly confirmationService: CustomConfirmationService = inject(
-    CustomConfirmationService
-  );
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
   public optics: OpticsDto[] = [];
   public newOpticsForm: boolean = false;
   public opticsToEdit: WritableSignal<OpticsDto | null> = signal(null);
@@ -83,7 +82,7 @@ export class AdminOpticsListComponent implements OnInit {
   }
 
   public async confirm(event: Event, optics: OpticsDto): Promise<void> {
-    const confirmed = await this.confirmationService.confirm(
+    const confirmed = await this.customConfirmationService.confirm(
       event,
       'Supprimer cette optique ?',
       this.currentPageMessageHeader

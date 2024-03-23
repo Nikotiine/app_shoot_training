@@ -17,6 +17,7 @@ import { Routing } from '../../../core/app/enum/Routing.enum';
 import { RouterLink } from '@angular/router';
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
 import { AmmunitionWeightListComponent } from '../../ammunition/ammunition-weight-list/ammunition-weight-list.component';
+import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-admin-ammunition-list',
@@ -43,8 +44,12 @@ export class AdminAmmunitionListComponent implements OnInit {
     inject(AmmunitionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
   protected readonly FactoryType = FactoryType;
   protected readonly Routing = Routing;
+  private readonly currentPageMessageHeader: string =
+    'Administration des munitions';
   private ammunition: AmmunitionDto[] = [];
   public filteredAmmunition: AmmunitionDto[] = [];
   public newAmmunitionForm: boolean = false;
@@ -62,7 +67,10 @@ export class AdminAmmunitionListComponent implements OnInit {
         this.totalAmmunition.set(data.length);
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Admin', err.error.message);
+        this.customMessageService.errorMessage(
+          this.currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
@@ -81,5 +89,35 @@ export class AdminAmmunitionListComponent implements OnInit {
       (ammo) => ammo.caliber.id === id
     );
     this.totalAmmunition.set(this.filteredAmmunition.length);
+  }
+
+  public async confirm(event: Event, ammo: AmmunitionDto): Promise<void> {
+    const confirmed = await this.customConfirmationService.confirm(
+      event,
+      'Supprimer cette munition ?',
+      this.currentPageMessageHeader
+    );
+    if (confirmed) {
+      this.disableAmmunition(ammo);
+    }
+  }
+
+  private disableAmmunition(ammo: AmmunitionDto) {
+    this.ammunitionService
+      .disableAmmunition({
+        id: ammo.id
+      })
+      .subscribe({
+        next: (res) => {
+          this.ammunition = res;
+          this.filterByCaliber(ammo.caliber.id);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
   }
 }

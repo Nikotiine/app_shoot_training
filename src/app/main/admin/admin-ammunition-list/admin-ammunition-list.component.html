@@ -27,6 +27,7 @@
             <th>Model</th>
             <th>Vitesse initiale</th>
             <th>Poids</th>
+            <th>Status</th>
             <th>Ajouté le</th>
             <th class="text-center">Modifier</th>
           </tr>
@@ -39,6 +40,16 @@
             <td>{{ ammo.name }}</td>
             <td>{{ ammo.initialSpeed}} m/s</td>
             <td>{{ ammo.weight.grains }} grains</td>
+            <td>
+              <div class="flex align-items-center">
+                {{ammo.active? 'Active' : 'Désactivée' }}
+                <p-button
+                  icon="pi pi-ban"
+                  severity="danger"
+                  [text]="true"
+                  (onClick)="confirm($event,ammo)"></p-button>
+              </div>
+            </td>
             <td>{{ ammo.createdAt | date:'dd MMM yyyy' }}</td>
             <td class="text-center">
               <p-button

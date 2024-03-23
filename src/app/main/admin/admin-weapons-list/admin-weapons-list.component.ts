@@ -12,7 +12,7 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { WeaponFormComponent } from '../../weapon/weapon-add/weapon-form.component';
+import { WeaponFormComponent } from '../../weapon/weapon-form/weapon-form.component';
 import { TabViewModule } from 'primeng/tabview';
 import { forkJoin } from 'rxjs';
 import { CaliberTableListComponent } from '../../caliber/caliber-table-list/caliber-table-list.component';

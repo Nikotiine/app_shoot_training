@@ -11,12 +11,12 @@ import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { WeaponService } from '../../../core/api/services/weapon.service';
 
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { WeaponFormComponent } from '../../weapon/weapon-add/weapon-form.component';
+import { WeaponFormComponent } from '../../weapon/weapon-form/weapon-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
 
-import { OpticsAddComponent } from '../../optics/optics-add/optics-add.component';
+import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 
@@ -38,7 +38,7 @@ export interface DropdownViewModel {
     DropdownModule,
     InputSwitchModule,
     WeaponFormComponent,
-    OpticsAddComponent,
+    OpticsFormComponent,
     ButtonModule,
     InputNumberModule
   ],

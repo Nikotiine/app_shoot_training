@@ -15,7 +15,7 @@ export interface OpticsDto {
   maxDerivation: number;
   maxElevation: number;
   maxZoom: number;
-  minParallax: number;
+  minParallax?: number;
   minZoom: number;
   name: string;
   opticsUnit: OpticsUnitDto;

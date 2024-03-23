@@ -35,7 +35,7 @@ import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
 
 @Component({
-  selector: 'app-optics-add',
+  selector: 'app-optics-form',
   standalone: true,
   imports: [
     ButtonModule,
@@ -45,10 +45,10 @@ import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
     InputTextModule,
     ReactiveFormsModule
   ],
-  templateUrl: './optics-add.component.html',
-  styleUrl: './optics-add.component.scss'
+  templateUrl: './optics-form.component.html',
+  styleUrl: './optics-form.component.scss'
 })
-export class OpticsAddComponent implements OnInit {
+export class OpticsFormComponent implements OnInit {
   // Private field
   private _editedOptic!: OpticsDto;
   // private readonly opticsUnitMil: string = 'MRAD';
@@ -139,7 +139,6 @@ export class OpticsAddComponent implements OnInit {
       valueOfOneClick: this.form.controls['opticsValueOfOneClick'].value
     };
     if (!this._isEditOptics) {
-      console.log(optics);
       this.createNewOptics(optics);
     } else {
       this.editOptic(optics);
@@ -317,14 +316,13 @@ export class OpticsAddComponent implements OnInit {
       active: this._editedOptic.active,
       createdAt: this._editedOptic.createdAt
     };
-    console.log(editOptics);
+
     this.opticsService
       .editOptics({
         body: editOptics
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.opticsEdited.emit(res);
           this.customMessageService.successMessage(
             this.currentPageMessageHeader,
@@ -332,7 +330,6 @@ export class OpticsAddComponent implements OnInit {
           );
         },
         error: (err) => {
-          console.log(err);
           this.customMessageService.errorMessage(
             this.currentPageMessageHeader,
             err.error.message

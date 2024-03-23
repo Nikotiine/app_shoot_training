@@ -11,6 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { AmmunitionDto } from '../models/ammunition-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
+import { disableAmmunition } from '../fn/ammunition/disable-ammunition';
+import { DisableAmmunition$Params } from '../fn/ammunition/disable-ammunition';
 import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
 import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
 import { getAllWeight } from '../fn/ammunition/get-all-weight';
@@ -153,6 +155,31 @@ export class AmmunitionService extends BaseService {
    */
   getAllAmmunition(params?: GetAllAmmunition$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
     return this.getAllAmmunition$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `disableAmmunition()` */
+  static readonly DisableAmmunitionPath = '/api/ammunition/delete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `disableAmmunition()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableAmmunition$Response(params: DisableAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+    return disableAmmunition(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `disableAmmunition$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableAmmunition(params: DisableAmmunition$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
+    return this.disableAmmunition$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
     );
   }
