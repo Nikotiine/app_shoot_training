@@ -6,15 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CaliberCreateDto } from '../../models/caliber-create-dto';
-import { CaliberDto } from '../../models/caliber-dto';
+import { OpticsDto } from '../../models/optics-dto';
 
-export interface Create$Params {
-      body: CaliberCreateDto
+export interface EditOptics$Params {
+      body: OpticsDto
 }
 
-export function create(http: HttpClient, rootUrl: string, params: Create$Params, context?: HttpContext): Observable<StrictHttpResponse<CaliberDto>> {
-  const rb = new RequestBuilder(rootUrl, create.PATH, 'post');
+export function editOptics(http: HttpClient, rootUrl: string, params: EditOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<OpticsDto>> {
+  const rb = new RequestBuilder(rootUrl, editOptics.PATH, 'put');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +23,9 @@ export function create(http: HttpClient, rootUrl: string, params: Create$Params,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CaliberDto>;
+      return r as StrictHttpResponse<OpticsDto>;
     })
   );
 }
 
-create.PATH = '/api/caliber/save';
+editOptics.PATH = '/api/optics/edit';

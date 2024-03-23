@@ -5,13 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { WeaponService } from './services/weapon.service';
+import { OpticsService } from './services/optics.service';
+import { FactoryService } from './services/factory.service';
+import { CaliberService } from './services/caliber.service';
 import { UserService } from './services/user.service';
 import { WeaponSetupService } from './services/weapon-setup.service';
 import { RegistrationService } from './services/registration.service';
-import { OpticsService } from './services/optics.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
-import { FactoryService } from './services/factory.service';
-import { CaliberService } from './services/caliber.service';
 import { AuthenticationService } from './services/authentication.service';
 import { AmmunitionService } from './services/ammunition.service';
 import { AdminService } from './services/admin.service';
@@ -25,13 +25,13 @@ import { AdminService } from './services/admin.service';
   declarations: [],
   providers: [
     WeaponService,
+    OpticsService,
+    FactoryService,
+    CaliberService,
     UserService,
     WeaponSetupService,
     RegistrationService,
-    OpticsService,
     ForgotPasswordService,
-    FactoryService,
-    CaliberService,
     AuthenticationService,
     AmmunitionService,
     AdminService,

@@ -280,33 +280,36 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   public submit(): void {
-    const newSetup: UserWeaponSetupCreateDto = {
-      weapon: this.getSelectedWeapon(),
-      optics: this.getSelectedOptics(),
-      slopeRail: this.form.controls['slopeRail'].value,
-      soundReducer: undefined,
-      user: this.appUserService.getProfile()
-    };
+    const user = this.appUserService.getProfile();
+    if (user) {
+      const newSetup: UserWeaponSetupCreateDto = {
+        weapon: this.getSelectedWeapon(),
+        optics: this.getSelectedOptics(),
+        slopeRail: this.form.controls['slopeRail'].value,
+        soundReducer: undefined,
+        user: user
+      };
 
-    this.weaponSetupService
-      .newSetup({
-        body: newSetup
-      })
-      .subscribe({
-        next: (res) => {
-          this.setupAdded.emit(res);
-          this.customMessageService.successMessage(
-            'Setup service',
-            'Nouveau setup enregistrer'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            'Setup service',
-            err.error.message
-          );
-        }
-      });
+      this.weaponSetupService
+        .newSetup({
+          body: newSetup
+        })
+        .subscribe({
+          next: (res) => {
+            this.setupAdded.emit(res);
+            this.customMessageService.successMessage(
+              'Setup service',
+              'Nouveau setup enregistrer'
+            );
+          },
+          error: (err) => {
+            this.customMessageService.errorMessage(
+              'Setup service',
+              err.error.message
+            );
+          }
+        });
+    }
   }
 
   private getSelectedWeapon(): WeaponDto {

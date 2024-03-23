@@ -42,21 +42,14 @@ import { WeaponCreateDto } from '../../../core/api/models/weapon-create-dto';
   styleUrl: './weapon-form.component.scss'
 })
 export class WeaponFormComponent implements OnInit {
-  @Output() weaponAdded: EventEmitter<WeaponDto> =
-    new EventEmitter<WeaponDto>();
-  @Output() weaponEdited: EventEmitter<WeaponDto> =
-    new EventEmitter<WeaponDto>();
-
+  // Private field
   private _editedWeapon!: WeaponDto;
-
-  @Input() set weaponForm(weapon: WeaponDto | null) {
-    console.log(weapon);
-    this._isEditWeapon = !!weapon;
-    if (weapon) {
-      this._editedWeapon = weapon;
-      this.autoCompleteForm(weapon);
-    }
-  }
+  private _isEditWeapon = false;
+  private readonly weaponService: WeaponService = inject(WeaponService);
+  private readonly customMessageService: CustomMessageService =
+    inject(CustomMessageService);
+  private readonly currentPageMessageHeader: string = 'Gestion des armes';
+  // Public field
   public weaponDataCollection!: WeaponDataCollection;
   public form: FormGroup = inject(FormBuilder).group({
     weaponCaliber: [0, Validators.min(1)],
@@ -71,10 +64,18 @@ export class WeaponFormComponent implements OnInit {
     variation: ['']
   });
   public isLoading: boolean = true;
-  private _isEditWeapon = false;
-  private readonly weaponService: WeaponService = inject(WeaponService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
+
+  @Output() weaponAdded: EventEmitter<WeaponDto> =
+    new EventEmitter<WeaponDto>();
+  @Output() weaponEdited: EventEmitter<WeaponDto> =
+    new EventEmitter<WeaponDto>();
+  @Input() set weaponForm(weapon: WeaponDto | null) {
+    this._isEditWeapon = !!weapon;
+    if (weapon) {
+      this._editedWeapon = weapon;
+      this.autoCompleteForm(weapon);
+    }
+  }
 
   public ngOnInit(): void {
     this.loadData();
@@ -91,7 +92,7 @@ export class WeaponFormComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          'Gestion des armes',
+          this.currentPageMessageHeader,
           err.error.message
         );
       }
@@ -177,14 +178,14 @@ export class WeaponFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            'Gestion des armes',
+            this.currentPageMessageHeader,
             'Nouvelle arme ajoutée'
           );
           this.weaponAdded.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            'Gestion des armes',
+            this.currentPageMessageHeader,
             err.error.message
           );
         }
@@ -205,14 +206,14 @@ export class WeaponFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            'Gestion des armes',
+            this.currentPageMessageHeader,
             'Arme correctement modifiée'
           );
           this.weaponEdited.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            'Gestion des armes',
+            this.currentPageMessageHeader,
             err.error.message
           );
         }

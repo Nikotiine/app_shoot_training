@@ -64,31 +64,6 @@ export class AdminService extends BaseService {
     );
   }
 
-  /** Path part for operation `disableUser()` */
-  static readonly DisableUserPath = '/api/admin/user/disable-profile';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `disableUser()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  disableUser$Response(params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-    return disableUser(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `disableUser$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  disableUser(params: DisableUser$Params, context?: HttpContext): Observable<Array<UserProfileDto>> {
-    return this.disableUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<UserProfileDto>>): Array<UserProfileDto> => r.body)
-    );
-  }
-
   /** Path part for operation `getAllWeapons()` */
   static readonly GetAllWeaponsPath = '/api/admin/weapons/all';
 
@@ -211,6 +186,31 @@ export class AdminService extends BaseService {
   getAllAmmunition1(params?: GetAllAmmunition1$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
     return this.getAllAmmunition1$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `disableUser()` */
+  static readonly DisableUserPath = '/api/admin/user/disable';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `disableUser()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableUser$Response(params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+    return disableUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `disableUser$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableUser(params: DisableUser$Params, context?: HttpContext): Observable<Array<UserProfileDto>> {
+    return this.disableUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserProfileDto>>): Array<UserProfileDto> => r.body)
     );
   }
 

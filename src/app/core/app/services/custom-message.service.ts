@@ -22,4 +22,12 @@ export class CustomMessageService {
       detail: detail
     });
   }
+
+  public warningMessage(summary: string, detail: string): void {
+    this.messageService.add({
+      severity: 'warn',
+      summary: summary,
+      detail: detail
+    });
+  }
 }

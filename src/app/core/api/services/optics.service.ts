@@ -9,6 +9,10 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { disableOptics } from '../fn/optics/disable-optics';
+import { DisableOptics$Params } from '../fn/optics/disable-optics';
+import { editOptics } from '../fn/optics/edit-optics';
+import { EditOptics$Params } from '../fn/optics/edit-optics';
 import { getAllOptics } from '../fn/optics/get-all-optics';
 import { GetAllOptics$Params } from '../fn/optics/get-all-optics';
 import { getOpticsDataCollection } from '../fn/optics/get-optics-data-collection';
@@ -28,8 +32,33 @@ export class OpticsService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `editOptics()` */
+  static readonly EditOpticsPath = '/api/optics/edit';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `editOptics()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editOptics$Response(params: EditOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<OpticsDto>> {
+    return editOptics(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `editOptics$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editOptics(params: EditOptics$Params, context?: HttpContext): Observable<OpticsDto> {
+    return this.editOptics$Response(params, context).pipe(
+      map((r: StrictHttpResponse<OpticsDto>): OpticsDto => r.body)
+    );
+  }
+
   /** Path part for operation `newOptics()` */
-  static readonly NewOpticsPath = '/api/optics/save/optics';
+  static readonly NewOpticsPath = '/api/optics/save';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -99,6 +128,31 @@ export class OpticsService extends BaseService {
    */
   getAllOptics(params?: GetAllOptics$Params, context?: HttpContext): Observable<Array<OpticsDto>> {
     return this.getAllOptics$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsDto>>): Array<OpticsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `disableOptics()` */
+  static readonly DisableOpticsPath = '/api/optics/delete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `disableOptics()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableOptics$Response(params: DisableOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsDto>>> {
+    return disableOptics(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `disableOptics$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableOptics(params: DisableOptics$Params, context?: HttpContext): Observable<Array<OpticsDto>> {
+    return this.disableOptics$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<OpticsDto>>): Array<OpticsDto> => r.body)
     );
   }

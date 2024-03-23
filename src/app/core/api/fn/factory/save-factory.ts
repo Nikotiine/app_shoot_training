@@ -6,16 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserProfileDto } from '../../models/user-profile-dto';
+import { FactoryCreateDto } from '../../models/factory-create-dto';
+import { FactoryDto } from '../../models/factory-dto';
 
-export interface DisableUser$Params {
-  id: number;
+export interface SaveFactory$Params {
+      body: FactoryCreateDto
 }
 
-export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'delete');
+export function saveFactory(http: HttpClient, rootUrl: string, params: SaveFactory$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryDto>> {
+  const rb = new RequestBuilder(rootUrl, saveFactory.PATH, 'post');
   if (params) {
-    rb.query('id', params.id, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -23,9 +24,9 @@ export function disableUser(http: HttpClient, rootUrl: string, params: DisableUs
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<UserProfileDto>>;
+      return r as StrictHttpResponse<FactoryDto>;
     })
   );
 }
 
-disableUser.PATH = '/api/admin/user/disable';
+saveFactory.PATH = '/api/factory/save';

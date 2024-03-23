@@ -51,7 +51,7 @@ export class FactoryAddComponent {
       type: this.factory
     };
     this.factoryService
-      .save({
+      .saveFactory({
         body: newFactory
       })
       .subscribe({

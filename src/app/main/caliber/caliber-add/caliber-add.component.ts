@@ -35,7 +35,7 @@ export class CaliberAddComponent {
       label: this.form.controls['label'].value
     };
     this.caliberService
-      .create({
+      .saveCaliber({
         body: newCaliber
       })
       .subscribe({
@@ -47,7 +47,6 @@ export class CaliberAddComponent {
           this.caliberAdded.emit(res);
         },
         error: (err) => {
-          console.log(err);
           this.customMessageService.errorMessage('Calibre', err.error.message);
         }
       });

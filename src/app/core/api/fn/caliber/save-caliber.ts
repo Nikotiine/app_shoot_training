@@ -6,14 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { WeaponDto } from '../../models/weapon-dto';
+import { CaliberCreateDto } from '../../models/caliber-create-dto';
+import { CaliberDto } from '../../models/caliber-dto';
 
-export interface Disable$Params {
-      body: WeaponDto
+export interface SaveCaliber$Params {
+      body: CaliberCreateDto
 }
 
-export function disable(http: HttpClient, rootUrl: string, params: Disable$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
-  const rb = new RequestBuilder(rootUrl, disable.PATH, 'delete');
+export function saveCaliber(http: HttpClient, rootUrl: string, params: SaveCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<CaliberDto>> {
+  const rb = new RequestBuilder(rootUrl, saveCaliber.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -23,9 +24,9 @@ export function disable(http: HttpClient, rootUrl: string, params: Disable$Param
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<WeaponDto>>;
+      return r as StrictHttpResponse<CaliberDto>;
     })
   );
 }
 
-disable.PATH = '/api/weapon/delete';
+saveCaliber.PATH = '/api/caliber/save';

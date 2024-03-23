@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserProfileDto } from '../../models/user-profile-dto';
+import { OpticsDto } from '../../models/optics-dto';
 
-export interface DisableUser$Params {
+export interface DisableOptics$Params {
   id: number;
 }
 
-export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'delete');
+export function disableOptics(http: HttpClient, rootUrl: string, params: DisableOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableOptics.PATH, 'delete');
   if (params) {
     rb.query('id', params.id, {});
   }
@@ -23,9 +23,9 @@ export function disableUser(http: HttpClient, rootUrl: string, params: DisableUs
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<UserProfileDto>>;
+      return r as StrictHttpResponse<Array<OpticsDto>>;
     })
   );
 }
 
-disableUser.PATH = '/api/admin/user/disable';
+disableOptics.PATH = '/api/optics/delete';

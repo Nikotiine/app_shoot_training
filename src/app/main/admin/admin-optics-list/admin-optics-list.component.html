@@ -8,7 +8,7 @@
 <div class="mt-5">
   <p-tabView>
     <p-tabPanel header="Optiques">
-      @if (!visible){
+      @if (!newOpticsForm){
       <p-table [value]="optics" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template pTemplate="header">
           <tr>
@@ -17,6 +17,7 @@
             <th>Caracteristique</th>
             <th>Type de graduation</th>
             <th>Ajouter le</th>
+            <th>Status</th>
             <th class="text-center">Modifier</th>
           </tr>
         </ng-template>
@@ -30,9 +31,20 @@
             </td>
             <td>{{optic.opticsUnit.label}}</td>
             <td>{{ optic.createdAt | date:'dd MMM yyyy' }}</td>
+            <td>
+              <div class="flex align-items-center">
+                {{optic.active? 'Active' : 'Désactivée' }}
+                <p-button
+                  icon="pi pi-ban"
+                  severity="danger"
+                  [text]="true"
+                  (onClick)="confirm($event,optic)"></p-button>
+              </div>
+            </td>
             <td class="text-center">
               <p-button
                 label="Editer"
+                (onClick)="edit(optic)"
                 icon="pi pi-user-edit"
                 [text]="true"></p-button>
             </td>
@@ -43,11 +55,14 @@
 
       <div class="mt-2 text-center">
         <p-button
-          label="{{ visible ? 'Annuler' : 'Ajouter' }}"
-          icon="pi {{visible ? 'pi-times' : 'pi-plus'}}"
+          label="{{ newOpticsForm ? 'Annuler' : 'Ajouter' }}"
+          icon="pi {{newOpticsForm ? 'pi-times' : 'pi-plus'}}"
           (onClick)="add()"></p-button>
-        @defer (when visible){ @if (visible){
-        <app-optics-add (opticsAdded)="opticAdded($event)"></app-optics-add>
+        @defer (when newOpticsForm){ @if (newOpticsForm){
+        <app-optics-add
+          (opticsAdded)="opticAdded($event)"
+          (opticsEdited)="opticEdited($event)"
+          [opticForm]="opticsToEdit()"></app-optics-add>
         } }
       </div>
     </p-tabPanel>

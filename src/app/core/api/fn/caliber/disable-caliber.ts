@@ -6,17 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { FactoryCreateDto } from '../../models/factory-create-dto';
-import { FactoryDto } from '../../models/factory-dto';
+import { CaliberDto } from '../../models/caliber-dto';
 
-export interface Save$Params {
-      body: FactoryCreateDto
+export interface DisableCaliber$Params {
+  id: number;
 }
 
-export function save(http: HttpClient, rootUrl: string, params: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryDto>> {
-  const rb = new RequestBuilder(rootUrl, save.PATH, 'post');
+export function disableCaliber(http: HttpClient, rootUrl: string, params: DisableCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CaliberDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableCaliber.PATH, 'delete');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.query('id', params.id, {});
   }
 
   return http.request(
@@ -24,9 +23,9 @@ export function save(http: HttpClient, rootUrl: string, params: Save$Params, con
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<FactoryDto>;
+      return r as StrictHttpResponse<Array<CaliberDto>>;
     })
   );
 }
 
-save.PATH = '/api/factory/save';
+disableCaliber.PATH = '/api/caliber/delete';

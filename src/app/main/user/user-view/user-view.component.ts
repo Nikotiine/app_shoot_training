@@ -19,7 +19,10 @@ export class UserViewComponent implements OnInit {
   public shooterProfile!: UserProfileDto;
   public isEdit: boolean = false;
   ngOnInit(): void {
-    this.shooterProfile = this.userService.getProfile();
+    const user = this.userService.getProfile();
+    if (user) {
+      this.shooterProfile = user;
+    }
   }
 
   public editProfile(): void {

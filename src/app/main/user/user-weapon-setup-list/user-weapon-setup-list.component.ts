@@ -31,9 +31,9 @@ export class UserWeaponSetupListComponent implements OnInit {
     inject(CustomMessageService);
 
   public ngOnInit(): void {
-    const userId = this.appUserService.getProfile().id;
-    if (userId) {
-      this.loadData(userId);
+    const user = this.appUserService.getProfile();
+    if (user) {
+      this.loadData(user.id);
     }
   }
 

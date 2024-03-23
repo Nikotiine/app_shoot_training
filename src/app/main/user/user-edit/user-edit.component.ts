@@ -38,7 +38,7 @@ export class UserEditComponent {
   public form: FormGroup;
   constructor(
     private readonly fb: FormBuilder,
-    private readonly shooterService: UserService,
+    private readonly userService: UserService,
     private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
@@ -54,7 +54,10 @@ export class UserEditComponent {
     const editProfile: UserEditDto = {
       firstName: this.form.controls['firstName'].value,
       lastName: this.form.controls['lastName'].value,
-      email: this.profile.email
+      email: this.profile.email,
+      createdAt: this.profile.createdAt,
+      id: this.profile.id,
+      active: this.profile.active
     };
     const oldPassword = this.form.controls['oldPassword'].value;
     if (oldPassword) {
@@ -65,7 +68,7 @@ export class UserEditComponent {
       }
     }
 
-    this.shooterService
+    this.userService
       .edit({
         body: editProfile
       })

@@ -1,4 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
@@ -13,6 +19,7 @@ import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { FactoryTableListComponent } from '../../factory/factory-table-list/factory-table-list.component';
 import { Routing } from '../../../core/app/enum/Routing.enum';
 import { RouterLink } from '@angular/router';
+import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-admin-optics-list',
@@ -35,8 +42,16 @@ export class AdminOpticsListComponent implements OnInit {
   private readonly opticsService: OpticsService = inject(OpticsService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly confirmationService: CustomConfirmationService = inject(
+    CustomConfirmationService
+  );
   public optics: OpticsDto[] = [];
-  public visible: boolean = false;
+  public newOpticsForm: boolean = false;
+  public opticsToEdit: WritableSignal<OpticsDto | null> = signal(null);
+  protected readonly FactoryType = FactoryType;
+  protected readonly Routing = Routing;
+  private readonly currentPageMessageHeader: string =
+    'Administration des optiques';
   public ngOnInit(): void {
     this.loadOptics();
   }
@@ -47,20 +62,65 @@ export class AdminOpticsListComponent implements OnInit {
         this.optics = optics;
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Admin', err.error.message);
+        this.customMessageService.errorMessage(
+          this.currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
 
   public add(): void {
-    this.visible = !this.visible;
+    if (this.newOpticsForm) {
+      this.opticsToEdit.set(null);
+    }
+    this.newOpticsForm = !this.newOpticsForm;
   }
 
   public opticAdded(newOptics: OpticsDto): void {
     this.optics.push(newOptics);
-    this.visible = false;
+    this.newOpticsForm = false;
   }
 
-  protected readonly FactoryType = FactoryType;
-  protected readonly Routing = Routing;
+  public async confirm(event: Event, optics: OpticsDto): Promise<void> {
+    const confirmed = await this.confirmationService.confirm(
+      event,
+      'Supprimer cette optique ?',
+      this.currentPageMessageHeader
+    );
+    if (confirmed) {
+      this.disable(optics.id);
+    }
+  }
+
+  private disable(id: number): void {
+    this.opticsService
+      .disableOptics({
+        id: id
+      })
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
+  }
+
+  public edit(optic: OpticsDto): void {
+    this.opticsToEdit.set(optic);
+    this.newOpticsForm = !this.newOpticsForm;
+  }
+
+  public opticEdited(optics: OpticsDto): void {
+    const index = this.optics.findIndex((o) => o.id === optics.id);
+    this.optics.splice(index, 1);
+    this.optics.push(optics);
+    this.newOpticsForm = !this.newOpticsForm;
+    this.opticsToEdit.set(null);
+  }
 }

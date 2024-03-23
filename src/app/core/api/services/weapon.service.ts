@@ -9,8 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { disable } from '../fn/weapon/disable';
-import { Disable$Params } from '../fn/weapon/disable';
+import { disableWeapon } from '../fn/weapon/disable-weapon';
+import { DisableWeapon$Params } from '../fn/weapon/disable-weapon';
 import { editWeapon } from '../fn/weapon/edit-weapon';
 import { EditWeapon$Params } from '../fn/weapon/edit-weapon';
 import { getActiveAllWeapon } from '../fn/weapon/get-active-all-weapon';
@@ -159,27 +159,27 @@ export class WeaponService extends BaseService {
     );
   }
 
-  /** Path part for operation `disable()` */
-  static readonly DisablePath = '/api/weapon/delete';
+  /** Path part for operation `disableWeapon()` */
+  static readonly DisableWeaponPath = '/api/weapon/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `disable()` instead.
+   * To access only the response body, use `disableWeapon()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  disable$Response(params: Disable$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
-    return disable(this.http, this.rootUrl, params, context);
+  disableWeapon$Response(params: DisableWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
+    return disableWeapon(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `disable$Response()` instead.
+   * To access the full response (for headers, for example), `disableWeapon$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  disable(params: Disable$Params, context?: HttpContext): Observable<Array<WeaponDto>> {
-    return this.disable$Response(params, context).pipe(
+  disableWeapon(params: DisableWeapon$Params, context?: HttpContext): Observable<Array<WeaponDto>> {
+    return this.disableWeapon$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<WeaponDto>>): Array<WeaponDto> => r.body)
     );
   }

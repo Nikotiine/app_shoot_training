@@ -6,16 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserProfileDto } from '../../models/user-profile-dto';
+import { CaliberDto } from '../../models/caliber-dto';
 
-export interface DisableUser$Params {
-  id: number;
+export interface EditCaliber$Params {
+      body: CaliberDto
 }
 
-export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'delete');
+export function editCaliber(http: HttpClient, rootUrl: string, params: EditCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<CaliberDto>> {
+  const rb = new RequestBuilder(rootUrl, editCaliber.PATH, 'put');
   if (params) {
-    rb.query('id', params.id, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -23,9 +23,9 @@ export function disableUser(http: HttpClient, rootUrl: string, params: DisableUs
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<UserProfileDto>>;
+      return r as StrictHttpResponse<CaliberDto>;
     })
   );
 }
 
-disableUser.PATH = '/api/admin/user/disable';
+editCaliber.PATH = '/api/caliber/edit';

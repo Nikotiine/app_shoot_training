@@ -8,7 +8,7 @@ import {
 import { WeaponService } from '../../../core/api/services/weapon.service';
 import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
-import { ConfirmationService, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
@@ -25,6 +25,7 @@ import { FactoryService } from '../../../core/api/services/factory.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
+import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-admin-weapons-list',
@@ -52,17 +53,18 @@ export class AdminWeaponsListComponent implements OnInit {
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly factoryService: FactoryService = inject(FactoryService);
-  private readonly confirmationService: ConfirmationService =
-    inject(ConfirmationService);
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
+  private readonly currentPageMessageHeader: string =
+    'Administration des armes';
   protected readonly FactoryType = FactoryType;
   protected readonly Routing = Routing;
   public weapons: WeaponDto[] = [];
   public filteredWeapons: WeaponDto[] = [];
   public newWeaponForm: boolean = false;
   public factories: FactoryDto[] = [];
-  private _weapon!: WeaponDto;
   public currentCaliberId = signal(0);
-  public weaponToEdit: WritableSignal<WeaponDto | null> = signal(this._weapon);
+  public weaponToEdit: WritableSignal<WeaponDto | null> = signal(null);
 
   ngOnInit(): void {
     this.loadData();
@@ -81,11 +83,13 @@ export class AdminWeaponsListComponent implements OnInit {
       next: (data) => {
         this.weapons = data[0];
         this.filteredWeapons = data[0];
-
         this.factories = data[1];
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Admin', err.error.message);
+        this.customMessageService.errorMessage(
+          this.currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
@@ -128,38 +132,39 @@ export class AdminWeaponsListComponent implements OnInit {
    * @param event Event
    * @param weapon WeaponDto
    */
-  public confirm(event: Event, weapon: WeaponDto) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Supprimer cette arme ?',
-      header: 'Administration',
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: 'none',
-      rejectIcon: 'none',
-      rejectButtonStyleClass: 'p-button-text',
-      accept: () => {
-        this.disableWeapon(weapon);
-      }
-    });
+  public async confirm(event: Event, weapon: WeaponDto): Promise<void> {
+    const confirmed = await this.customConfirmationService.confirm(
+      event,
+      'Supprimer cette arme ?',
+      this.currentPageMessageHeader
+    );
+    if (confirmed) {
+      this.disableWeapon(weapon.id);
+    }
   }
 
   /**
    * Dective l'arme en base de donnée
-   * @param weapon WeaponDto
+   * @param id
    */
-  private disableWeapon(weapon: WeaponDto): void {
-    weapon.active = false;
+  private disableWeapon(id: number): void {
     this.weaponService
-      .disable({
-        body: weapon
+      .disableWeapon({
+        id: id
       })
       .subscribe({
         next: (res) => {
           this.weapons = res;
-          this.customMessageService.successMessage('Admin', 'Arme desactivé');
+          this.customMessageService.successMessage(
+            this.currentPageMessageHeader,
+            'Arme desactivée'
+          );
         },
         error: (err) => {
-          this.customMessageService.errorMessage('Admin', err.error.message);
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
         }
       });
   }

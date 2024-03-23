@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserProfileDto } from '../../models/user-profile-dto';
+import { WeaponDto } from '../../models/weapon-dto';
 
-export interface DisableUser$Params {
+export interface DisableWeapon$Params {
   id: number;
 }
 
-export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'delete');
+export function disableWeapon(http: HttpClient, rootUrl: string, params: DisableWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableWeapon.PATH, 'delete');
   if (params) {
     rb.query('id', params.id, {});
   }
@@ -23,9 +23,9 @@ export function disableUser(http: HttpClient, rootUrl: string, params: DisableUs
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<UserProfileDto>>;
+      return r as StrictHttpResponse<Array<WeaponDto>>;
     })
   );
 }
 
-disableUser.PATH = '/api/admin/user/disable';
+disableWeapon.PATH = '/api/weapon/delete';

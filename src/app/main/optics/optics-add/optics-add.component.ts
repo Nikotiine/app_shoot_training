@@ -1,4 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import {
   FormBuilder,
@@ -42,53 +49,70 @@ import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
   styleUrl: './optics-add.component.scss'
 })
 export class OpticsAddComponent implements OnInit {
+  // Private field
+  private _editedOptic!: OpticsDto;
+  // private readonly opticsUnitMil: string = 'MRAD';
+  private readonly currentPageMessageHeader: string = 'Gestion des optiques';
+  private _isEditOptics: boolean = false;
+  private readonly opticsService: OpticsService = inject(OpticsService);
+  private readonly customMessageService: CustomMessageService =
+    inject(CustomMessageService);
+
+  // Public field
+  public opticsDataCollection!: OpticsDataCollection;
+  public opticsClickValues: OpticsClickValueInterface[] =
+    OpticsClickValue.getClickValuesMoa();
+  public form: FormGroup = inject(FormBuilder).group({
+    opticsFactory: [0, Validators.required],
+    opticsFocalPlan: [0, Validators.required],
+    opticsClickType: [2, Validators.required],
+    opticsBodyDiameter: [0, Validators.required],
+    opticsOutletDiameter: [0, Validators.required],
+    name: ['', Validators.required],
+    opticsMinZoom: [null, Validators.required],
+    opticsMaxZoom: [null],
+    opticsMaxDerivation: [null],
+    maxDerivationUnit: [2],
+    opticsMaxElevation: [null],
+    maxElevationUnit: [2],
+    opticsMinParallax: [null],
+    opticsValueOfOneClick: new FormControl(
+      { value: 0, disabled: false },
+      Validators.required
+    ),
+    isParallax: [false]
+  });
+
   @Output() opticsAdded: EventEmitter<OpticsDto> =
     new EventEmitter<OpticsDto>();
+  @Output() opticsEdited: EventEmitter<OpticsDto> =
+    new EventEmitter<OpticsDto>();
 
-  public form: FormGroup;
-  public opticsDataCollection!: OpticsDataCollection;
-  private readonly opticsUnitMil: string = 'MRAD';
-  public opticsClickValues: OpticsClickValueInterface[] = [];
-
-  constructor(
-    private readonly OpticsService: OpticsService,
-    private fb: FormBuilder,
-    private readonly customMessageService: CustomMessageService
-  ) {
-    this.form = this.fb.group({
-      opticsFactory: [0, Validators.required],
-      opticsFocalPlan: [0, Validators.required],
-      opticsClickType: [2, Validators.required],
-      opticsBodyDiameter: [0, Validators.required],
-      opticsOutletDiameter: [0, Validators.required],
-      name: ['', Validators.required],
-      opticsMinZoom: [null, Validators.required],
-      opticsMaxZoom: [null],
-      opticsMaxDerivation: [null],
-      maxDerivationUnit: [2],
-      opticsMaxElevation: [null],
-      maxElevationUnit: [2],
-      opticsMinParallax: [null],
-      opticsValueOfOneClick: new FormControl(
-        { value: 0, disabled: false },
-        Validators.required
-      ),
-      isParallax: [false]
-    });
-    this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
+  @Input() set opticForm(optic: OpticsDto | null) {
+    this._isEditOptics = !!optic;
+    if (optic) {
+      this._editedOptic = optic;
+      this.autoCompleteForm(optic);
+    }
   }
 
   public ngOnInit(): void {
     this.loadDataCollection();
   }
 
+  /**
+   * Charge les donnée necessaires pour remplir le formulaire
+   */
   private loadDataCollection(): void {
-    this.OpticsService.getOpticsDataCollection().subscribe({
+    this.opticsService.getOpticsDataCollection().subscribe({
       next: (data) => {
         this.opticsDataCollection = data;
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Optique', err.error.message);
+        this.customMessageService.errorMessage(
+          this.currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
@@ -99,7 +123,7 @@ export class OpticsAddComponent implements OnInit {
    */
   public submit(): void {
     const opticsClickTypeId = this.form.controls['opticsClickType'].value;
-    const newOptics: OpticsCreateDto = {
+    const optics: OpticsCreateDto = {
       bodyDiameter: this.getOpticsBodyDiameter(),
       opticsUnit: this.getOpticsUnit(opticsClickTypeId),
       factory: this.getOpticsFactory(),
@@ -114,22 +138,17 @@ export class OpticsAddComponent implements OnInit {
       parallax: this.form.controls['isParallax'].value,
       valueOfOneClick: this.form.controls['opticsValueOfOneClick'].value
     };
-    this.OpticsService.newOptics({
-      body: newOptics
-    }).subscribe({
-      next: (res) => {
-        this.customMessageService.successMessage(
-          'Gestion des optiques',
-          'Nouvelle optique ajoutée'
-        );
-        this.opticsAdded.emit(res);
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage('Optique', err.error.message);
-      }
-    });
+    if (!this._isEditOptics) {
+      console.log(optics);
+      this.createNewOptics(optics);
+    } else {
+      this.editOptic(optics);
+    }
   }
 
+  /**
+   * Routourne l'objet OpticsBodyDiameterDto en fonction de la valaur selection dans le dropdown
+   */
   private getOpticsBodyDiameter(): OpticsBodyDiameterDto {
     const id = this.form.controls['opticsBodyDiameter'].value;
     return <OpticsBodyDiameterDto>(
@@ -139,6 +158,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
+  /**
+   * Routourne l'objet OpticsUnitDto en fonction de la valaur selection dans le dropdown
+   */
   private getOpticsUnit(id: number): OpticsUnitDto {
     return <OpticsUnitDto>(
       this.opticsDataCollection.opticsUnitList.find(
@@ -147,6 +169,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
+  /**
+   * Routourne l'objet FactoryDto en fonction de la valaur selection dans le dropdown
+   */
   private getOpticsFactory(): FactoryDto {
     const id = this.form.controls['opticsFactory'].value;
     return <FactoryDto>(
@@ -156,6 +181,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
+  /**
+   * Routourne l'objet OpticsFocalPlaneDto en fonction de la valaur selection dans le dropdown
+   */
   private getFocalPlane(): OpticsFocalPlaneDto {
     const id = this.form.controls['opticsFocalPlan'].value;
     return <OpticsFocalPlaneDto>(
@@ -165,6 +193,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
+  /**
+   * Routourne l'objet OpticsOutletDiameterDto en fonction de la valaur selection dans le dropdown
+   */
   private getOpticsOutletDiameter(): OpticsOutletDiameterDto {
     const id = this.form.controls['opticsOutletDiameter'].value;
     return <OpticsOutletDiameterDto>(
@@ -174,6 +205,9 @@ export class OpticsAddComponent implements OnInit {
     );
   }
 
+  /**
+   * Routourne la valeur de derivation max en MAO / converti les mrad en mao si l'utlisateur a choisi de remplir ce cham en mead
+   */
   private maxDerivation(): number {
     const maxDerivation: number =
       this.form.controls['opticsMaxDerivation'].value;
@@ -197,13 +231,13 @@ export class OpticsAddComponent implements OnInit {
    */
   private convertMilToMoa(moa: number, unitId: number): number {
     const opticsUnit: OpticsUnitDto = this.getOpticsUnit(unitId);
-    if (opticsUnit.label === this.opticsUnitMil) {
+    if (opticsUnit.label === OpticsUnit.MIL) {
       moa = Math.round(moa * 3.4377);
     }
     return moa;
   }
 
-  opticUnitSelected(unitId: number) {
+  public opticUnitSelected(unitId: number): void {
     const value = this.opticsDataCollection.opticsUnitList.find(
       (unit) => unit.id === unitId
     );
@@ -214,5 +248,96 @@ export class OpticsAddComponent implements OnInit {
       this.opticsClickValues = OpticsClickValue.getClickValuesMil();
       this.form.controls['opticsValueOfOneClick'].setValue(1);
     }
+  }
+
+  /**
+   * Lors de l'edition d une optique, pre rempli le formulaire avec les données connues de l'optique
+   * @param optic OpticsDto
+   */
+  private autoCompleteForm(optic: OpticsDto): void {
+    this.form.controls['name'].setValue(optic.name);
+    this.form.controls['opticsMaxZoom'].setValue(optic.maxZoom);
+    this.form.controls['opticsMinZoom'].setValue(optic.minZoom);
+    this.form.controls['opticsMinParallax'].setValue(optic.minParallax);
+    this.form.controls['isParallax'].setValue(optic.parallax);
+    this.form.controls['opticsClickType'].setValue(optic.opticsUnit.id);
+
+    //Charge le opticsClickValue en fonction du type de la lunette
+    if (optic.opticsUnit.label === OpticsUnit.MOA) {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
+    } else {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMil();
+    }
+
+    this.form.controls['opticsFocalPlan'].setValue(optic.focalPlane.id);
+    this.form.controls['opticsBodyDiameter'].setValue(optic.bodyDiameter.id);
+    this.form.controls['opticsFactory'].setValue(optic.factory.id);
+    this.form.controls['opticsOutletDiameter'].setValue(
+      optic.outletDiameter.id
+    );
+    this.form.controls['opticsMaxDerivation'].setValue(optic.maxDerivation);
+    this.form.controls['opticsMaxElevation'].setValue(optic.maxElevation);
+    this.form.controls['opticsValueOfOneClick'].setValue(optic.valueOfOneClick);
+  }
+
+  /**
+   * Soumission du formulaire de creation d'une novuelle optique
+   * @param newOptics OpticsCreateDto
+   */
+  private createNewOptics(newOptics: OpticsCreateDto) {
+    this.opticsService
+      .newOptics({
+        body: newOptics
+      })
+      .subscribe({
+        next: (res) => {
+          this.customMessageService.successMessage(
+            this.currentPageMessageHeader,
+            'Nouvelle optique ajoutée'
+          );
+          this.opticsAdded.emit(res);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
+  }
+
+  /**
+   * Sousmission du formulaire d'edition de l'optique
+   * @param optics OpticsCreateDto
+   */
+  private editOptic(optics: OpticsCreateDto) {
+    const editOptics: OpticsDto = {
+      ...optics,
+      id: this._editedOptic.id,
+      active: this._editedOptic.active,
+      createdAt: this._editedOptic.createdAt
+    };
+    console.log(editOptics);
+    this.opticsService
+      .editOptics({
+        body: editOptics
+      })
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.opticsEdited.emit(res);
+          this.customMessageService.successMessage(
+            this.currentPageMessageHeader,
+            'Optique correctement modifiée'
+          );
+        },
+        error: (err) => {
+          console.log(err);
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
   }
 }

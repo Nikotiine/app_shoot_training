@@ -27,7 +27,7 @@ export class SecurityService {
   public logout(): void {
     this.authenticate.set(false);
     this.tokenService.removeToken();
-    this.userService.setProfile({});
+    this.userService.setProfile(null);
     // this.router.navigate([Routing.HOME]);
   }
 

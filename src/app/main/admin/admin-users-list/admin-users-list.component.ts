@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AdminService } from '../../../core/api/services/admin.service';
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
-import { ConfirmationService, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +13,7 @@ import { AppUserService } from '../../../core/app/services/app-user.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { RouterLink } from '@angular/router';
 import { Routing } from '../../../core/app/enum/Routing.enum';
+import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-admin-users-list',
@@ -35,19 +36,19 @@ export class AdminUsersListComponent implements OnInit {
   private readonly appUserService: AppUserService = inject(AppUserService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly confirmationService: ConfirmationService =
-    inject(ConfirmationService);
-
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
+  private readonly currentPageMessageHeader: string =
+    'Administration des utilisateurs';
   private selectedUser: UserProfileDto | null = null;
+  protected readonly Routing = Routing;
   public users: UserProfileDto[] = [];
-  public form: FormGroup;
+  public form: FormGroup = inject(FormBuilder).group({
+    role: [UserRoleEnum.USER]
+  });
   public visible: boolean = false;
   public roles: UserRoleEnum[] = [UserRoleEnum.USER, UserRoleEnum.ADMIN];
-  constructor(private readonly fb: FormBuilder) {
-    this.form = this.fb.group({
-      role: [UserRoleEnum.USER]
-    });
-  }
+
   public ngOnInit(): void {
     this.loadUsers();
   }
@@ -61,7 +62,10 @@ export class AdminUsersListComponent implements OnInit {
         this.users = users;
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Admin', err.error.message);
+        this.customMessageService.errorMessage(
+          this.currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
@@ -73,9 +77,9 @@ export class AdminUsersListComponent implements OnInit {
    */
   public changeRole(id: number): void {
     const user = this.getUserById(id);
-    if (user.email === this.appUserService.getProfile().email) {
-      this.customMessageService.errorMessage(
-        'Admin',
+    if (user.email === this.appUserService.getProfile()?.email) {
+      this.customMessageService.warningMessage(
+        this.currentPageMessageHeader,
         'Vous ne pouvez pas changer votre propre role'
       );
     } else {
@@ -100,12 +104,15 @@ export class AdminUsersListComponent implements OnInit {
             this.users = res;
             this.visible = !this.visible;
             this.customMessageService.successMessage(
-              'Admin',
+              this.currentPageMessageHeader,
               'Role utilisateur modifier'
             );
           },
           error: (err) => {
-            this.customMessageService.errorMessage('Admin', err.error.message);
+            this.customMessageService.errorMessage(
+              this.currentPageMessageHeader,
+              err.error.message
+            );
           }
         });
     }
@@ -113,24 +120,26 @@ export class AdminUsersListComponent implements OnInit {
 
   /**
    * Soumission du formulaire de desactivation du profil
-   * @param user UserProfileDto
+   * @param id
    */
-  private disableUser(user: UserProfileDto): void {
-    user.active = false;
+  private disableUser(id: number): void {
     this.adminService
       .disableUser({
-        body: user
+        id: id
       })
       .subscribe({
         next: (res) => {
           this.users = res;
           this.customMessageService.successMessage(
-            'Admin',
+            this.currentPageMessageHeader,
             'Utilisateur desactivé'
           );
         },
         error: (err) => {
-          this.customMessageService.errorMessage('Admin', err.error.message);
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
         }
       });
   }
@@ -139,28 +148,23 @@ export class AdminUsersListComponent implements OnInit {
    * Verifie que l'utlisateur courant n'est pas le meme que l'utilisateur qui sera descativé
    * Si diffent affiche une boite de dialogue pour confirmer
    * @param event Event de ConfirmationService
-   * @param id de l utilisateur en cours de desactivation
+   * @param user UserProfileDto
    */
-  public confirm(event: Event, id: number): void {
-    const user = this.getUserById(id);
-    if (user.email === this.appUserService.getProfile().email) {
+  public async confirm(event: Event, user: UserProfileDto): Promise<void> {
+    if (user.email === this.appUserService.getProfile()?.email) {
       this.customMessageService.errorMessage(
-        'Admin',
+        this.currentPageMessageHeader,
         'Vous ne pouvez pas vous desactiver'
       );
     } else {
-      this.confirmationService.confirm({
-        target: event.target as EventTarget,
-        message: 'Supprimer ce profil ?',
-        header: 'Administration',
-        icon: 'pi pi-exclamation-triangle',
-        acceptIcon: 'none',
-        rejectIcon: 'none',
-        rejectButtonStyleClass: 'p-button-text',
-        accept: () => {
-          this.disableUser(user);
-        }
-      });
+      const confirmed = await this.customConfirmationService.confirm(
+        event,
+        'Supprimer cet utilisateur ? ',
+        this.currentPageMessageHeader
+      );
+      if (confirmed) {
+        this.disableUser(user.id);
+      }
     }
   }
 
@@ -172,6 +176,4 @@ export class AdminUsersListComponent implements OnInit {
   private getUserById(id: number): UserProfileDto {
     return <UserProfileDto>this.users.find((user) => user.id === id);
   }
-
-  protected readonly Routing = Routing;
 }
