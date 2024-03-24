@@ -61,8 +61,8 @@ export class AmmunitionFormComponent implements OnInit {
   private readonly ammunitionWeightService: AmmunitionWeightService = inject(
     AmmunitionWeightService
   );
-  // Public field
 
+  // Public field
   public form: FormGroup = inject(FormBuilder).group({
     name: ['', Validators.required],
     factory: [0, Validators.min(1)],

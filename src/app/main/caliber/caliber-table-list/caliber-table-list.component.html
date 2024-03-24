@@ -14,6 +14,7 @@
       <td>{{ caliber.label }}</td>
       <td class="text-center">
         <p-button
+          (onClick)="edit(caliber)"
           label="Editer"
           icon="pi pi-user-edit"
           [text]="true"></p-button>
@@ -29,5 +30,8 @@
     (onClick)="add()"></p-button>
 </div>
 @defer (when visible){ @if (visible){
-<app-caliber-add (caliberAdded)="newCaliber($event)"></app-caliber-add>
+<app-caliber-form
+  (caliberAdded)="newCaliber($event)"
+  [caliberForm]="caliberToEdit()"
+  (caliberEdited)="caliberEdited($event)"></app-caliber-form>
 } }
