@@ -1,4 +1,10 @@
-import { Component, inject, Input } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 
 import { ButtonModule } from 'primeng/button';
@@ -8,7 +14,8 @@ import { TableModule } from 'primeng/table';
 
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { FactoryService } from '../../../core/api/services/factory.service';
-import { FactoryAddComponent } from '../factory-add/factory-add.component';
+import { FactoryFormComponent } from '../factory-form/factory-form.component';
+import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 
 @Component({
   selector: 'app-factory-table-list',
@@ -18,12 +25,23 @@ import { FactoryAddComponent } from '../factory-add/factory-add.component';
     DatePipe,
     SharedModule,
     TableModule,
-    FactoryAddComponent
+    FactoryFormComponent
   ],
   templateUrl: './factory-table-list.component.html',
   styleUrl: './factory-table-list.component.scss'
 })
 export class FactoryTableListComponent {
+  // Private field
+  private _factory!: FactoryType;
+  private readonly factoryService: FactoryService = inject(FactoryService);
+  private readonly currentPageMessageHeader: string = 'Gestion des marques';
+  private readonly customMessageService: CustomMessageService =
+    inject(CustomMessageService);
+
+  // Public field
+  public factoryToEdit: WritableSignal<FactoryDto | null> = signal(null);
+  public factories: FactoryDto[] = [];
+  public newFactoryForm: boolean = false;
   @Input() set factoryType(factory: FactoryType) {
     this._factory = factory;
     this.loadFactory(factory);
@@ -33,11 +51,10 @@ export class FactoryTableListComponent {
     return this._factory;
   }
 
-  private _factory!: FactoryType;
-  public factories: FactoryDto[] = [];
-  public newFactoryForm: boolean = false;
-  private readonly factoryService: FactoryService = inject(FactoryService);
-
+  /**
+   * Charge la liste des marque en fonction du type demander
+   * @param type FactoryType
+   */
   private loadFactory(type: FactoryType): void {
     this.factoryService
       .getAllFactoryByType({
@@ -48,17 +65,52 @@ export class FactoryTableListComponent {
           this.factories = factories;
         },
         error: (err) => {
-          console.log(err);
+          this.customMessageService.errorMessage(
+            this.currentPageMessageHeader,
+            err.error.message
+          );
         }
       });
   }
 
-  addFactory() {
+  /**
+   * Affiche le formulaire pour une nouvelle marque
+   * repasse le signal factoryToEdit a null si le formulaire est annule
+   */
+  public addFactory(): void {
+    if (this.newFactoryForm) {
+      this.factoryToEdit.set(null);
+    }
     this.newFactoryForm = !this.newFactoryForm;
   }
 
-  newFactory(event: FactoryDto): void {
+  /**
+   * Met a jour la liste des marque apres ajout d'une nouvelle
+   * @param event
+   */
+  public newFactory(event: FactoryDto): void {
     this.factories.push(event);
     this.newFactoryForm = false;
+  }
+
+  /**
+   * Affiche le formulaire d'edition d'une marque et met le set le signal factoryToEdit avec la factory choisie
+   * @param factory FactoryDto
+   */
+  public edit(factory: FactoryDto): void {
+    this.newFactoryForm = !this.newFactoryForm;
+    this.factoryToEdit.set(factory);
+  }
+
+  /**
+   * Met a jour la liste des factory apres modification d'une
+   * @param factory FactoryDto
+   */
+  public editedFactory(factory: FactoryDto): void {
+    const index = this.factories.findIndex((f) => f.id === factory.id);
+    this.factories.splice(index, 1);
+    this.factories.push(factory);
+    this.factoryToEdit.set(null);
+    this.newFactoryForm = !this.newFactoryForm;
   }
 }

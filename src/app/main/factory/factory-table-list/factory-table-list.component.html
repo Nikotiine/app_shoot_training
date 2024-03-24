@@ -4,7 +4,6 @@
     <tr>
       <th>ID</th>
       <th>Nom</th>
-
       <th>Actif</th>
       <th>Ajouter le</th>
       <th class="text-center">Modifier</th>
@@ -19,6 +18,7 @@
       <td class="text-center">
         <p-button
           label="Editer"
+          (onClick)="edit(factory)"
           icon="pi pi-user-edit"
           [text]="true"></p-button>
       </td>
@@ -32,9 +32,11 @@
     icon="pi {{newFactoryForm ? 'pi-times' : 'pi-plus'}}"
     (onClick)="addFactory()"></p-button>
   @defer (when newFactoryForm){ @if (newFactoryForm){
-  <app-factory-add
+  <app-factory-form
     [factoryType]="factory"
-    (newFactory)="newFactory($event)"></app-factory-add>
+    [factoryForm]="factoryToEdit()"
+    (editedFactory)="editedFactory($event)"
+    (newFactory)="newFactory($event)"></app-factory-form>
   } }
 </div>
 }

@@ -14,7 +14,7 @@ import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
 import { TabViewModule } from 'primeng/tabview';
-import { FactoryAddComponent } from '../../factory/factory-add/factory-add.component';
+import { FactoryFormComponent } from '../../factory/factory-form/factory-form.component';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { FactoryTableListComponent } from '../../factory/factory-table-list/factory-table-list.component';
 import { Routing } from '../../../core/app/enum/Routing.enum';
@@ -31,7 +31,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
     TableModule,
     OpticsFormComponent,
     TabViewModule,
-    FactoryAddComponent,
+    FactoryFormComponent,
     FactoryTableListComponent,
     RouterLink
   ],
