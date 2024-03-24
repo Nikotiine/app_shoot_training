@@ -51,7 +51,6 @@ import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
 export class OpticsFormComponent implements OnInit {
   // Private field
   private _editedOptic!: OpticsDto;
-  // private readonly opticsUnitMil: string = 'MRAD';
   private readonly currentPageMessageHeader: string = 'Gestion des optiques';
   private _isEditOptics: boolean = false;
   private readonly opticsService: OpticsService = inject(OpticsService);

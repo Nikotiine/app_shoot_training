@@ -49,6 +49,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
   styleUrl: './admin-weapons-list.component.scss'
 })
 export class AdminWeaponsListComponent implements OnInit {
+  // Private field
   private readonly weaponService: WeaponService = inject(WeaponService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
@@ -59,6 +60,8 @@ export class AdminWeaponsListComponent implements OnInit {
     'Administration des armes';
   protected readonly FactoryType = FactoryType;
   protected readonly Routing = Routing;
+
+  // Public field
   public weapons: WeaponDto[] = [];
   public filteredWeapons: WeaponDto[] = [];
   public newWeaponForm: boolean = false;

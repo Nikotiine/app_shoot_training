@@ -39,22 +39,29 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
   styleUrl: './admin-optics-list.component.scss'
 })
 export class AdminOpticsListComponent implements OnInit {
+  // Private field
   private readonly opticsService: OpticsService = inject(OpticsService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
-  public optics: OpticsDto[] = [];
-  public newOpticsForm: boolean = false;
-  public opticsToEdit: WritableSignal<OpticsDto | null> = signal(null);
   protected readonly FactoryType = FactoryType;
   protected readonly Routing = Routing;
   private readonly currentPageMessageHeader: string =
     'Administration des optiques';
+
+  // Public field
+  public optics: OpticsDto[] = [];
+  public newOpticsForm: boolean = false;
+  public opticsToEdit: WritableSignal<OpticsDto | null> = signal(null);
+
   public ngOnInit(): void {
     this.loadOptics();
   }
 
+  /**
+   * Charge la liste de toutes les optiques (active ou non)
+   */
   private loadOptics(): void {
     this.opticsService.getAllOptics().subscribe({
       next: (optics) => {
@@ -69,6 +76,10 @@ export class AdminOpticsListComponent implements OnInit {
     });
   }
 
+  /**
+   * Affiche le formulaire d'ajouit ou d'edition d'une optique
+   * Si une edition a ete charge puis annule met le signal opticsToEdit a null
+   */
   public add(): void {
     if (this.newOpticsForm) {
       this.opticsToEdit.set(null);
@@ -76,11 +87,20 @@ export class AdminOpticsListComponent implements OnInit {
     this.newOpticsForm = !this.newOpticsForm;
   }
 
+  /**
+   * Met a jour la liste des optique apres la creation d'une nouvelle
+   * @param newOptics OpticsDto
+   */
   public opticAdded(newOptics: OpticsDto): void {
     this.optics.push(newOptics);
     this.newOpticsForm = false;
   }
 
+  /**
+   * Pop up de confirmation pour la suppression d'une optique
+   * @param event Event
+   * @param optics OpticsDto
+   */
   public async confirm(event: Event, optics: OpticsDto): Promise<void> {
     const confirmed = await this.customConfirmationService.confirm(
       event,
@@ -92,6 +112,11 @@ export class AdminOpticsListComponent implements OnInit {
     }
   }
 
+  /**
+   * Soummission de la desactivation de l'optique
+   * Met a jour la liste des optique une fois celle ci desactive
+   * @param id de l'optique
+   */
   private disable(id: number): void {
     this.opticsService
       .disableOptics({
@@ -99,7 +124,7 @@ export class AdminOpticsListComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
+          this.optics = res;
         },
         error: (err) => {
           this.customMessageService.errorMessage(
@@ -110,11 +135,22 @@ export class AdminOpticsListComponent implements OnInit {
       });
   }
 
+  /**
+   * Affiche le formualaire d'edition de l'optique
+   * ajoute l'object OpticsDto au signal opticsToEdit pour pre remplir le formulaire d'edition
+   * @param optic OpticsDto
+   */
   public edit(optic: OpticsDto): void {
     this.opticsToEdit.set(optic);
     this.newOpticsForm = !this.newOpticsForm;
   }
 
+  /**
+   * Met a jour la liste des optique apres edition d'une optique
+   * Cherche et trouve l'optique modifie , la supprime du tableau et ajoute l'optique modifie
+   * Passe le signal opticsToEdit a null
+   * @param optics OpticsDto
+   */
   public opticEdited(optics: OpticsDto): void {
     const index = this.optics.findIndex((o) => o.id === optics.id);
     this.optics.splice(index, 1);

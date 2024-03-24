@@ -1,11 +1,17 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { AmmunitionService } from '../../../core/api/services/ammunition.service';
-import { AmmunitionAddComponent } from '../../ammunition/ammunition-add/ammunition-add.component';
+import { AmmunitionFormComponent } from '../../ammunition/ammunition-form/ammunition-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { AccordionModule } from 'primeng/accordion';
 
@@ -27,7 +33,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
     DatePipe,
     SharedModule,
     TableModule,
-    AmmunitionAddComponent,
+    AmmunitionFormComponent,
     AccordionModule,
     TabViewModule,
     CaliberTableListComponent,
@@ -40,6 +46,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
   styleUrl: './admin-ammunition-list.component.scss'
 })
 export class AdminAmmunitionListComponent implements OnInit {
+  // Private field
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
   private readonly customMessageService: CustomMessageService =
@@ -51,10 +58,13 @@ export class AdminAmmunitionListComponent implements OnInit {
   private readonly currentPageMessageHeader: string =
     'Administration des munitions';
   private ammunition: AmmunitionDto[] = [];
+
+  // Public field
   public filteredAmmunition: AmmunitionDto[] = [];
   public newAmmunitionForm: boolean = false;
   public currentCaliberId = signal(0);
   public totalAmmunition = signal(0);
+  public ammunitionToEdit: WritableSignal<AmmunitionDto | null> = signal(null);
   ngOnInit(): void {
     this.loadAmmunition();
   }
@@ -111,6 +121,7 @@ export class AdminAmmunitionListComponent implements OnInit {
         next: (res) => {
           this.ammunition = res;
           this.filterByCaliber(ammo.caliber.id);
+          this.currentCaliberId.set(ammo.caliber.id);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
@@ -119,5 +130,19 @@ export class AdminAmmunitionListComponent implements OnInit {
           );
         }
       });
+  }
+
+  public edit(ammunition: AmmunitionDto) {
+    console.log(ammunition);
+    this.newAmmunitionForm = !this.newAmmunitionForm;
+    this.ammunitionToEdit.set(ammunition);
+  }
+
+  public ammunitionEdited(ammunition: AmmunitionDto): void {
+    const index = this.ammunition.findIndex((a) => a.id === ammunition.id);
+    this.ammunition.splice(index, 1);
+    this.ammunition.push(ammunition);
+    this.newAmmunitionForm = !this.newAmmunitionForm;
+    this.ammunitionToEdit.set(null);
   }
 }

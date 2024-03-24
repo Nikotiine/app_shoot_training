@@ -54,6 +54,7 @@
             <td class="text-center">
               <p-button
                 label="Editer"
+                (onClick)="edit(ammo)"
                 icon="pi pi-user-edit"
                 [text]="true"></p-button>
             </td>
@@ -68,8 +69,10 @@
           icon="pi pi-plus"
           (onClick)="addAmmunition()"></p-button>
         @defer (when newAmmunitionForm){ @if (newAmmunitionForm){
-        <app-ammunition-add
-          (newAmmunitionAdded)="newAmmunition($event)"></app-ammunition-add>
+        <app-ammunition-form
+          (newAmmunitionAdded)="newAmmunition($event)"
+          [ammunitionForm]="ammunitionToEdit()"
+          (ammunitionEdited)="ammunitionEdited($event)"></app-ammunition-form>
         } }
       </div>
     </p-tabPanel>

@@ -13,6 +13,8 @@ import { disableOptics } from '../fn/optics/disable-optics';
 import { DisableOptics$Params } from '../fn/optics/disable-optics';
 import { editOptics } from '../fn/optics/edit-optics';
 import { EditOptics$Params } from '../fn/optics/edit-optics';
+import { getAllActiveOptics } from '../fn/optics/get-all-active-optics';
+import { GetAllActiveOptics$Params } from '../fn/optics/get-all-active-optics';
 import { getAllOptics } from '../fn/optics/get-all-optics';
 import { GetAllOptics$Params } from '../fn/optics/get-all-optics';
 import { getOpticsDataCollection } from '../fn/optics/get-optics-data-collection';
@@ -128,6 +130,31 @@ export class OpticsService extends BaseService {
    */
   getAllOptics(params?: GetAllOptics$Params, context?: HttpContext): Observable<Array<OpticsDto>> {
     return this.getAllOptics$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsDto>>): Array<OpticsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllActiveOptics()` */
+  static readonly GetAllActiveOpticsPath = '/api/optics/actoves';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllActiveOptics()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveOptics$Response(params?: GetAllActiveOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsDto>>> {
+    return getAllActiveOptics(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllActiveOptics$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveOptics(params?: GetAllActiveOptics$Params, context?: HttpContext): Observable<Array<OpticsDto>> {
+    return this.getAllActiveOptics$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<OpticsDto>>): Array<OpticsDto> => r.body)
     );
   }

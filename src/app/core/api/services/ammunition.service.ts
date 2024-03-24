@@ -13,6 +13,8 @@ import { AmmunitionDto } from '../models/ammunition-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
 import { disableAmmunition } from '../fn/ammunition/disable-ammunition';
 import { DisableAmmunition$Params } from '../fn/ammunition/disable-ammunition';
+import { editAmmunition } from '../fn/ammunition/edit-ammunition';
+import { EditAmmunition$Params } from '../fn/ammunition/edit-ammunition';
 import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
 import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
 import { getAllWeight } from '../fn/ammunition/get-all-weight';
@@ -32,6 +34,31 @@ import { NewWeight$Params } from '../fn/ammunition/new-weight';
 export class AmmunitionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `editAmmunition()` */
+  static readonly EditAmmunitionPath = '/api/ammunition/edit';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `editAmmunition()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editAmmunition$Response(params: EditAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
+    return editAmmunition(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `editAmmunition$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editAmmunition(params: EditAmmunition$Params, context?: HttpContext): Observable<AmmunitionDto> {
+    return this.editAmmunition$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionDto>): AmmunitionDto => r.body)
+    );
   }
 
   /** Path part for operation `newWeight()` */

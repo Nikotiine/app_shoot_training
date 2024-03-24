@@ -8,12 +8,12 @@ import { WeaponService } from './services/weapon.service';
 import { OpticsService } from './services/optics.service';
 import { FactoryService } from './services/factory.service';
 import { CaliberService } from './services/caliber.service';
+import { AmmunitionService } from './services/ammunition.service';
 import { UserService } from './services/user.service';
 import { WeaponSetupService } from './services/weapon-setup.service';
 import { RegistrationService } from './services/registration.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
 import { AuthenticationService } from './services/authentication.service';
-import { AmmunitionService } from './services/ammunition.service';
 import { AdminService } from './services/admin.service';
 
 /**
@@ -28,12 +28,12 @@ import { AdminService } from './services/admin.service';
     OpticsService,
     FactoryService,
     CaliberService,
+    AmmunitionService,
     UserService,
     WeaponSetupService,
     RegistrationService,
     ForgotPasswordService,
     AuthenticationService,
-    AmmunitionService,
     AdminService,
     ApiConfiguration
   ],

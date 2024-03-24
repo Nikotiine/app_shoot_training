@@ -186,7 +186,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * Charge la liste des optiques disponible apres que l'utilisateur est choisi son arme
    */
   private loadOpticsList(): void {
-    this.opticsService.getAllOptics().subscribe({
+    this.opticsService.getAllActiveOptics().subscribe({
       next: (optics) => {
         this.optics = optics;
         this.createOpticsFactoriesDropdown(optics);
