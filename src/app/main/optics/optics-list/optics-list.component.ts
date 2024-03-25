@@ -5,55 +5,42 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { OpticsService } from '../../../core/api/services/optics.service';
 import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
+import { OpticsFormComponent } from '../optics-form/optics-form.component';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
+import { OpticsService } from '../../../core/api/services/optics.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
-import { TabViewModule } from 'primeng/tabview';
-import { FactoryFormComponent } from '../../factory/factory-form/factory-form.component';
-import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
-import { FactoryTableListComponent } from '../../factory/factory-table-list/factory-table-list.component';
-import { Routing } from '../../../core/app/enum/Routing.enum';
-import { RouterLink } from '@angular/router';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
-  selector: 'app-admin-optics-list',
+  selector: 'app-optics-list',
   standalone: true,
   imports: [
     ButtonModule,
     DatePipe,
-    SharedModule,
-    TableModule,
     OpticsFormComponent,
-    TabViewModule,
-    FactoryFormComponent,
-    FactoryTableListComponent,
-    RouterLink
+    SharedModule,
+    TableModule
   ],
-  templateUrl: './admin-optics-list.component.html',
-  styleUrl: './admin-optics-list.component.scss'
+  templateUrl: './optics-list.component.html',
+  styleUrl: './optics-list.component.scss'
 })
-export class AdminOpticsListComponent implements OnInit {
+export class OpticsListComponent implements OnInit {
   // Private field
+  private readonly _currentPageMessageHeader: string =
+    'Administration des optiques';
   private readonly opticsService: OpticsService = inject(OpticsService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
-  protected readonly FactoryType = FactoryType;
-  protected readonly Routing = Routing;
-  private readonly currentPageMessageHeader: string =
-    'Administration des optiques';
-
   // Public field
   public optics: OpticsDto[] = [];
-  public newOpticsForm: boolean = false;
-  public opticsToEdit: WritableSignal<OpticsDto | null> = signal(null);
+  public isShowFormComponent: boolean = false;
+  public selectedOptics: WritableSignal<OpticsDto | null> = signal(null);
 
   public ngOnInit(): void {
     this.loadOptics();
@@ -69,7 +56,7 @@ export class AdminOpticsListComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
@@ -80,20 +67,20 @@ export class AdminOpticsListComponent implements OnInit {
    * Affiche le formulaire d'ajouit ou d'edition d'une optique
    * Si une edition a ete charge puis annule met le signal opticsToEdit a null
    */
-  public add(): void {
-    if (this.newOpticsForm) {
-      this.opticsToEdit.set(null);
+  public showAddForm(): void {
+    if (this.isShowFormComponent) {
+      this.selectedOptics.set(null);
     }
-    this.newOpticsForm = !this.newOpticsForm;
+    this.isShowFormComponent = !this.isShowFormComponent;
   }
 
   /**
    * Met a jour la liste des optique apres la creation d'une nouvelle
-   * @param newOptics OpticsDto
+   * @param optics OpticsDto
    */
-  public opticAdded(newOptics: OpticsDto): void {
-    this.optics.push(newOptics);
-    this.newOpticsForm = false;
+  public addedEvent(optics: OpticsDto): void {
+    this.optics.push(optics);
+    this.isShowFormComponent = false;
   }
 
   /**
@@ -105,10 +92,10 @@ export class AdminOpticsListComponent implements OnInit {
     const confirmed = await this.customConfirmationService.confirm(
       event,
       'Supprimer cette optique ?',
-      this.currentPageMessageHeader
+      this._currentPageMessageHeader
     );
     if (confirmed) {
-      this.disable(optics.id);
+      this.disableOptics(optics.id);
     }
   }
 
@@ -117,7 +104,7 @@ export class AdminOpticsListComponent implements OnInit {
    * Met a jour la liste des optique une fois celle ci desactive
    * @param id de l'optique
    */
-  private disable(id: number): void {
+  private disableOptics(id: number): void {
     this.opticsService
       .disableOptics({
         id: id
@@ -128,7 +115,7 @@ export class AdminOpticsListComponent implements OnInit {
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -140,9 +127,9 @@ export class AdminOpticsListComponent implements OnInit {
    * ajoute l'object OpticsDto au signal opticsToEdit pour pre remplir le formulaire d'edition
    * @param optic OpticsDto
    */
-  public edit(optic: OpticsDto): void {
-    this.opticsToEdit.set(optic);
-    this.newOpticsForm = !this.newOpticsForm;
+  public showEditForm(optic: OpticsDto): void {
+    this.selectedOptics.set(optic);
+    this.isShowFormComponent = !this.isShowFormComponent;
   }
 
   /**
@@ -151,11 +138,11 @@ export class AdminOpticsListComponent implements OnInit {
    * Passe le signal opticsToEdit a null
    * @param optics OpticsDto
    */
-  public opticEdited(optics: OpticsDto): void {
+  public editedEvent(optics: OpticsDto): void {
     const index = this.optics.findIndex((o) => o.id === optics.id);
     this.optics.splice(index, 1);
     this.optics.push(optics);
-    this.newOpticsForm = !this.newOpticsForm;
-    this.opticsToEdit.set(null);
+    this.isShowFormComponent = !this.isShowFormComponent;
+    this.selectedOptics.set(null);
   }
 }

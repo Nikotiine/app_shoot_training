@@ -51,7 +51,7 @@ import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
 export class OpticsFormComponent implements OnInit {
   // Private field
   private _editedOptic!: OpticsDto;
-  private readonly currentPageMessageHeader: string = 'Gestion des optiques';
+  private readonly _currentPageMessageHeader: string = 'Gestion des optiques';
   private _isEditOptics: boolean = false;
   private readonly opticsService: OpticsService = inject(OpticsService);
   private readonly customMessageService: CustomMessageService =
@@ -82,12 +82,10 @@ export class OpticsFormComponent implements OnInit {
     isParallax: [false]
   });
 
-  @Output() opticsAdded: EventEmitter<OpticsDto> =
-    new EventEmitter<OpticsDto>();
-  @Output() opticsEdited: EventEmitter<OpticsDto> =
-    new EventEmitter<OpticsDto>();
+  @Output() added: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
+  @Output() edited: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
 
-  @Input() set opticForm(optic: OpticsDto | null) {
+  @Input() set optics(optic: OpticsDto | null) {
     this._isEditOptics = !!optic;
     if (optic) {
       this._editedOptic = optic;
@@ -109,7 +107,7 @@ export class OpticsFormComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
@@ -290,14 +288,14 @@ export class OpticsFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Nouvelle optique ajoutée'
           );
-          this.opticsAdded.emit(res);
+          this.added.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -322,15 +320,15 @@ export class OpticsFormComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          this.opticsEdited.emit(res);
+          this.edited.emit(res);
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Optique correctement modifiée'
           );
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }

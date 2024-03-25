@@ -90,7 +90,7 @@
           id="switchNewOptics"></p-inputSwitch>
       </div>
       @defer (when isNewOptics){ @if (isNewOptics){
-      <app-optics-form (opticsAdded)="opticsAdded($event)"></app-optics-form>
+      <app-optics-form (added)="opticsAdded($event)"></app-optics-form>
       } }
     </fieldset>
     <fieldset class="formgrid grid">

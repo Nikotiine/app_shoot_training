@@ -1,0 +1,18 @@
+<div class="mt-3">
+  <a
+    class="p-button no-underline"
+    [routerLink]="['/'+Routing.ADMIN+'/'+Routing.ADMIN_DASHBOARD]"
+    ><i class="pi pi-arrow-left mr-2"></i>Retour</a
+  >
+</div>
+<div class="mt-5">
+  <p-tabView>
+    <p-tabPanel header="Optiques">
+      <app-optics-list></app-optics-list>
+    </p-tabPanel>
+    <p-tabPanel header="Marques d'optiques">
+      <app-factory-table-list
+        [factoryType]="FactoryType.OPTICS"></app-factory-table-list>
+    </p-tabPanel>
+  </p-tabView>
+</div>
