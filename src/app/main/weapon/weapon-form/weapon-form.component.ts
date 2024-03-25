@@ -4,7 +4,9 @@ import {
   inject,
   Input,
   OnInit,
-  Output
+  Output,
+  signal,
+  WritableSignal
 } from '@angular/core';
 import {
   FormBuilder,
@@ -48,7 +50,7 @@ export class WeaponFormComponent implements OnInit {
   private readonly weaponService: WeaponService = inject(WeaponService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly currentPageMessageHeader: string = 'Gestion des armes';
+  private readonly _currentPageMessageHeader: string = 'Gestion des armes';
   // Public field
   public weaponDataCollection!: WeaponDataCollection;
   public form: FormGroup = inject(FormBuilder).group({
@@ -64,13 +66,16 @@ export class WeaponFormComponent implements OnInit {
     variation: ['']
   });
   public isLoading: boolean = true;
+  protected title: WritableSignal<string> = signal('');
 
   @Output() weaponAdded: EventEmitter<WeaponDto> =
     new EventEmitter<WeaponDto>();
   @Output() weaponEdited: EventEmitter<WeaponDto> =
     new EventEmitter<WeaponDto>();
+
   @Input() set weaponForm(weapon: WeaponDto | null) {
     this._isEditWeapon = !!weapon;
+    this.setTitle();
     if (weapon) {
       this._editedWeapon = weapon;
       this.autoCompleteForm(weapon);
@@ -92,7 +97,7 @@ export class WeaponFormComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
@@ -178,14 +183,14 @@ export class WeaponFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Nouvelle arme ajoutée'
           );
           this.weaponAdded.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -206,17 +211,27 @@ export class WeaponFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Arme correctement modifiée'
           );
           this.weaponEdited.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
       });
+  }
+  /**
+   * Defini le titre a afficher selon creatin ou edition
+   */
+  private setTitle(): void {
+    if (this._isEditWeapon) {
+      this.title.set("Modifier l'arme");
+    } else {
+      this.title.set('Ajouter une nouvelle arme');
+    }
   }
 }

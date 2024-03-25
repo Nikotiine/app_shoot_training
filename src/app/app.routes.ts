@@ -15,7 +15,7 @@ import { authGuard } from './core/app/guards/auth.guard';
 import { AdminDashboardComponent } from './main/admin/admin-dashboard/admin-dashboard.component';
 import { adminGuard } from './core/app/guards/admin.guard';
 import { AdminUsersListComponent } from './main/admin/admin-users-list/admin-users-list.component';
-import { AdminWeaponsListComponent } from './main/admin/admin-weapons-list/admin-weapons-list.component';
+import { WeaponsTabviewComponent } from './main/admin/weapons-tabview/weapons-tabview.component';
 import { OpticsTabviewComponent } from './main/admin/optics-tabview/optics-tabview.component';
 import { AmmunitionTabviewComponent } from './main/admin/ammunition-tabview/ammunition-tabview.component';
 
@@ -69,7 +69,7 @@ export const routes: Routes = [
           },
           {
             path: Routing.ADMIN_WEAPONS_LIST,
-            component: AdminWeaponsListComponent
+            component: WeaponsTabviewComponent
           },
           {
             path: Routing.ADMIN_OPTICS_LIST,

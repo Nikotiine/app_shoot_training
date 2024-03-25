@@ -1,0 +1,59 @@
+@if (!isShowFormComponent){
+
+<app-caliber-dropdown
+  [initDropdown]="currentCaliberId()"
+  (selectedCaliber)="filterByCaliber($event.id)"></app-caliber-dropdown>
+<p-table [value]="filteredWeapons" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Marque</th>
+      <th>Model</th>
+      <th>Calibre</th>
+      <th>Longueur du canon</th>
+      <th>Ajouter le</th>
+      <th>Status</th>
+      <th class="text-center">Modifier</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-weapon>
+    <tr>
+      <td>{{ weapon.id }}</td>
+      <td>{{ weapon.factory.name }}</td>
+      <td>{{ weapon.model }} - {{ weapon.variation }}</td>
+      <td>{{ weapon.caliber.label }}</td>
+      <td>{{ weapon.barrelLength }}</td>
+      <td>{{ weapon.createdAt | date:'dd MMM yyyy' }}</td>
+      <td>
+        <div class="flex align-items-center">
+          {{weapon.active? 'Active' : 'Désactivée' }}
+          <p-button
+            icon="pi pi-ban"
+            severity="danger"
+            [text]="true"
+            (onClick)="confirm($event,weapon)"></p-button>
+        </div>
+      </td>
+      <td class="text-center">
+        <p-button
+          label="Editer"
+          icon="pi pi-user-edit"
+          (onClick)="showEditForm(weapon)"
+          [text]="true"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+}
+<div class="mt-2 text-center">
+  <p-button
+    label="{{isShowFormComponent ? 'Annuler' : 'Ajouter'}}"
+    icon="pi {{isShowFormComponent ? 'pi-times' : 'pi-plus'}}"
+    (onClick)="showAddForm()"></p-button>
+  @defer (when isShowFormComponent){ @if (isShowFormComponent){
+  <app-weapon-form
+    (weaponAdded)="addedEvent($event)"
+    (weaponEdited)="editedEvent($event)"
+    [weaponForm]="selectedWeapon()"></app-weapon-form>
+  } }
+</div>
