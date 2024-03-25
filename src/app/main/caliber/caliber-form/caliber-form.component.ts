@@ -81,7 +81,7 @@ export class CaliberFormComponent {
       });
   }
 
-  private editCaliber(caliber: CaliberCreateDto) {
+  private editCaliber(caliber: CaliberCreateDto): void {
     const editedCaliber: CaliberDto = {
       ...caliber,
       id: this._caliber.id,

@@ -50,7 +50,7 @@ export class AmmunitionFormComponent implements OnInit {
   // Private field
   private _weights: AmmunitionWeightDto[] = [];
   private _isEditAmmunition: boolean = false;
-  private readonly currentPageMessageHeader: string = 'Gestion des munitions';
+  private readonly _currentPageMessageHeader: string = 'Gestion des munitions';
   private _editedAmmunition!: AmmunitionDto;
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
@@ -74,12 +74,12 @@ export class AmmunitionFormComponent implements OnInit {
   public factories: FactoryDto[] = [];
   public weights: WeightViewModel[] = [];
 
-  @Output() newAmmunitionAdded: EventEmitter<AmmunitionDto> =
+  @Output() added: EventEmitter<AmmunitionDto> =
     new EventEmitter<AmmunitionDto>();
-  @Output() ammunitionEdited: EventEmitter<AmmunitionDto> =
+  @Output() edited: EventEmitter<AmmunitionDto> =
     new EventEmitter<AmmunitionDto>();
 
-  @Input() set ammunitionForm(ammunition: AmmunitionDto | null) {
+  @Input() set ammunition(ammunition: AmmunitionDto | null) {
     this._isEditAmmunition = !!ammunition;
     if (ammunition) {
       this._editedAmmunition = ammunition;
@@ -90,6 +90,10 @@ export class AmmunitionFormComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Charge les calibre et les marque de munitions
+   * @private
+   */
   private loadData(): void {
     forkJoin([
       this.caliberService.getAllCalibers(),
@@ -103,7 +107,7 @@ export class AmmunitionFormComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
@@ -126,6 +130,10 @@ export class AmmunitionFormComponent implements OnInit {
     }
   }
 
+  /**
+   * Charge la liste des poids disponible selon le calibre selectioné
+   * @param caliberId number
+   */
   public selectedCaliber(caliberId: number): void {
     this.ammunitionService
       .getWeightByCaliber({
@@ -143,11 +151,17 @@ export class AmmunitionFormComponent implements OnInit {
       });
   }
 
+  /**
+   * Retourne la marque choisie
+   */
   private getAmmunitionFactory(): FactoryDto {
     const id = this.form.controls['factory'].value;
     return <FactoryDto>this.factories.find((factory) => factory.id === id);
   }
 
+  /**
+   * Retourne le poid selectioné
+   */
   private getAmmunitionWeight(): AmmunitionWeightDto {
     const id = this.form.controls['weight'].value;
     return <AmmunitionWeightDto>(
@@ -155,6 +169,9 @@ export class AmmunitionFormComponent implements OnInit {
     );
   }
 
+  /**
+   * Retourne le calibre selectioné
+   */
   private getCaliber(): CaliberDto {
     const id = this.form.controls['caliber'].value;
     return <CaliberDto>this.calibers.find((caliber) => caliber.id === id);
@@ -181,15 +198,15 @@ export class AmmunitionFormComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          this.newAmmunitionAdded.emit(res);
+          this.added.emit(res);
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Muntion ajoutée'
           );
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -209,15 +226,15 @@ export class AmmunitionFormComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          this.ammunitionEdited.emit(res);
+          this.edited.emit(res);
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
-            'Muntion modifiée'
+            this._currentPageMessageHeader,
+            'Munition modifiée'
           );
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }

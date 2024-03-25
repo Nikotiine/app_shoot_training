@@ -1,0 +1,34 @@
+<div class="mt-3">
+  <a
+    class="p-button no-underline"
+    [routerLink]="['/'+Routing.ADMIN+'/'+Routing.ADMIN_DASHBOARD]"
+    ><i class="pi pi-arrow-left mr-2"></i>Retour</a
+  >
+</div>
+<div class="mt-5">
+  <h2 class="text-center text-blue-500 text-2xl">Gestion des munitions</h2>
+
+  <p-tabView>
+    <p-tabPanel header="Munitions enregistrées">
+      <ng-template pTemplate="content">
+        <app-ammunition-list></app-ammunition-list>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header=" Marques disponibles">
+      <ng-template pTemplate="content">
+        <app-factory-table-list
+          [factoryType]="FactoryType.AMMUNITION"></app-factory-table-list>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Calibres">
+      <ng-template pTemplate="content">
+        <app-caliber-table-list></app-caliber-table-list>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Poids des munitions">
+      <ng-template pTemplate="content">
+        <app-ammunition-weight-list></app-ammunition-weight-list>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>
