@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,18 +34,17 @@ export class CaliberFormComponent {
     inject(CustomMessageService);
   private _isEditCaliber: boolean = false;
   private _caliber!: CaliberDto;
-  private readonly currentPageMessageHeader: string = 'Gestion des calibres';
+  private readonly _currentPageMessageHeader: string = 'Gestion des calibres';
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
     label: ['', Validators.required]
   });
-
-  @Output() caliberAdded: EventEmitter<CaliberDto> =
-    new EventEmitter<CaliberDto>();
-  @Output() caliberEdited: EventEmitter<CaliberDto> =
-    new EventEmitter<CaliberDto>();
-  @Input() set caliberForm(caliber: CaliberDto | null) {
+  protected title: WritableSignal<string> = signal('');
+  @Output() added: EventEmitter<CaliberDto> = new EventEmitter<CaliberDto>();
+  @Output() edited: EventEmitter<CaliberDto> = new EventEmitter<CaliberDto>();
+  @Input() set caliber(caliber: CaliberDto | null) {
     this._isEditCaliber = !!caliber;
+    this.setTitle();
     if (caliber) {
       this._caliber = caliber;
       this.autoCompleteForm(caliber);
@@ -67,14 +74,14 @@ export class CaliberFormComponent {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Nouveau calibre ajouté'
           );
-          this.caliberAdded.emit(res);
+          this.added.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -94,18 +101,26 @@ export class CaliberFormComponent {
       })
       .subscribe({
         next: (res) => {
-          this.caliberEdited.emit(res);
+          this.edited.emit(res);
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Calibre edité'
           );
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
       });
+  }
+  /**
+   * Defini le titre a afficher selon creatin ou edition
+   */
+  private setTitle(): void {
+    this._isEditCaliber
+      ? this.title.set('Modifier le calibre')
+      : this.title.set('Ajouter un nouveau calibre');
   }
 }

@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AmmunitionDto } from '../../models/ammunition-dto';
+import { AmmunitionWeightDto } from '../../models/ammunition-weight-dto';
 
-export interface DisableAmmunition$Params {
+export interface DisableAmmunitionWeight$Params {
   id: number;
 }
 
-export function disableAmmunition(http: HttpClient, rootUrl: string, params: DisableAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableAmmunition.PATH, 'delete');
+export function disableAmmunitionWeight(http: HttpClient, rootUrl: string, params: DisableAmmunitionWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionWeightDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableAmmunitionWeight.PATH, 'delete');
   if (params) {
     rb.query('id', params.id, {});
   }
@@ -23,9 +23,9 @@ export function disableAmmunition(http: HttpClient, rootUrl: string, params: Dis
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<AmmunitionDto>>;
+      return r as StrictHttpResponse<Array<AmmunitionWeightDto>>;
     })
   );
 }
 
-disableAmmunition.PATH = '/api/ammunition/delete/ammunition';
+disableAmmunitionWeight.PATH = '/api/ammunition/delete/weight';

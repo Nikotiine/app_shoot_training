@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AmmunitionDto } from '../../models/ammunition-dto';
+import { AmmunitionWeightDto } from '../../models/ammunition-weight-dto';
 
-export interface EditAmmunition$Params {
-      body: AmmunitionDto
+export interface EditWeight$Params {
+      body: AmmunitionWeightDto
 }
 
-export function editAmmunition(http: HttpClient, rootUrl: string, params: EditAmmunition$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionDto>> {
-  const rb = new RequestBuilder(rootUrl, editAmmunition.PATH, 'put');
+export function editWeight(http: HttpClient, rootUrl: string, params: EditWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionWeightDto>> {
+  const rb = new RequestBuilder(rootUrl, editWeight.PATH, 'put');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -23,9 +23,9 @@ export function editAmmunition(http: HttpClient, rootUrl: string, params: EditAm
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AmmunitionDto>;
+      return r as StrictHttpResponse<AmmunitionWeightDto>;
     })
   );
 }
 
-editAmmunition.PATH = '/api/ammunition/edit/ammunition';
+editWeight.PATH = '/api/ammunition/edit/weight';

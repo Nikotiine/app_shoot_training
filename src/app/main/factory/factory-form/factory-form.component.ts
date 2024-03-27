@@ -44,7 +44,7 @@ export class FactoryFormComponent {
     name: ['', Validators.required]
   });
   public factoryLabel = signal('');
-  public title: WritableSignal<string> = signal('');
+  protected title: WritableSignal<string> = signal('');
 
   @Output() newFactory: EventEmitter<FactoryDto> =
     new EventEmitter<FactoryDto>();
@@ -175,10 +175,8 @@ export class FactoryFormComponent {
    * Defini le titre a afficher selon creatin ou edition
    */
   private setTitle(): void {
-    if (this._isEditFactory) {
-      this.title.set('Modifier la marque');
-    } else {
-      this.title.set('Ajouter une nouvelle marque');
-    }
+    this._isEditFactory
+      ? this.title.set('Modifier la marque')
+      : this.title.set('Ajouter une nouvelle marque');
   }
 }

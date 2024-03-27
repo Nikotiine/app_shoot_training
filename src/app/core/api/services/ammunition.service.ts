@@ -13,8 +13,12 @@ import { AmmunitionDto } from '../models/ammunition-dto';
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
 import { disableAmmunition } from '../fn/ammunition/disable-ammunition';
 import { DisableAmmunition$Params } from '../fn/ammunition/disable-ammunition';
+import { disableAmmunitionWeight } from '../fn/ammunition/disable-ammunition-weight';
+import { DisableAmmunitionWeight$Params } from '../fn/ammunition/disable-ammunition-weight';
 import { editAmmunition } from '../fn/ammunition/edit-ammunition';
 import { EditAmmunition$Params } from '../fn/ammunition/edit-ammunition';
+import { editWeight } from '../fn/ammunition/edit-weight';
+import { EditWeight$Params } from '../fn/ammunition/edit-weight';
 import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
 import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
 import { getAllWeight } from '../fn/ammunition/get-all-weight';
@@ -36,8 +40,33 @@ export class AmmunitionService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `editWeight()` */
+  static readonly EditWeightPath = '/api/ammunition/edit/weight';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `editWeight()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editWeight$Response(params: EditWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionWeightDto>> {
+    return editWeight(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `editWeight$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editWeight(params: EditWeight$Params, context?: HttpContext): Observable<AmmunitionWeightDto> {
+    return this.editWeight$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AmmunitionWeightDto>): AmmunitionWeightDto => r.body)
+    );
+  }
+
   /** Path part for operation `editAmmunition()` */
-  static readonly EditAmmunitionPath = '/api/ammunition/edit';
+  static readonly EditAmmunitionPath = '/api/ammunition/edit/ammunition';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -186,8 +215,33 @@ export class AmmunitionService extends BaseService {
     );
   }
 
+  /** Path part for operation `disableAmmunitionWeight()` */
+  static readonly DisableAmmunitionWeightPath = '/api/ammunition/delete/weight';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `disableAmmunitionWeight()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableAmmunitionWeight$Response(params: DisableAmmunitionWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionWeightDto>>> {
+    return disableAmmunitionWeight(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `disableAmmunitionWeight$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  disableAmmunitionWeight(params: DisableAmmunitionWeight$Params, context?: HttpContext): Observable<Array<AmmunitionWeightDto>> {
+    return this.disableAmmunitionWeight$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionWeightDto>>): Array<AmmunitionWeightDto> => r.body)
+    );
+  }
+
   /** Path part for operation `disableAmmunition()` */
-  static readonly DisableAmmunitionPath = '/api/ammunition/delete';
+  static readonly DisableAmmunitionPath = '/api/ammunition/delete/ammunition';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

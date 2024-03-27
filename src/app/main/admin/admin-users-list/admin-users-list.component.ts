@@ -32,21 +32,24 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
   styleUrl: './admin-users-list.component.scss'
 })
 export class AdminUsersListComponent implements OnInit {
+  // Private field
   private readonly adminService: AdminService = inject(AdminService);
   private readonly appUserService: AppUserService = inject(AppUserService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
-  private readonly currentPageMessageHeader: string =
+  private readonly _currentPageMessageHeader: string =
     'Administration des utilisateurs';
   private selectedUser: UserProfileDto | null = null;
+  //public field
+
   protected readonly Routing = Routing;
   public users: UserProfileDto[] = [];
   public form: FormGroup = inject(FormBuilder).group({
     role: [UserRoleEnum.USER]
   });
-  public visible: boolean = false;
+  public showChangeRoleForm: boolean = false;
   public roles: UserRoleEnum[] = [UserRoleEnum.USER, UserRoleEnum.ADMIN];
 
   public ngOnInit(): void {
@@ -63,7 +66,7 @@ export class AdminUsersListComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
@@ -79,13 +82,13 @@ export class AdminUsersListComponent implements OnInit {
     const user = this.getUserById(id);
     if (user.email === this.appUserService.getProfile()?.email) {
       this.customMessageService.warningMessage(
-        this.currentPageMessageHeader,
+        this._currentPageMessageHeader,
         'Vous ne pouvez pas changer votre propre role'
       );
     } else {
       this.form.controls['role'].setValue(user.role);
       this.selectedUser = user;
-      this.visible = !this.visible;
+      this.showChangeRoleForm = !this.showChangeRoleForm;
     }
   }
 
@@ -102,15 +105,15 @@ export class AdminUsersListComponent implements OnInit {
         .subscribe({
           next: (res) => {
             this.users = res;
-            this.visible = !this.visible;
+            this.showChangeRoleForm = !this.showChangeRoleForm;
             this.customMessageService.successMessage(
-              this.currentPageMessageHeader,
+              this._currentPageMessageHeader,
               'Role utilisateur modifier'
             );
           },
           error: (err) => {
             this.customMessageService.errorMessage(
-              this.currentPageMessageHeader,
+              this._currentPageMessageHeader,
               err.error.message
             );
           }
@@ -131,13 +134,13 @@ export class AdminUsersListComponent implements OnInit {
         next: (res) => {
           this.users = res;
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             'Utilisateur desactivé'
           );
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -153,14 +156,14 @@ export class AdminUsersListComponent implements OnInit {
   public async confirm(event: Event, user: UserProfileDto): Promise<void> {
     if (user.email === this.appUserService.getProfile()?.email) {
       this.customMessageService.errorMessage(
-        this.currentPageMessageHeader,
+        this._currentPageMessageHeader,
         'Vous ne pouvez pas vous desactiver'
       );
     } else {
       const confirmed = await this.customConfirmationService.confirm(
         event,
         'Supprimer cet utilisateur ? ',
-        this.currentPageMessageHeader
+        this._currentPageMessageHeader
       );
       if (confirmed) {
         this.disableUser(user.id);

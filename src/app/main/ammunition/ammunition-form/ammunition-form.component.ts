@@ -4,7 +4,9 @@ import {
   inject,
   Input,
   OnInit,
-  Output
+  Output,
+  signal,
+  WritableSignal
 } from '@angular/core';
 import {
   FormBuilder,
@@ -73,7 +75,7 @@ export class AmmunitionFormComponent implements OnInit {
   public calibers: CaliberDto[] = [];
   public factories: FactoryDto[] = [];
   public weights: WeightViewModel[] = [];
-
+  protected title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<AmmunitionDto> =
     new EventEmitter<AmmunitionDto>();
   @Output() edited: EventEmitter<AmmunitionDto> =
@@ -81,6 +83,7 @@ export class AmmunitionFormComponent implements OnInit {
 
   @Input() set ammunition(ammunition: AmmunitionDto | null) {
     this._isEditAmmunition = !!ammunition;
+    this.setTitle();
     if (ammunition) {
       this._editedAmmunition = ammunition;
       this.autoCompleteForm(ammunition);
@@ -239,5 +242,13 @@ export class AmmunitionFormComponent implements OnInit {
           );
         }
       });
+  }
+  /**
+   * Defini le titre a afficher selon creatin ou edition
+   */
+  private setTitle(): void {
+    this._isEditAmmunition
+      ? this.title.set('Modifier la munition')
+      : this.title.set('Ajouter un nouvelle munition');
   }
 }

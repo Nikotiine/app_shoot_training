@@ -3,9 +3,9 @@
 import { CaliberDto } from '../models/caliber-dto';
 export interface AmmunitionWeightDto {
   active: boolean;
-  calibers?: Array<CaliberDto>;
+  calibers: Array<CaliberDto>;
   createdAt: string;
-  grains?: number;
-  grams?: number;
+  grains: number;
+  grams: number;
   id: number;
 }

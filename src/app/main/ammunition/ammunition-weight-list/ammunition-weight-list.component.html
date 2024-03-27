@@ -1,27 +1,33 @@
 <div class="mt-2">
   <app-caliber-dropdown
-    [initDropdown]="0"
+    [initDropdown]="selectedCaliberId()"
     [disable]="disableDropdown()"
-    (selectedCaliber)="loadAmmunitionWeights($event.id)"></app-caliber-dropdown>
+    (selectedCaliber)="filterByCaliber($event.id)"></app-caliber-dropdown>
 
   <div class="mt-5">
     <h2 class="text-blue-500 text-center">
       {{result()}} {{result() <2 ? 'resultat' : 'resultats'}}
     </h2>
-    @if (result() > 0 && !visible){
-    <p-table [value]="weights" [tableStyle]="{ 'min-width': '50rem' }">
+    @if (result() > 0 && !isShowForm){
+    <p-table [value]="filteredWeights" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
           <th>Id</th>
+          <th>Calibre</th>
           <th>Grains</th>
           <th>Grammes</th>
           <th>Ajouter le</th>
           <th>Status</th>
+          <th class="text-center">Modifier</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-weight>
         <tr>
           <td>{{ weight.id }}</td>
+          <td>
+            @for (caliber of weight.calibers;track caliber.id){
+            {{caliber.label}} }
+          </td>
           <td>{{ weight.grains }} grains</td>
           <td>{{ weight.grams }} grammes</td>
           <td>{{ weight.createdAt | date:'dd MMM yyyy' }}</td>
@@ -32,8 +38,15 @@
                 icon="pi pi-ban"
                 severity="danger"
                 [text]="true"
-                (onClick)="confirm($event,weight.id)"></p-button>
+                (onClick)="confirm($event,weight)"></p-button>
             </div>
+          </td>
+          <td class="text-center">
+            <p-button
+              label="Editer"
+              (onClick)="showEditForm(weight)"
+              icon="pi pi-user-edit"
+              [text]="true"></p-button>
           </td>
         </tr>
       </ng-template>
@@ -41,13 +54,16 @@
     }
     <div class="mt-2 text-center">
       <p-button
-        label="{{ visible ? 'Annuler' : 'Ajouter' }}"
-        icon="pi {{visible ? 'pi-times' : 'pi-plus'}}"
-        (onClick)="add()"></p-button>
+        label="{{ isShowForm ? 'Annuler' : 'Ajouter' }}"
+        icon="pi {{isShowForm ? 'pi-times' : 'pi-plus'}}"
+        (onClick)="showAddForm()"></p-button>
     </div>
-    @defer (when visible){ @if (visible){
-    <app-ammunition-weight-add
-      (newWeight)="newWeight($event)"></app-ammunition-weight-add>
+    @defer (when isShowForm){ @if (isShowForm){
+    <app-ammunition-weight-form
+      (added)="addedEvent($event)"
+      (edited)="editedEvent($event)"
+      [weight]="selectedWeight()"
+      [weights]="weights"></app-ammunition-weight-form>
     } }
   </div>
 </div>

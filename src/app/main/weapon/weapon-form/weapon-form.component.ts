@@ -228,10 +228,8 @@ export class WeaponFormComponent implements OnInit {
    * Defini le titre a afficher selon creatin ou edition
    */
   private setTitle(): void {
-    if (this._isEditWeapon) {
-      this.title.set("Modifier l'arme");
-    } else {
-      this.title.set('Ajouter une nouvelle arme');
-    }
+    this._isEditWeapon
+      ? this.title.set("Modifier l'arme")
+      : this.title.set('Ajouter une nouvelle arme');
   }
 }

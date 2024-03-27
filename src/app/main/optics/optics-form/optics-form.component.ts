@@ -4,7 +4,9 @@ import {
   inject,
   Input,
   OnInit,
-  Output
+  Output,
+  signal,
+  WritableSignal
 } from '@angular/core';
 import { OpticsService } from '../../../core/api/services/optics.service';
 import {
@@ -81,12 +83,13 @@ export class OpticsFormComponent implements OnInit {
     ),
     isParallax: [false]
   });
-
+  protected title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
   @Output() edited: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
 
   @Input() set optics(optic: OpticsDto | null) {
     this._isEditOptics = !!optic;
+    this.setTitle();
     if (optic) {
       this._editedOptic = optic;
       this.autoCompleteForm(optic);
@@ -333,5 +336,13 @@ export class OpticsFormComponent implements OnInit {
           );
         }
       });
+  }
+  /**
+   * Defini le titre a afficher selon creatin ou edition
+   */
+  private setTitle(): void {
+    this._isEditOptics
+      ? this.title.set("Modifier l'optique")
+      : this.title.set('Ajouter un nouveau calibre');
   }
 }
