@@ -12,7 +12,6 @@ export const userResolver: ResolveFn<UserProfileDto | null | boolean> = (
   route,
   state
 ) => {
-  console.log('Resolver');
   const authenticationService: AuthenticationService = inject(
     AuthenticationService
   );
