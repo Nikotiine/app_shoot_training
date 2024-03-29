@@ -32,7 +32,7 @@ import { forkJoin } from 'rxjs';
 import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { AmmunitionCreateDto } from '../../../core/api/models/ammunition-create-dto';
 import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
-import { AmmunitionWeightService } from '../../../core/app/services/ammunition-weight.service';
+import { AppWeightService } from '../../../core/app/services/app-weight.service';
 
 @Component({
   selector: 'app-ammunition-form',
@@ -60,9 +60,8 @@ export class AmmunitionFormComponent implements OnInit {
     inject(CustomMessageService);
   private readonly caliberService: CaliberService = inject(CaliberService);
   private readonly factoryService: FactoryService = inject(FactoryService);
-  private readonly ammunitionWeightService: AmmunitionWeightService = inject(
-    AmmunitionWeightService
-  );
+  private readonly appWeightService: AppWeightService =
+    inject(AppWeightService);
 
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
@@ -138,20 +137,16 @@ export class AmmunitionFormComponent implements OnInit {
    * @param caliberId number
    */
   public selectedCaliber(caliberId: number): void {
-    this.ammunitionService
-      .getWeightByCaliber({
-        id: caliberId
-      })
-      .subscribe({
-        next: (weight) => {
-          this.weights = this.ammunitionWeightService.createWeightVM(weight);
-          this._weights = weight;
-          this.form.controls['weight'].enable();
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage('Admin', err.error.message);
-        }
-      });
+    this.appWeightService.getWeightByCaliber(caliberId).subscribe({
+      next: (weight) => {
+        this.weights = this.appWeightService.createWeightVM(weight);
+        this._weights = weight;
+        this.form.controls['weight'].enable();
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage('Admin', err.error.message);
+      }
+    });
   }
 
   /**

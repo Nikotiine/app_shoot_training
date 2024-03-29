@@ -9,8 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { edit } from '../fn/user/edit';
-import { Edit$Params } from '../fn/user/edit';
+import { editProfile } from '../fn/user/edit-profile';
+import { EditProfile$Params } from '../fn/user/edit-profile';
 import { UserProfileDto } from '../models/user-profile-dto';
 
 
@@ -23,27 +23,27 @@ export class UserService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `edit()` */
-  static readonly EditPath = '/api/user/edit';
+  /** Path part for operation `editProfile()` */
+  static readonly EditProfilePath = '/api/user/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `edit()` instead.
+   * To access only the response body, use `editProfile()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  edit$Response(params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
-    return edit(this.http, this.rootUrl, params, context);
+  editProfile$Response(params: EditProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
+    return editProfile(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `edit$Response()` instead.
+   * To access the full response (for headers, for example), `editProfile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  edit(params: Edit$Params, context?: HttpContext): Observable<UserProfileDto> {
-    return this.edit$Response(params, context).pipe(
+  editProfile(params: EditProfile$Params, context?: HttpContext): Observable<UserProfileDto> {
+    return this.editProfile$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
     );
   }

@@ -29,4 +29,4 @@ export function newSetup(http: HttpClient, rootUrl: string, params: NewSetup$Par
   );
 }
 
-newSetup.PATH = '/api/setup/new';
+newSetup.PATH = '/api/setup/save';

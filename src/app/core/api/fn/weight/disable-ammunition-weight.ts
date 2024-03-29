@@ -28,4 +28,4 @@ export function disableAmmunitionWeight(http: HttpClient, rootUrl: string, param
   );
 }
 
-disableAmmunitionWeight.PATH = '/api/ammunition/delete/weight';
+disableAmmunitionWeight.PATH = '/api/weight/delete';

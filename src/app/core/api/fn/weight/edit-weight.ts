@@ -28,4 +28,4 @@ export function editWeight(http: HttpClient, rootUrl: string, params: EditWeight
   );
 }
 
-editWeight.PATH = '/api/ammunition/edit/weight';
+editWeight.PATH = '/api/weight/edit';

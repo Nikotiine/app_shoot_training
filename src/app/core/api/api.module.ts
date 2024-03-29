@@ -4,6 +4,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { WeightService } from './services/weight.service';
 import { WeaponService } from './services/weapon.service';
 import { OpticsService } from './services/optics.service';
 import { FactoryService } from './services/factory.service';
@@ -24,6 +25,7 @@ import { AdminService } from './services/admin.service';
   exports: [],
   declarations: [],
   providers: [
+    WeightService,
     WeaponService,
     OpticsService,
     FactoryService,

@@ -69,7 +69,7 @@ export class UserEditComponent {
     }
 
     this.userService
-      .edit({
+      .editProfile({
         body: editProfile
       })
       .subscribe({

@@ -28,4 +28,4 @@ export function editAmmunition(http: HttpClient, rootUrl: string, params: EditAm
   );
 }
 
-editAmmunition.PATH = '/api/ammunition/edit/ammunition';
+editAmmunition.PATH = '/api/ammunition/edit';

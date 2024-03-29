@@ -1,7 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AmmunitionWeight } from '../enum/AmmunitionWeight.enum';
 import { WeightViewModel } from '../model/WeightViewModel';
 import { AmmunitionWeightDto } from '../../api/models/ammunition-weight-dto';
+import { WeightService } from '../../api/services';
+import { Observable } from 'rxjs';
+import { AmmunitionWeightCreateDto } from '../../api/models/ammunition-weight-create-dto';
 
 export interface GrainsAndGrams {
   grains: number;
@@ -10,7 +13,7 @@ export interface GrainsAndGrams {
 @Injectable({
   providedIn: 'root'
 })
-export class AmmunitionWeightService {
+export class AppWeightService {
   private _typeOfWeight: WeightViewModel[] = [
     {
       id: 1,
@@ -21,7 +24,7 @@ export class AmmunitionWeightService {
       label: AmmunitionWeight.GRAIN
     }
   ];
-  constructor() {}
+  private readonly weightService: WeightService = inject(WeightService);
 
   public getTypesOfWeight(): WeightViewModel[] {
     return this._typeOfWeight;
@@ -66,6 +69,36 @@ export class AmmunitionWeightService {
         id: weight.id,
         label: `${weight.grains} grains - ${weight.grams?.toFixed(2)} grammes`
       };
+    });
+  }
+
+  public getAllWeight(): Observable<AmmunitionWeightDto[]> {
+    return this.weightService.getAllWeight();
+  }
+
+  public getWeightByCaliber(id: number): Observable<AmmunitionWeightDto[]> {
+    return this.weightService.getWeightByCaliber({
+      id: id
+    });
+  }
+
+  public disableWeight(id: number): Observable<AmmunitionWeightDto[]> {
+    return this.weightService.disableAmmunitionWeight({
+      id: id
+    });
+  }
+
+  public create(
+    weight: AmmunitionWeightCreateDto
+  ): Observable<AmmunitionWeightDto> {
+    return this.weightService.newWeight({
+      body: weight
+    });
+  }
+
+  public edit(weight: AmmunitionWeightDto): Observable<AmmunitionWeightDto> {
+    return this.weightService.editWeight({
+      body: weight
     });
   }
 }

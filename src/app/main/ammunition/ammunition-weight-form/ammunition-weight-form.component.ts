@@ -24,9 +24,9 @@ import {
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import {
-  AmmunitionWeightService,
+  AppWeightService,
   GrainsAndGrams
-} from '../../../core/app/services/ammunition-weight.service';
+} from '../../../core/app/services/app-weight.service';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CaliberService } from '../../../core/api/services/caliber.service';
@@ -56,9 +56,8 @@ export class AmmunitionWeightFormComponent implements OnInit {
   // Private field
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
-  private readonly ammunitionWeightService: AmmunitionWeightService = inject(
-    AmmunitionWeightService
-  );
+  private readonly appWeightService: AppWeightService =
+    inject(AppWeightService);
   private readonly caliberService: CaliberService = inject(CaliberService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
@@ -73,7 +72,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
     selectedCalibers: [null, Validators.required]
   });
   public typesOfWeight: WeightViewModel[] =
-    this.ammunitionWeightService.getTypesOfWeight();
+    this.appWeightService.getTypesOfWeight();
   public calibers: CaliberDto[] = [];
   protected title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<AmmunitionWeightDto> =
@@ -175,10 +174,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
   private createNewAmmunitionWeight(): void {
     const weight = this.form.controls['weight'].value;
     const typeOfWeight = this.form.controls['typeOfWeight'].value;
-    const grainAndGram = this.ammunitionWeightService.convert(
-      weight,
-      typeOfWeight
-    );
+    const grainAndGram = this.appWeightService.convert(weight, typeOfWeight);
     const weightExist: boolean = this.verifyWeights(grainAndGram);
     if (!weightExist) {
       const calibers = this.form.controls['selectedCalibers'].value;
@@ -187,40 +183,9 @@ export class AmmunitionWeightFormComponent implements OnInit {
         grams: grainAndGram.grams,
         calibers: calibers
       };
-      this.ammunitionService
-        .newWeight({
-          body: ammunitionWeightCreate
-        })
-        .subscribe({
-          next: (res) => {
-            this.added.emit(res);
-          },
-          error: (err) => {
-            this.customMessageService.errorMessage(
-              this._currentPageMessageHeader,
-              err.error.message
-            );
-          }
-        });
-    }
-  }
-
-  private editAmmunitionWeight(): void {
-    const weight: AmmunitionWeightDto = {
-      ...this._weight,
-      calibers: this.form.controls['selectedCalibers'].value
-    };
-    this.ammunitionService
-      .editWeight({
-        body: weight
-      })
-      .subscribe({
+      this.appWeightService.create(ammunitionWeightCreate).subscribe({
         next: (res) => {
-          this.edited.emit(res);
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Calibre ajoute au poids'
-          );
+          this.added.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
@@ -229,5 +194,28 @@ export class AmmunitionWeightFormComponent implements OnInit {
           );
         }
       });
+    }
+  }
+
+  private editAmmunitionWeight(): void {
+    const weight: AmmunitionWeightDto = {
+      ...this._weight,
+      calibers: this.form.controls['selectedCalibers'].value
+    };
+    this.appWeightService.edit(weight).subscribe({
+      next: (res) => {
+        this.edited.emit(res);
+        this.customMessageService.successMessage(
+          this._currentPageMessageHeader,
+          'Calibre ajoute au poids'
+        );
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 }

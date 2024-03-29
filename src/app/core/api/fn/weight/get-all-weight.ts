@@ -26,4 +26,4 @@ export function getAllWeight(http: HttpClient, rootUrl: string, params?: GetAllW
   );
 }
 
-getAllWeight.PATH = '/api/ammunition/all/weight';
+getAllWeight.PATH = '/api/weight/all';

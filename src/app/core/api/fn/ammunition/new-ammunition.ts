@@ -29,4 +29,4 @@ export function newAmmunition(http: HttpClient, rootUrl: string, params: NewAmmu
   );
 }
 
-newAmmunition.PATH = '/api/ammunition/save/ammunition';
+newAmmunition.PATH = '/api/ammunition/save';

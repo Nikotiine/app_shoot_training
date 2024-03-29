@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserEditDto } from '../../models/user-edit-dto';
-import { UserProfileDto } from '../../models/user-profile-dto';
+import { AmmunitionWeightCreateDto } from '../../models/ammunition-weight-create-dto';
+import { AmmunitionWeightDto } from '../../models/ammunition-weight-dto';
 
-export interface Edit$Params {
-      body: UserEditDto
+export interface NewWeight$Params {
+      body: AmmunitionWeightCreateDto
 }
 
-export function edit(http: HttpClient, rootUrl: string, params: Edit$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
-  const rb = new RequestBuilder(rootUrl, edit.PATH, 'post');
+export function newWeight(http: HttpClient, rootUrl: string, params: NewWeight$Params, context?: HttpContext): Observable<StrictHttpResponse<AmmunitionWeightDto>> {
+  const rb = new RequestBuilder(rootUrl, newWeight.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +24,9 @@ export function edit(http: HttpClient, rootUrl: string, params: Edit$Params, con
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserProfileDto>;
+      return r as StrictHttpResponse<AmmunitionWeightDto>;
     })
   );
 }
 
-edit.PATH = '/api/user/edit';
+newWeight.PATH = '/api/weight/save';

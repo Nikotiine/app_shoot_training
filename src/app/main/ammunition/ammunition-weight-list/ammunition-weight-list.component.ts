@@ -15,6 +15,7 @@ import { TableModule } from 'primeng/table';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { AmmunitionWeightFormComponent } from '../ammunition-weight-form/ammunition-weight-form.component';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
+import { AppWeightService } from '../../../core/app/services/app-weight.service';
 
 @Component({
   selector: 'app-ammunition-weight-list',
@@ -34,8 +35,8 @@ export class AmmunitionWeightListComponent implements OnInit {
   // Private field
   private readonly _currentPageMessageHeader: string = 'Poids des munitions';
 
-  private readonly ammunitionService: AmmunitionService =
-    inject(AmmunitionService);
+  private readonly appWeightService: AppWeightService =
+    inject(AppWeightService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
   private readonly customMessageService: CustomMessageService =
@@ -100,22 +101,18 @@ export class AmmunitionWeightListComponent implements OnInit {
    * @param weight AmmunitionWeightDto
    */
   private disableAmmunitionWeight(weight: AmmunitionWeightDto): void {
-    this.ammunitionService
-      .disableAmmunitionWeight({
-        id: weight.id
-      })
-      .subscribe({
-        next: (data) => {
-          this.weights = data;
-          this.filterByCaliber(this.selectedCaliberId());
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.appWeightService.disableWeight(weight.id).subscribe({
+      next: (data) => {
+        this.weights = data;
+        this.filterByCaliber(this.selectedCaliberId());
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 
   /**
@@ -139,7 +136,7 @@ export class AmmunitionWeightListComponent implements OnInit {
    * Charge les poids a l'init du template
    */
   private loadData(): void {
-    this.ammunitionService.getAllWeight().subscribe({
+    this.appWeightService.getAllWeight().subscribe({
       next: (data) => {
         this.filteredWeights = data;
         this.weights = data;

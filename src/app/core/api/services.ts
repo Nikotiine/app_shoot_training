@@ -1,3 +1,4 @@
+export { WeightService } from './services/weight.service';
 export { WeaponService } from './services/weapon.service';
 export { OpticsService } from './services/optics.service';
 export { FactoryService } from './services/factory.service';

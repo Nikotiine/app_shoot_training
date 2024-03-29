@@ -28,4 +28,4 @@ export function getWeightByCaliber(http: HttpClient, rootUrl: string, params: Ge
   );
 }
 
-getWeightByCaliber.PATH = '/api/ammunition/weight-by-caliber';
+getWeightByCaliber.PATH = '/api/weight/by-caliber';

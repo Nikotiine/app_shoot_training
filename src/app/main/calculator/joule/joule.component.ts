@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +16,7 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
 import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
+import { AppWeightService } from '../../../core/app/services/app-weight.service';
 
 @Component({
   selector: 'app-joule',
@@ -31,26 +32,21 @@ import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
   styleUrl: './joule.component.scss'
 })
 export class JouleComponent implements OnInit {
+  // Private field
+
+  private readonly appWeightService: AppWeightService =
+    inject(AppWeightService);
   public form: FormGroup;
   public result: string = '';
   public calibers: CaliberDto[] = [];
   public weightsVM: WeightViewModel[] = [];
   private weights: AmmunitionWeightDto[] = [];
-  public typeOfWeight: WeightViewModel[] = [
-    {
-      id: 1,
-      label: AmmunitionWeight.GRAM
-    },
-    {
-      id: 2,
-      label: AmmunitionWeight.GRAIN
-    }
-  ];
+  public typeOfWeight: WeightViewModel[] =
+    this.appWeightService.getTypesOfWeight();
   public legend: string = 'Parametres pre definis';
   public predefinedParams: boolean = true;
   constructor(
     private fb: FormBuilder,
-    private readonly ammunitionService: AmmunitionService,
     private readonly caliberService: CaliberService,
     private readonly customMessageService: CustomMessageService
   ) {
@@ -65,6 +61,7 @@ export class JouleComponent implements OnInit {
 
   /**
    * Calcul la puissance en joules des parametre passe
+   * TODO : Utiliser le service AppWeightService
    */
   public calculate(): void {
     let weight = this.form.controls['weight'].value;
@@ -93,19 +90,15 @@ export class JouleComponent implements OnInit {
    * @param caliberId
    */
   public caliberSelected(caliberId: number): void {
-    this.ammunitionService
-      .getWeightByCaliber({
-        id: caliberId
-      })
-      .subscribe({
-        next: (weights) => {
-          this.createWeightVM(weights);
-          console.log(weights);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage('Calibre', err.error.message);
-        }
-      });
+    this.appWeightService.getWeightByCaliber(caliberId).subscribe({
+      next: (weights) => {
+        this.createWeightVM(weights);
+        console.log(weights);
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage('Calibre', err.error.message);
+      }
+    });
   }
 
   /**

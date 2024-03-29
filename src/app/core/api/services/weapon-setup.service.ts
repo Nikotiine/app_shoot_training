@@ -26,7 +26,7 @@ export class WeaponSetupService extends BaseService {
   }
 
   /** Path part for operation `newSetup()` */
-  static readonly NewSetupPath = '/api/setup/new';
+  static readonly NewSetupPath = '/api/setup/save';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -51,7 +51,7 @@ export class WeaponSetupService extends BaseService {
   }
 
   /** Path part for operation `getAllUserWeaponSetup()` */
-  static readonly GetAllUserWeaponSetupPath = '/api/setup/all';
+  static readonly GetAllUserWeaponSetupPath = '/api/setup/by-user';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
