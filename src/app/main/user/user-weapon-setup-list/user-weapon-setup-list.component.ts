@@ -3,7 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { UserWeaponSetupAddComponent } from '../user-weapon-setup-add/user-weapon-setup-add.component';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
-import { AppUserService } from '../../../core/app/services/app-user.service';
+import { CustomUserService } from '../../../core/app/services/custom-user.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { TableModule } from 'primeng/table';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
@@ -26,7 +26,7 @@ export class UserWeaponSetupListComponent implements OnInit {
   public isAddNewSetup: boolean = false;
   public weaponsSetups: UserWeaponSetupDto[] = [];
   private weaponSetupService: WeaponSetupService = inject(WeaponSetupService);
-  private appUserService: AppUserService = inject(AppUserService);
+  private appUserService: CustomUserService = inject(CustomUserService);
   private customMessageService: CustomMessageService =
     inject(CustomMessageService);
 

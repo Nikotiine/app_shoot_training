@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserRoleEnum } from '../../../core/app/enum/UserRole.enum';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { AppUserService } from '../../../core/app/services/app-user.service';
+import { CustomUserService } from '../../../core/app/services/custom-user.service';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { RouterLink } from '@angular/router';
 import { Routing } from '../../../core/app/enum/Routing.enum';
@@ -34,7 +34,8 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
 export class AdminUsersListComponent implements OnInit {
   // Private field
   private readonly adminService: AdminService = inject(AdminService);
-  private readonly appUserService: AppUserService = inject(AppUserService);
+  private readonly appUserService: CustomUserService =
+    inject(CustomUserService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =

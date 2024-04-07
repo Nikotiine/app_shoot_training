@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AppUserService } from '../../../core/app/services/app-user.service';
+import { CustomUserService } from '../../../core/app/services/custom-user.service';
 
 import { DatePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
   styleUrl: './user-view.component.scss'
 })
 export class UserViewComponent implements OnInit {
-  private userService: AppUserService = inject(AppUserService);
+  private userService: CustomUserService = inject(CustomUserService);
   public shooterProfile!: UserProfileDto;
   public isEdit: boolean = false;
   ngOnInit(): void {

@@ -20,7 +20,7 @@ import { OpticsFormComponent } from '../../optics/optics-form/optics-form.compon
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-import { AppUserService } from '../../../core/app/services/app-user.service';
+import { CustomUserService } from '../../../core/app/services/custom-user.service';
 import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
@@ -65,7 +65,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,
     private readonly opticsService: OpticsService,
-    private readonly appUserService: AppUserService,
+    private readonly appUserService: CustomUserService,
     private readonly weaponSetupService: WeaponSetupService
   ) {
     this.form = this.fb.group({
@@ -299,7 +299,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
             this.setupAdded.emit(res);
             this.customMessageService.successMessage(
               'Setup service',
-              'Nouveau setup enregistrer'
+              'Nouveau setup enregistré'
             );
           },
           error: (err) => {

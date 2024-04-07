@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 import { Token } from '../../api/models/token';
-import { AppUserService } from './app-user.service';
+import { CustomUserService } from './custom-user.service';
 import { Routing } from '../enum/Routing.enum';
 import { UserProfileDto } from '../../api/models/user-profile-dto';
 
@@ -11,7 +11,7 @@ import { UserProfileDto } from '../../api/models/user-profile-dto';
 })
 export class SecurityService {
   private tokenService: TokenService = inject(TokenService);
-  private userService: AppUserService = inject(AppUserService);
+  private userService: CustomUserService = inject(CustomUserService);
   private router = inject(Router);
   public authenticate = signal(!!this.tokenService.getToken());
   public setAuthentication(profile: UserProfileDto): void {

@@ -5,7 +5,7 @@ import { UserProfileDto } from '../../api/models/user-profile-dto';
 @Injectable({
   providedIn: 'root'
 })
-export class AppUserService {
+export class CustomUserService {
   private shooter: UserProfileDto | null = null;
   public isAdmin = signal(false);
 

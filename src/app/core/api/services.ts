@@ -5,6 +5,7 @@ export { FactoryService } from './services/factory.service';
 export { CaliberService } from './services/caliber.service';
 export { AmmunitionService } from './services/ammunition.service';
 export { UserService } from './services/user.service';
+export { TrainingSessionService } from './services/training-session.service';
 export { WeaponSetupService } from './services/weapon-setup.service';
 export { RegistrationService } from './services/registration.service';
 export { ForgotPasswordService } from './services/forgot-password.service';

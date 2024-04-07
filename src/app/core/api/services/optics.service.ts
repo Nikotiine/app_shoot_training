@@ -135,7 +135,7 @@ export class OpticsService extends BaseService {
   }
 
   /** Path part for operation `getAllActiveOptics()` */
-  static readonly GetAllActiveOpticsPath = '/api/optics/actoves';
+  static readonly GetAllActiveOpticsPath = '/api/optics/actives';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

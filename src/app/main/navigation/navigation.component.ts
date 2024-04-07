@@ -7,7 +7,7 @@ import { MenuModule } from 'primeng/menu';
 
 import { Routing } from '../../core/app/enum/Routing.enum';
 import { SecurityService } from '../../core/app/services/security.service';
-import { AppUserService } from '../../core/app/services/app-user.service';
+import { CustomUserService } from '../../core/app/services/custom-user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,14 +18,16 @@ import { Router } from '@angular/router';
   styleUrl: './navigation.component.scss'
 })
 export class NavigationComponent implements OnInit {
-  public navbarConnected: MenuItem[] = [];
-  public navbarVisitor: MenuItem[] = [];
+  // Private field
+  private readonly securityService: SecurityService = inject(SecurityService);
+  private readonly userProfileService: CustomUserService =
+    inject(CustomUserService);
+  private readonly router: Router = inject(Router);
   protected readonly Routing = Routing;
 
-  private readonly securityService: SecurityService = inject(SecurityService);
-  private readonly userProfileService: AppUserService = inject(AppUserService);
-  private readonly router: Router = inject(Router);
-
+  // Public field
+  public navbarConnected: MenuItem[] = [];
+  public navbarVisitor: MenuItem[] = [];
   public isLogged: Signal<boolean> = computed(() => {
     return this.securityService.authenticate();
   });
@@ -56,40 +58,28 @@ export class NavigationComponent implements OnInit {
         items: [
           {
             label: 'Mes info',
-            icon: 'pi pi-fw pi-align-left',
+            icon: 'pi pi-fw pi-info',
             routerLink: Routing.USER + '/' + Routing.USER_PROFILE
           },
           {
             label: 'Mes armes',
-            icon: 'pi pi-fw pi-align-right',
+            icon: 'pi pi-fw pi-list',
             routerLink: Routing.USER + '/' + Routing.USER_WEAPON_SETUP_LIST
-          },
-          {
-            label: 'Center',
-            icon: 'pi pi-fw pi-align-center'
-          },
-          {
-            label: 'Justify',
-            icon: 'pi pi-fw pi-align-justify'
           }
         ]
       },
       {
         label: 'Calculateur balistique',
-        icon: 'pi pi-fw pi-user',
+        icon: 'pi pi-fw pi-sliders-h',
         items: [
           {
-            label: 'Reglages',
-            icon: 'pi pi-fw pi-user-plus'
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-user-minus'
-          },
-          {
             label: 'Joules',
-            icon: 'pi pi-fw pi-users',
+            icon: 'pi pi-fw pi-sort-alt',
             routerLink: Routing.JOULE_CALCULATOR
+          },
+          {
+            label: 'Reglages de lunette',
+            icon: 'pi pi-fw pi-wrench'
           }
         ]
       },
@@ -99,15 +89,16 @@ export class NavigationComponent implements OnInit {
         items: [
           {
             label: 'Nouvelle session',
-            icon: 'pi pi-fw pi-pencil'
+            icon: 'pi pi-fw pi-pencil',
+            routerLink: Routing.TRAINING + '/' + Routing.TRAINING_SESSION_FORM
           },
           {
             label: 'Session passé',
-            icon: 'pi pi-fw pi-calendar-times'
+            icon: 'pi pi-fw pi-history'
           },
           {
             label: 'Statistiques',
-            icon: 'pi pi-fw pi-calendar-times'
+            icon: 'pi pi-fw pi-chart-line'
           }
         ]
       }
@@ -121,23 +112,18 @@ export class NavigationComponent implements OnInit {
         icon: 'pi pi-home',
         routerLink: Routing.HOME
       },
-
       {
         label: 'Calculateur balistique',
-        icon: 'pi pi-fw pi-user',
+        icon: 'pi pi-fw pi-sliders-h',
         items: [
           {
-            label: 'Reglage',
-            icon: 'pi pi-fw pi-user-plus'
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-user-minus'
-          },
-          {
             label: 'Joules',
-            icon: 'pi pi-fw pi-users',
+            icon: 'pi pi-fw pi-sort-alt',
             routerLink: Routing.JOULE_CALCULATOR
+          },
+          {
+            label: 'Reglages de lunette',
+            icon: 'pi pi-fw pi-wrench'
           }
         ]
       },

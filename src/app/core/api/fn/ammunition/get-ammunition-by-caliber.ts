@@ -6,14 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OpticsDto } from '../../models/optics-dto';
+import { AmmunitionDto } from '../../models/ammunition-dto';
 
-export interface GetAllActiveOptics$Params {
+export interface GetAmmunitionByCaliber$Params {
+  id: number;
 }
 
-export function getAllActiveOptics(http: HttpClient, rootUrl: string, params?: GetAllActiveOptics$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllActiveOptics.PATH, 'get');
+export function getAmmunitionByCaliber(http: HttpClient, rootUrl: string, params: GetAmmunitionByCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAmmunitionByCaliber.PATH, 'get');
   if (params) {
+    rb.query('id', params.id, {});
   }
 
   return http.request(
@@ -21,9 +23,9 @@ export function getAllActiveOptics(http: HttpClient, rootUrl: string, params?: G
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<OpticsDto>>;
+      return r as StrictHttpResponse<Array<AmmunitionDto>>;
     })
   );
 }
 
-getAllActiveOptics.PATH = '/api/optics/actives';
+getAmmunitionByCaliber.PATH = '/api/ammunition/by-caliber';

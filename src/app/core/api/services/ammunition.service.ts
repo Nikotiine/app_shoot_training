@@ -16,6 +16,8 @@ import { editAmmunition } from '../fn/ammunition/edit-ammunition';
 import { EditAmmunition$Params } from '../fn/ammunition/edit-ammunition';
 import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
 import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
+import { getAmmunitionByCaliber } from '../fn/ammunition/get-ammunition-by-caliber';
+import { GetAmmunitionByCaliber$Params } from '../fn/ammunition/get-ammunition-by-caliber';
 import { newAmmunition } from '../fn/ammunition/new-ammunition';
 import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
 
@@ -76,6 +78,31 @@ export class AmmunitionService extends BaseService {
   newAmmunition(params: NewAmmunition$Params, context?: HttpContext): Observable<AmmunitionDto> {
     return this.newAmmunition$Response(params, context).pipe(
       map((r: StrictHttpResponse<AmmunitionDto>): AmmunitionDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getAmmunitionByCaliber()` */
+  static readonly GetAmmunitionByCaliberPath = '/api/ammunition/by-caliber';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAmmunitionByCaliber()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAmmunitionByCaliber$Response(params: GetAmmunitionByCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AmmunitionDto>>> {
+    return getAmmunitionByCaliber(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAmmunitionByCaliber$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAmmunitionByCaliber(params: GetAmmunitionByCaliber$Params, context?: HttpContext): Observable<Array<AmmunitionDto>> {
+    return this.getAmmunitionByCaliber$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AmmunitionDto>>): Array<AmmunitionDto> => r.body)
     );
   }
 

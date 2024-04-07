@@ -18,6 +18,7 @@ import { AdminUsersListComponent } from './main/admin/admin-users-list/admin-use
 import { WeaponsTabviewComponent } from './main/admin/weapons-tabview/weapons-tabview.component';
 import { OpticsTabviewComponent } from './main/admin/optics-tabview/optics-tabview.component';
 import { AmmunitionTabviewComponent } from './main/admin/ammunition-tabview/ammunition-tabview.component';
+import { SessionFormComponent } from './main/training/session/session-form/session-form.component';
 
 export const routes: Routes = [
   {
@@ -84,6 +85,16 @@ export const routes: Routes = [
       {
         path: Routing.JOULE_CALCULATOR,
         component: JouleComponent
+      },
+      {
+        path: Routing.TRAINING,
+        canActivate: [authGuard],
+        children: [
+          {
+            path: Routing.TRAINING_SESSION_FORM,
+            component: SessionFormComponent
+          }
+        ]
       }
     ]
   }

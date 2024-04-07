@@ -1,0 +1,137 @@
+@defer (when !isLoading){
+
+<form [formGroup]="form">
+  @if (!isSpeedHistoryForm){
+
+  <fieldset class="mt-2">
+    <legend class="text-blue-500">{{title()}}</legend>
+
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label for="setup">Setup</label>
+        <div>
+          <p-dropdown
+            [options]="userSetups"
+            id="setup"
+            optionLabel="name"
+            [style]="{'width':'100%'}"
+            formControlName="setup"
+            (onChange)="setupSelected($event.value)"
+            optionValue="id"
+            placeholder="Selectionnez votre setup"></p-dropdown>
+        </div>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="ammunition">Munition</label>
+        <div>
+          <p-dropdown
+            [options]="ammunitions"
+            id="ammunition"
+            optionLabel="name"
+            [style]="{'width':'100%'}"
+            formControlName="ammunition"
+            optionValue="id"
+            placeholder="Selectionnez une munition"></p-dropdown>
+        </div>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="distance">Distance</label>
+        <div>
+          <p-inputNumber
+            mode="decimal"
+            suffix=" m"
+            [maxFractionDigits]="2"
+            inputId="minmaxfraction"
+            id="distance"
+            formControlName="distance"></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="temperature">Temperature</label>
+        <div>
+          <p-inputNumber
+            mode="decimal"
+            suffix=" °"
+            [max]="60"
+            [maxFractionDigits]="1"
+            inputId="minmaxfraction"
+            id="temperature"
+            formControlName="temperature"></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="windSpeed">Vitesse du vent</label>
+        <div>
+          <p-inputNumber
+            mode="decimal"
+            suffix=" m/s"
+            [max]="60"
+            [maxFractionDigits]="1"
+            inputId="minmaxfraction"
+            id="windSpeed"
+            formControlName="windSpeed"></p-inputNumber>
+        </div>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="date">Date</label>
+        <div>
+          <p-calendar formControlName="date" id="date"></p-calendar>
+        </div>
+      </div>
+      <div class="field col-6">
+        <p-button
+          label="Valider"
+          class="mt-3"
+          (onClick)="submit()"
+          [disabled]="form.invalid"></p-button>
+      </div>
+      <div class="field col-6">
+        <p-button
+          label="Enregister vitesse"
+          class="mt-3"
+          (onClick)="addSpeedHistories()"></p-button>
+      </div>
+    </div>
+  </fieldset>
+  } @else {
+  <fieldset class="mt-2">
+    <legend class="text-blue-500">Vitesse en sortie de canon</legend>
+    <div class="formgrid grid">
+      <ng-container formArrayName="speedHistories" class="field col-3">
+        @for ( speed of speedArray.controls ;let i = $index ;track speed){
+        <div [formGroupName]="i">
+          <label for="speed-{{ i }}">Vitesse enregistrée n°{{ i + 1 }} </label>
+          <div class="mx-1">
+            <p-inputNumber
+              mode="decimal"
+              suffix=" m/s"
+              [max]="60"
+              [maxFractionDigits]="1"
+              inputId="minmaxfraction"
+              id="speed"
+              formControlName="speed"></p-inputNumber>
+            <p-button
+              label="X"
+              [severity]="'danger'"
+              class="ml-1"
+              (onClick)="removeSpeed(i)"></p-button>
+          </div>
+        </div>
+        }
+      </ng-container>
+    </div>
+
+    <div class="field col-12 mt-2 text-center">
+      <p-button
+        label="Ajouter"
+        [severity]="'info'"
+        class="mr-2"
+        (onClick)="addNewSpeed()"></p-button>
+      <p-button label="Sauvegarder" (onClick)="addSpeedHistories()"></p-button>
+    </div>
+  </fieldset>
+  }
+</form>
+}
