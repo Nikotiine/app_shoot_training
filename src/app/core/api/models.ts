@@ -25,6 +25,7 @@ export { ResponseMessage } from './models/response-message';
 export { Token } from './models/token';
 export { TrainingSessionCreateDto } from './models/training-session-create-dto';
 export { TrainingSessionDto } from './models/training-session-dto';
+export { TrainingSessionGroupCreateDto } from './models/training-session-group-create-dto';
 export { UserEditDto } from './models/user-edit-dto';
 export { UserProfileDto } from './models/user-profile-dto';
 export { UserRegistrationDto } from './models/user-registration-dto';

@@ -28,7 +28,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModel } from '../../../../core/app/model/DropdownModel';
 import { CalendarModule } from 'primeng/calendar';
-import { AmmunitionSpeedHistoryCreateDto } from '../../../../core/api/models/ammunition-speed-history-create-dto';
+import { GroupFormComponent } from '../../group/group-form/group-form.component';
+import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
 
 @Component({
   selector: 'app-session-form',
@@ -41,7 +42,8 @@ import { AmmunitionSpeedHistoryCreateDto } from '../../../../core/api/models/amm
     InputSwitchModule,
     InputTextModule,
     ReactiveFormsModule,
-    CalendarModule
+    CalendarModule,
+    GroupFormComponent
   ],
   templateUrl: './session-form.component.html',
   styleUrl: './session-form.component.scss'
@@ -56,6 +58,7 @@ export class SessionFormComponent implements OnInit {
   private _userSetups: UserWeaponSetupDto[] = [];
   private _ammunitions: AmmunitionDto[] = [];
   private readonly fb: FormBuilder = inject(FormBuilder);
+  private _sessionGroup: TrainingSessionGroupCreateDto[] = [];
   // Public field
 
   public form: FormGroup = this.fb.group({
@@ -74,8 +77,12 @@ export class SessionFormComponent implements OnInit {
   public ammunitions: DropdownModel[] = [];
   public userSetups: DropdownModel[] = [];
   public isLoading: boolean = true;
-  public title: WritableSignal<string> = signal('titre');
+  public title: WritableSignal<string> = signal('Nouvelle session');
+  public ammunitionNotSelected: WritableSignal<boolean> = signal(true);
+  public ammunitionInitialSpeedSelected: WritableSignal<number> = signal(0);
   public isSpeedHistoryForm: boolean = false;
+  public isSessionGroupForm: boolean = false;
+
   public ngOnInit(): void {
     const user = this.customUserService.getProfile();
     if (user) {
@@ -117,7 +124,8 @@ export class SessionFormComponent implements OnInit {
       windSpeed: this.form.controls['windSpeed'].value,
       ammunition: this.getAmmunition(),
       setup: this.getSetup(),
-      speedHistories: this.speed()
+      speedHistories: this.form.controls['speedHistories'].value,
+      trainingSessionGroups: this._sessionGroup
     };
     this.customTrainingService.saveTrainingSession(session).subscribe({
       next: (res) => {
@@ -129,20 +137,6 @@ export class SessionFormComponent implements OnInit {
     });
   }
 
-  private speed(): AmmunitionSpeedHistoryCreateDto[] {
-    return [
-      {
-        speed: 12,
-        ammunition: this.getAmmunition(),
-        weapon: this.getSetup().weapon
-      },
-      {
-        speed: 15,
-        ammunition: this.getAmmunition(),
-        weapon: this.getSetup().weapon
-      }
-    ];
-  }
   private getAmmunition(): AmmunitionDto {
     const id = this.form.controls['ammunition'].value;
     return <AmmunitionDto>this._ammunitions.find((ammo) => ammo.id === id);
@@ -190,12 +184,39 @@ export class SessionFormComponent implements OnInit {
   public addNewSpeed(): void {
     this.speedArray.push(
       this.fb.group({
-        speed: [0, Validators.required]
+        speed: [this.ammunitionInitialSpeedSelected(), Validators.required],
+        weapon: this.getSetup().weapon,
+        ammunition: this.getAmmunition()
       })
     );
   }
-  // Suppression d'un secteur ( sauf le 1 obligatoire )
+
   public removeSpeed(i: number): void {
     this.speedArray.removeAt(i);
+  }
+
+  public onChangeAmmunition(): void {
+    this.ammunitionInitialSpeedSelected.set(
+      this.getAmmunition().initialSpeed ?? 0
+    );
+    this.ammunitionNotSelected.set(false);
+  }
+
+  public cancelSpeedHistories(): void {
+    this.speedArray.clear();
+    this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
+  }
+
+  public addSessionGroup(): void {
+    this.isSessionGroupForm = !this.isSessionGroupForm;
+  }
+
+  public cancelSessionGroup(): void {
+    this.isSessionGroupForm = !this.isSessionGroupForm;
+  }
+
+  saveSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
+    this._sessionGroup = sessionGroups;
+    this.isSessionGroupForm = !this.isSessionGroupForm;
   }
 }

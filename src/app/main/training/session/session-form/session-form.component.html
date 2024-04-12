@@ -1,7 +1,7 @@
 @defer (when !isLoading){
 
 <form [formGroup]="form">
-  @if (!isSpeedHistoryForm){
+  @if (!isSpeedHistoryForm && !isSessionGroupForm){
 
   <fieldset class="mt-2">
     <legend class="text-blue-500">{{title()}}</legend>
@@ -31,9 +31,11 @@
             [style]="{'width':'100%'}"
             formControlName="ammunition"
             optionValue="id"
+            (onChange)="onChangeAmmunition()"
             placeholder="Selectionnez une munition"></p-dropdown>
         </div>
       </div>
+
       <div class="field col-12 md:col-6">
         <label for="distance">Distance</label>
         <div>
@@ -80,22 +82,31 @@
           <p-calendar formControlName="date" id="date"></p-calendar>
         </div>
       </div>
-      <div class="field col-6">
+
+      <div class="field col-12 flex justify-content-center">
+        <p-button
+          label="Ajouter resultats"
+          [disabled]="ammunitionNotSelected()"
+          [severity]="'info'"
+          class="mr-3"
+          (onClick)="addSessionGroup()"></p-button>
+        <p-button
+          label="Enregister vitesse"
+          [disabled]="ammunitionNotSelected()"
+          [severity]="'info'"
+          class=""
+          (onClick)="addSpeedHistories()"></p-button>
+      </div>
+      <div class="field col-12 flex justify-content-center">
         <p-button
           label="Valider"
-          class="mt-3"
+          class=""
           (onClick)="submit()"
           [disabled]="form.invalid"></p-button>
       </div>
-      <div class="field col-6">
-        <p-button
-          label="Enregister vitesse"
-          class="mt-3"
-          (onClick)="addSpeedHistories()"></p-button>
-      </div>
     </div>
   </fieldset>
-  } @else {
+  } @else { @if (isSpeedHistoryForm) {
   <fieldset class="mt-2">
     <legend class="text-blue-500">Vitesse en sortie de canon</legend>
     <div class="formgrid grid">
@@ -107,7 +118,6 @@
             <p-inputNumber
               mode="decimal"
               suffix=" m/s"
-              [max]="60"
               [maxFractionDigits]="1"
               inputId="minmaxfraction"
               id="speed"
@@ -125,6 +135,11 @@
 
     <div class="field col-12 mt-2 text-center">
       <p-button
+        label="Annuler"
+        [severity]="'secondary'"
+        class="mr-2"
+        (onClick)="cancelSpeedHistories()"></p-button>
+      <p-button
         label="Ajouter"
         [severity]="'info'"
         class="mr-2"
@@ -132,6 +147,10 @@
       <p-button label="Sauvegarder" (onClick)="addSpeedHistories()"></p-button>
     </div>
   </fieldset>
-  }
+  } @if (isSessionGroupForm){
+  <app-group-form
+    (cancel)="cancelSessionGroup()"
+    (sessionGroup)="saveSessionGroup($event)"></app-group-form>
+  } }
 </form>
 }
