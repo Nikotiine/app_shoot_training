@@ -89,13 +89,13 @@
           [disabled]="ammunitionNotSelected()"
           [severity]="'info'"
           class="mr-3"
-          (onClick)="addSessionGroup()"></p-button>
+          (onClick)="showSessionGroupForm()"></p-button>
         <p-button
           label="Enregister vitesse"
           [disabled]="ammunitionNotSelected()"
           [severity]="'info'"
           class=""
-          (onClick)="addSpeedHistories()"></p-button>
+          (onClick)="showSpeedHistoriesForm()"></p-button>
       </div>
       <div class="field col-12 flex justify-content-center">
         <p-button
@@ -107,7 +107,13 @@
     </div>
   </fieldset>
   } @else { @if (isSpeedHistoryForm) {
-  <fieldset class="mt-2">
+  <app-ammunition-speed-histories-form
+    [weapon]="weaponSelected()"
+    [ammunition]="ammunitionSelected()"
+    [speedHistories]="speedHistoriesSaved()"
+    (save)="setSpeedHistories($event)"
+    (cancelSpeedHistories)="cancelSpeedHistories()"></app-ammunition-speed-histories-form>
+  <!-- <fieldset class="mt-2">
     <legend class="text-blue-500">Vitesse en sortie de canon</legend>
     <div class="formgrid grid">
       <ng-container formArrayName="speedHistories" class="field col-3">
@@ -146,11 +152,11 @@
         (onClick)="addNewSpeed()"></p-button>
       <p-button label="Sauvegarder" (onClick)="addSpeedHistories()"></p-button>
     </div>
-  </fieldset>
+  </fieldset>-->
   } @if (isSessionGroupForm){
   <app-group-form
     (cancel)="cancelSessionGroup()"
-    (sessionGroup)="saveSessionGroup($event)"></app-group-form>
+    (sessionGroup)="setSessionGroup($event)"></app-group-form>
   } }
 </form>
 }

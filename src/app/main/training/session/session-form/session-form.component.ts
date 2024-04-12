@@ -10,7 +10,6 @@ import { CustomUserService } from '../../../../core/app/services/custom-user.ser
 
 import { CustomTrainingService } from '../../../../core/app/services/custom-training.service';
 import {
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -30,6 +29,9 @@ import { DropdownModel } from '../../../../core/app/model/DropdownModel';
 import { CalendarModule } from 'primeng/calendar';
 import { GroupFormComponent } from '../../group/group-form/group-form.component';
 import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
+import { AmmunitionSpeedHistoriesFormComponent } from '../../../ammunition/ammunition-speed-histories-form/ammunition-speed-histories-form.component';
+import { WeaponDto } from '../../../../core/api/models/weapon-dto';
+import { AmmunitionSpeedHistoryCreateDto } from '../../../../core/api/models/ammunition-speed-history-create-dto';
 
 @Component({
   selector: 'app-session-form',
@@ -43,7 +45,8 @@ import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/train
     InputTextModule,
     ReactiveFormsModule,
     CalendarModule,
-    GroupFormComponent
+    GroupFormComponent,
+    AmmunitionSpeedHistoriesFormComponent
   ],
   templateUrl: './session-form.component.html',
   styleUrl: './session-form.component.scss'
@@ -59,6 +62,7 @@ export class SessionFormComponent implements OnInit {
   private _ammunitions: AmmunitionDto[] = [];
   private readonly fb: FormBuilder = inject(FormBuilder);
   private _sessionGroup: TrainingSessionGroupCreateDto[] = [];
+  private _speedHistories: AmmunitionSpeedHistoryCreateDto[] = [];
   // Public field
 
   public form: FormGroup = this.fb.group({
@@ -70,8 +74,7 @@ export class SessionFormComponent implements OnInit {
       { value: 0, disabled: true },
       Validators.min(1)
     ),
-    setup: [0, Validators.min(1)],
-    speedHistories: this.fb.array([])
+    setup: [0, Validators.min(1)]
   });
 
   public ammunitions: DropdownModel[] = [];
@@ -79,7 +82,12 @@ export class SessionFormComponent implements OnInit {
   public isLoading: boolean = true;
   public title: WritableSignal<string> = signal('Nouvelle session');
   public ammunitionNotSelected: WritableSignal<boolean> = signal(true);
-  public ammunitionInitialSpeedSelected: WritableSignal<number> = signal(0);
+  public ammunitionSelected: WritableSignal<AmmunitionDto | null> =
+    signal(null);
+  public weaponSelected: WritableSignal<WeaponDto | null> = signal(null);
+  public speedHistoriesSaved: WritableSignal<
+    AmmunitionSpeedHistoryCreateDto[] | null
+  > = signal(null);
   public isSpeedHistoryForm: boolean = false;
   public isSessionGroupForm: boolean = false;
 
@@ -124,9 +132,11 @@ export class SessionFormComponent implements OnInit {
       windSpeed: this.form.controls['windSpeed'].value,
       ammunition: this.getAmmunition(),
       setup: this.getSetup(),
-      speedHistories: this.form.controls['speedHistories'].value,
+      speedHistories: this._speedHistories,
       trainingSessionGroups: this._sessionGroup
     };
+    console.log(session);
+
     this.customTrainingService.saveTrainingSession(session).subscribe({
       next: (res) => {
         this.customTrainingService.successCreateMessage();
@@ -167,56 +177,36 @@ export class SessionFormComponent implements OnInit {
     });
   }
 
-  public addSpeedHistories(): void {
-    this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
-    if (this.speedArray.length < 1) {
-      this.addNewSpeed();
-    }
-  }
-  /**
-   * Creation du Array pour les speedHistories
-   */
-  get speedArray(): FormArray {
-    return this.form.controls['speedHistories'] as FormArray;
-  }
-
-  // Ajout d'une nouvelle vitesse
-  public addNewSpeed(): void {
-    this.speedArray.push(
-      this.fb.group({
-        speed: [this.ammunitionInitialSpeedSelected(), Validators.required],
-        weapon: this.getSetup().weapon,
-        ammunition: this.getAmmunition()
-      })
-    );
-  }
-
-  public removeSpeed(i: number): void {
-    this.speedArray.removeAt(i);
-  }
-
   public onChangeAmmunition(): void {
-    this.ammunitionInitialSpeedSelected.set(
-      this.getAmmunition().initialSpeed ?? 0
-    );
+    this.ammunitionSelected.set(this.getAmmunition());
+    this.weaponSelected.set(this.getSetup().weapon);
     this.ammunitionNotSelected.set(false);
   }
-
-  public cancelSpeedHistories(): void {
-    this.speedArray.clear();
+  public showSpeedHistoriesForm(): void {
     this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
   }
-
-  public addSessionGroup(): void {
-    this.isSessionGroupForm = !this.isSessionGroupForm;
+  public showSessionGroupForm(): void {
+    this.isSessionGroupForm = true;
   }
 
   public cancelSessionGroup(): void {
     this.isSessionGroupForm = !this.isSessionGroupForm;
   }
 
-  saveSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
+  public setSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
     this._sessionGroup = sessionGroups;
     this.isSessionGroupForm = !this.isSessionGroupForm;
+  }
+
+  public setSpeedHistories(
+    speedHistories: AmmunitionSpeedHistoryCreateDto[]
+  ): void {
+    this._speedHistories = speedHistories;
+    this.speedHistoriesSaved.set(speedHistories);
+    this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
+  }
+
+  public cancelSpeedHistories(): void {
+    this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
   }
 }
