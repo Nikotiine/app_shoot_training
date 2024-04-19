@@ -21,7 +21,7 @@ import { TrainingSessionCreateDto } from '../../../../core/api/models/training-s
 import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
 import { UserWeaponSetupDto } from '../../../../core/api/models/user-weapon-setup-dto';
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,6 +32,7 @@ import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/train
 import { AmmunitionSpeedHistoriesFormComponent } from '../../../ammunition/ammunition-speed-histories-form/ammunition-speed-histories-form.component';
 import { WeaponDto } from '../../../../core/api/models/weapon-dto';
 import { AmmunitionSpeedHistoryCreateDto } from '../../../../core/api/models/ammunition-speed-history-create-dto';
+import { TrainingPosition } from '../../../../core/app/enum/TrainingSession.enum';
 
 @Component({
   selector: 'app-session-form',
@@ -74,11 +75,17 @@ export class SessionFormComponent implements OnInit {
       { value: 0, disabled: true },
       Validators.min(1)
     ),
-    setup: [0, Validators.min(1)]
+    setup: [0, Validators.min(1)],
+    position: [null, Validators.required],
+    support: [null, Validators.required]
   });
 
   public ammunitions: DropdownModel[] = [];
   public userSetups: DropdownModel[] = [];
+  public positions: DropdownModel[] =
+    this.customTrainingService.getTrainingPositions();
+  public supports: DropdownModel[] =
+    this.customTrainingService.getWeaponSupports();
   public isLoading: boolean = true;
   public title: WritableSignal<string> = signal('Nouvelle session');
   public ammunitionNotSelected: WritableSignal<boolean> = signal(true);
@@ -133,12 +140,15 @@ export class SessionFormComponent implements OnInit {
       ammunition: this.getAmmunition(),
       setup: this.getSetup(),
       speedHistories: this._speedHistories,
-      trainingSessionGroups: this._sessionGroup
+      trainingSessionGroups: this._sessionGroup,
+      position: this.form.controls['position'].value,
+      support: this.form.controls['support'].value
     };
     console.log(session);
 
     this.customTrainingService.saveTrainingSession(session).subscribe({
       next: (res) => {
+        console.log(res);
         this.customTrainingService.successCreateMessage();
       },
       error: (err) => {
@@ -195,6 +205,7 @@ export class SessionFormComponent implements OnInit {
 
   public setSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
     this._sessionGroup = sessionGroups;
+    console.log(this._sessionGroup);
     this.isSessionGroupForm = !this.isSessionGroupForm;
   }
 

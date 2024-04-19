@@ -82,7 +82,32 @@
           <p-calendar formControlName="date" id="date"></p-calendar>
         </div>
       </div>
-
+      <div class="field col-12 md:col-6">
+        <label for="position">Position de tir</label>
+        <div>
+          <p-dropdown
+            [options]="positions"
+            id="position"
+            [style]="{'width':'100%'}"
+            optionLabel="name"
+            optionValue="apiEnum"
+            formControlName="position"
+            placeholder="Selectionnez une position"></p-dropdown>
+        </div>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="support">Support de tir</label>
+        <div>
+          <p-dropdown
+            [options]="supports"
+            id="support"
+            [style]="{'width':'100%'}"
+            optionLabel="name"
+            optionValue="apiEnum"
+            formControlName="support"
+            placeholder="Selectionnez un support"></p-dropdown>
+        </div>
+      </div>
       <div class="field col-12 flex justify-content-center">
         <p-button
           label="Ajouter resultats"

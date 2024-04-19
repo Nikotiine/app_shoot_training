@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   inject,
+  Input,
   OnInit,
   Output,
   signal,
@@ -15,6 +16,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
 import { TableModule } from 'primeng/table';
+import { TrainingSessionCreateDto } from '../../../../core/api/models/training-session-create-dto';
 
 @Component({
   selector: 'app-group-form',
@@ -31,7 +33,7 @@ import { TableModule } from 'primeng/table';
   templateUrl: './group-form.component.html',
   styleUrl: './group-form.component.scss'
 })
-export class GroupFormComponent implements OnInit {
+export class GroupFormComponent {
   // Private field
   public groups: TrainingSessionGroupCreateDto[] = [];
 
@@ -47,6 +49,9 @@ export class GroupFormComponent implements OnInit {
   @Output() cancel: EventEmitter<void> = new EventEmitter();
   @Output() sessionGroup: EventEmitter<TrainingSessionGroupCreateDto[]> =
     new EventEmitter<TrainingSessionGroupCreateDto[]>();
+  @Input() set trainingSession(groups: TrainingSessionGroupCreateDto[]) {
+    this.groups = groups;
+  }
   public title: WritableSignal<string> = signal('titre');
 
   public add(): void {
@@ -65,9 +70,5 @@ export class GroupFormComponent implements OnInit {
 
   public closeAndEmitGroups(): void {
     this.sessionGroup.emit(this.groups);
-  }
-
-  ngOnInit(): void {
-    console.log(this.groups);
   }
 }

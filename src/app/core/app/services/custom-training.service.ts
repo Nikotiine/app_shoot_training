@@ -8,23 +8,25 @@ import { AmmunitionDto } from '../../api/models/ammunition-dto';
 import { TrainingSessionCreateDto } from '../../api/models/training-session-create-dto';
 import { TrainingSessionDto } from '../../api/models/training-session-dto';
 import { CustomMessageService } from './custom-message.service';
+import { TrainingPosition, WeaponSupport } from '../enum/TrainingSession.enum';
+import { DropdownModel } from '../model/DropdownModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomTrainingService {
+  // Private field
   private readonly trainingSessionService: TrainingSessionService = inject(
     TrainingSessionService
   );
-
   private readonly userSetupService: WeaponSetupService =
     inject(WeaponSetupService);
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
+
   public getUserSetups(id: number): Observable<UserWeaponSetupDto[]> {
     return this.userSetupService.getAllUserWeaponSetup({
       id: id
@@ -64,5 +66,50 @@ export class CustomTrainingService {
       this._currentPageMessageHeader,
       message
     );
+  }
+
+  public getTrainingPositions(): DropdownModel[] {
+    return [
+      {
+        id: 1,
+        name: 'Debout',
+        apiEnum: TrainingPosition.STANDING
+      },
+      {
+        id: 2,
+        name: 'A genoux',
+        apiEnum: TrainingPosition.KNEELING
+      },
+      {
+        id: 3,
+        name: 'Assis',
+        apiEnum: TrainingPosition.SEATED
+      },
+      {
+        id: 4,
+        name: 'Couché',
+        apiEnum: TrainingPosition.LYING
+      }
+    ];
+  }
+
+  public getWeaponSupports(): DropdownModel[] {
+    return [
+      {
+        id: 1,
+        name: 'Sac de tir',
+        apiEnum: WeaponSupport.BAG
+      },
+      {
+        id: 2,
+        name: 'Bipied',
+        apiEnum: WeaponSupport.BIPOD
+      },
+      {
+        id: 3,
+        name: 'Bras franc',
+        apiEnum: WeaponSupport.HAND
+      }
+    ];
   }
 }
