@@ -19,6 +19,7 @@ import { WeaponsTabviewComponent } from './main/admin/weapons-tabview/weapons-ta
 import { OpticsTabviewComponent } from './main/admin/optics-tabview/optics-tabview.component';
 import { AmmunitionTabviewComponent } from './main/admin/ammunition-tabview/ammunition-tabview.component';
 import { SessionFormComponent } from './main/training/session/session-form/session-form.component';
+import { SessionListComponent } from './main/training/session/session-list/session-list.component';
 
 export const routes: Routes = [
   {
@@ -93,6 +94,10 @@ export const routes: Routes = [
           {
             path: Routing.TRAINING_SESSION_FORM,
             component: SessionFormComponent
+          },
+          {
+            path: Routing.TRAINING_SESSION_LIST,
+            component: SessionListComponent
           }
         ]
       }

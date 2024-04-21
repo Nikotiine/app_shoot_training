@@ -9,7 +9,7 @@
         <p-inputNumber
           inputId="integeronly"
           id="totalShoots"
-          [max]="10"
+          [max]="20"
           class="w-full"
           formControlName="totalShoots"></p-inputNumber>
       </div>
@@ -37,7 +37,7 @@
           formControlName="horizontalGap"></p-inputNumber>
       </div>
       <div class="field col-12 md:col-6">
-        <label for="verticalGap">Ecart horizontal</label>
+        <label for="verticalGap">Ecart vertical</label>
 
         <p-inputNumber
           mode="decimal"
@@ -72,22 +72,32 @@
   </fieldset>
 </form>
 <div class="max-width-90rem">
-  <h3 class="text-center">Groupement enregistrés</h3>
+  <h3 class="text-center">
+    {{groups.length > 1 ? 'Groupements enregistrés' :'Groupement enregistré' }}
+  </h3>
   <p-table [value]="groups">
     <ng-template pTemplate="header">
       <tr>
-        <th>Code</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Quantity</th>
+        <th>Munitions tirées</th>
+        <th>Score</th>
+        <th>Ecart vertical</th>
+        <th>Ecart horizontal</th>
+        <th>Supprimer</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-group>
+    <ng-template pTemplate="body" let-group let-rowIndex="rowIndex">
       <tr>
         <td>{{ group.totalShoots }}</td>
         <td>{{ group.score }}</td>
         <td>{{ group.verticalGap }}</td>
         <td>{{ group.horizontalGap }}</td>
+        <td>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            (onClick)="confirm($event,rowIndex)"></p-button>
+        </td>
       </tr>
     </ng-template>
   </p-table>

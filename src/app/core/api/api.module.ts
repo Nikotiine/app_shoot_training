@@ -11,7 +11,7 @@ import { FactoryService } from './services/factory.service';
 import { CaliberService } from './services/caliber.service';
 import { AmmunitionService } from './services/ammunition.service';
 import { UserService } from './services/user.service';
-import { TrainingSessionService } from './services/training-session.service';
+import { ApiTrainingSessionService } from './services/api-training-session.service';
 import { WeaponSetupService } from './services/weapon-setup.service';
 import { RegistrationService } from './services/registration.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
@@ -33,7 +33,7 @@ import { AdminService } from './services/admin.service';
     CaliberService,
     AmmunitionService,
     UserService,
-    TrainingSessionService,
+    ApiTrainingSessionService,
     WeaponSetupService,
     RegistrationService,
     ForgotPasswordService,

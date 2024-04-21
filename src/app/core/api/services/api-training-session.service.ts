@@ -9,10 +9,10 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { createTrainingSession } from '../fn/training-session/create-training-session';
-import { CreateTrainingSession$Params } from '../fn/training-session/create-training-session';
-import { getTrainingSessionByUserId } from '../fn/training-session/get-training-session-by-user-id';
-import { GetTrainingSessionByUserId$Params } from '../fn/training-session/get-training-session-by-user-id';
+import { createTrainingSession } from '../fn/api-training-session/create-training-session';
+import { CreateTrainingSession$Params } from '../fn/api-training-session/create-training-session';
+import { getTrainingSessionByUserId } from '../fn/api-training-session/get-training-session-by-user-id';
+import { GetTrainingSessionByUserId$Params } from '../fn/api-training-session/get-training-session-by-user-id';
 import { TrainingSessionDto } from '../models/training-session-dto';
 
 
@@ -20,7 +20,7 @@ import { TrainingSessionDto } from '../models/training-session-dto';
  * Training Session Controller
  */
 @Injectable({ providedIn: 'root' })
-export class TrainingSessionService extends BaseService {
+export class ApiTrainingSessionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

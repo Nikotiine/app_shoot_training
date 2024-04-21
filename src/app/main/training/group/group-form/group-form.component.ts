@@ -17,6 +17,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
 import { TableModule } from 'primeng/table';
 import { TrainingSessionCreateDto } from '../../../../core/api/models/training-session-create-dto';
+import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
+import { CustomConfirmationService } from '../../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-group-form',
@@ -36,7 +38,8 @@ import { TrainingSessionCreateDto } from '../../../../core/api/models/training-s
 export class GroupFormComponent {
   // Private field
   public groups: TrainingSessionGroupCreateDto[] = [];
-
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
   // Public field
 
   public form: FormGroup = inject(FormBuilder).group({
@@ -49,8 +52,11 @@ export class GroupFormComponent {
   @Output() cancel: EventEmitter<void> = new EventEmitter();
   @Output() sessionGroup: EventEmitter<TrainingSessionGroupCreateDto[]> =
     new EventEmitter<TrainingSessionGroupCreateDto[]>();
-  @Input() set trainingSession(groups: TrainingSessionGroupCreateDto[]) {
-    this.groups = groups;
+  @Input() set trainingSession(groups: TrainingSessionGroupCreateDto[] | null) {
+    if (groups) {
+      console.log(groups);
+      this.groups = groups;
+    }
   }
   public title: WritableSignal<string> = signal('titre');
 
@@ -70,5 +76,21 @@ export class GroupFormComponent {
 
   public closeAndEmitGroups(): void {
     this.sessionGroup.emit(this.groups);
+  }
+
+  /**
+   * Pop-up de confirmation de suppression de la munition
+   * @param event Event
+   * @param index
+   */
+  public async confirm(event: Event, index: number): Promise<void> {
+    const confirmed = await this.customConfirmationService.confirm(
+      event,
+      'Supprimer ce resultat ?',
+      'Resultats et groupememnts'
+    );
+    if (confirmed) {
+      this.groups.splice(index, 1);
+    }
   }
 }

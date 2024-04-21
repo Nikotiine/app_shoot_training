@@ -3,7 +3,7 @@
 <form [formGroup]="form">
   @if (!isSpeedHistoryForm && !isSessionGroupForm){
 
-  <fieldset class="mt-2">
+  <fieldset class="mt-4">
     <legend class="text-blue-500">{{title()}}</legend>
 
     <div class="formgrid grid">
@@ -79,7 +79,10 @@
       <div class="field col-12 md:col-6">
         <label for="date">Date</label>
         <div>
-          <p-calendar formControlName="date" id="date"></p-calendar>
+          <p-calendar
+            formControlName="date"
+            id="date"
+            dateFormat="dd.mm.yy"></p-calendar>
         </div>
       </div>
       <div class="field col-12 md:col-6">
@@ -138,49 +141,10 @@
     [speedHistories]="speedHistoriesSaved()"
     (save)="setSpeedHistories($event)"
     (cancelSpeedHistories)="cancelSpeedHistories()"></app-ammunition-speed-histories-form>
-  <!-- <fieldset class="mt-2">
-    <legend class="text-blue-500">Vitesse en sortie de canon</legend>
-    <div class="formgrid grid">
-      <ng-container formArrayName="speedHistories" class="field col-3">
-        @for ( speed of speedArray.controls ;let i = $index ;track speed){
-        <div [formGroupName]="i">
-          <label for="speed-{{ i }}">Vitesse enregistrée n°{{ i + 1 }} </label>
-          <div class="mx-1">
-            <p-inputNumber
-              mode="decimal"
-              suffix=" m/s"
-              [maxFractionDigits]="1"
-              inputId="minmaxfraction"
-              id="speed"
-              formControlName="speed"></p-inputNumber>
-            <p-button
-              label="X"
-              [severity]="'danger'"
-              class="ml-1"
-              (onClick)="removeSpeed(i)"></p-button>
-          </div>
-        </div>
-        }
-      </ng-container>
-    </div>
-
-    <div class="field col-12 mt-2 text-center">
-      <p-button
-        label="Annuler"
-        [severity]="'secondary'"
-        class="mr-2"
-        (onClick)="cancelSpeedHistories()"></p-button>
-      <p-button
-        label="Ajouter"
-        [severity]="'info'"
-        class="mr-2"
-        (onClick)="addNewSpeed()"></p-button>
-      <p-button label="Sauvegarder" (onClick)="addSpeedHistories()"></p-button>
-    </div>
-  </fieldset>-->
   } @if (isSessionGroupForm){
   <app-group-form
     (cancel)="cancelSessionGroup()"
+    [trainingSession]="groupsSaved()"
     (sessionGroup)="setSessionGroup($event)"></app-group-form>
   } }
 </form>

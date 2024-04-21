@@ -8,7 +8,7 @@ import {
 
 import { CustomUserService } from '../../../../core/app/services/custom-user.service';
 
-import { CustomTrainingService } from '../../../../core/app/services/custom-training.service';
+import { TrainingService } from '../../../../core/app/services/training.service';
 import {
   FormBuilder,
   FormControl,
@@ -21,7 +21,7 @@ import { TrainingSessionCreateDto } from '../../../../core/api/models/training-s
 import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
 import { UserWeaponSetupDto } from '../../../../core/api/models/user-weapon-setup-dto';
 import { ButtonModule } from 'primeng/button';
-import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,7 +32,6 @@ import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/train
 import { AmmunitionSpeedHistoriesFormComponent } from '../../../ammunition/ammunition-speed-histories-form/ammunition-speed-histories-form.component';
 import { WeaponDto } from '../../../../core/api/models/weapon-dto';
 import { AmmunitionSpeedHistoryCreateDto } from '../../../../core/api/models/ammunition-speed-history-create-dto';
-import { TrainingPosition } from '../../../../core/app/enum/TrainingSession.enum';
 
 @Component({
   selector: 'app-session-form',
@@ -54,9 +53,7 @@ import { TrainingPosition } from '../../../../core/app/enum/TrainingSession.enum
 })
 export class SessionFormComponent implements OnInit {
   // Private field
-  private readonly customTrainingService: CustomTrainingService = inject(
-    CustomTrainingService
-  );
+  private readonly trainingService: TrainingService = inject(TrainingService);
   private readonly customUserService: CustomUserService =
     inject(CustomUserService);
   private _userSetups: UserWeaponSetupDto[] = [];
@@ -83,9 +80,8 @@ export class SessionFormComponent implements OnInit {
   public ammunitions: DropdownModel[] = [];
   public userSetups: DropdownModel[] = [];
   public positions: DropdownModel[] =
-    this.customTrainingService.getTrainingPositions();
-  public supports: DropdownModel[] =
-    this.customTrainingService.getWeaponSupports();
+    this.trainingService.getTrainingPositions();
+  public supports: DropdownModel[] = this.trainingService.getWeaponSupports();
   public isLoading: boolean = true;
   public title: WritableSignal<string> = signal('Nouvelle session');
   public ammunitionNotSelected: WritableSignal<boolean> = signal(true);
@@ -95,6 +91,8 @@ export class SessionFormComponent implements OnInit {
   public speedHistoriesSaved: WritableSignal<
     AmmunitionSpeedHistoryCreateDto[] | null
   > = signal(null);
+  public groupsSaved: WritableSignal<TrainingSessionGroupCreateDto[] | null> =
+    signal(null);
   public isSpeedHistoryForm: boolean = false;
   public isSessionGroupForm: boolean = false;
 
@@ -106,27 +104,28 @@ export class SessionFormComponent implements OnInit {
   }
 
   private loadData(id: number): void {
-    this.customTrainingService.getUserSetups(id).subscribe({
+    this.trainingService.getUserSetups(id).subscribe({
       next: (data) => {
         this._userSetups = data;
-        this.createSetupViewModel(data);
+        this.userSetups = this.trainingService.mapSetupToDropdownModel(data);
         this.isLoading = false;
       },
       error: (err) => {
-        this.customTrainingService.errorMessage(err.error.message);
+        this.trainingService.errorMessage(err.error.message);
       }
     });
   }
 
   public setupSelected(id: number): void {
-    this.customTrainingService.getAmmunitionByCaliber(id).subscribe({
+    this.trainingService.getAmmunitionByCaliber(id).subscribe({
       next: (data) => {
         this.form.controls['ammunition'].enable();
         this._ammunitions = data;
-        this.createAmmunitionViewModel(data);
+        this.ammunitions =
+          this.trainingService.mapAmmunitionToDropdownModel(data);
       },
       error: (err) => {
-        this.customTrainingService.errorMessage(err.error.message);
+        this.trainingService.errorMessage(err.error.message);
       }
     });
   }
@@ -144,15 +143,13 @@ export class SessionFormComponent implements OnInit {
       position: this.form.controls['position'].value,
       support: this.form.controls['support'].value
     };
-    console.log(session);
 
-    this.customTrainingService.saveTrainingSession(session).subscribe({
+    this.trainingService.saveTrainingSession(session).subscribe({
       next: (res) => {
-        console.log(res);
-        this.customTrainingService.successCreateMessage();
+        this.trainingService.successCreateMessage();
       },
       error: (err) => {
-        this.customTrainingService.errorMessage(err.error.message);
+        this.trainingService.errorMessage(err.error.message);
       }
     });
   }
@@ -167,24 +164,6 @@ export class SessionFormComponent implements OnInit {
     return <UserWeaponSetupDto>(
       this._userSetups.find((setup) => setup.id === id)
     );
-  }
-
-  private createSetupViewModel(setups: UserWeaponSetupDto[]): void {
-    this.userSetups = setups.map((setup) => {
-      return {
-        id: setup.id,
-        name: `${setup.weapon.factory.name}-${setup.weapon.model} + ${setup.optics.factory.name}-${setup.optics.name} ${setup.optics.minZoom}-${setup.optics.maxZoom}x${setup.optics.outletDiameter.label}`
-      };
-    });
-  }
-
-  private createAmmunitionViewModel(ammunition: AmmunitionDto[]) {
-    this.ammunitions = ammunition.map((ammo) => {
-      return {
-        id: ammo.id,
-        name: `${ammo.factory.name} - ${ammo.name} / ${ammo.weight.grains} grains`
-      };
-    });
   }
 
   public onChangeAmmunition(): void {
@@ -205,8 +184,9 @@ export class SessionFormComponent implements OnInit {
 
   public setSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
     this._sessionGroup = sessionGroups;
-    console.log(this._sessionGroup);
+    this.groupsSaved.set(sessionGroups);
     this.isSessionGroupForm = !this.isSessionGroupForm;
+    this.trainingService.savedForm('Resultats et groupememnts');
   }
 
   public setSpeedHistories(
@@ -215,6 +195,7 @@ export class SessionFormComponent implements OnInit {
     this._speedHistories = speedHistories;
     this.speedHistoriesSaved.set(speedHistories);
     this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
+    this.trainingService.savedForm('Vitesse des munitions');
   }
 
   public cancelSpeedHistories(): void {

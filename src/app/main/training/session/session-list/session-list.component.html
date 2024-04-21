@@ -1,0 +1,138 @@
+<div class="card mt-6">
+  <h2 class="text-center text-2xl text-primary">Toutes mes sessions de tir</h2>
+  <p-table
+    #dt2
+    [value]="sessions"
+    dataKey="id"
+    styleClass="p-datatable-striped"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    selectionMode="single"
+    (onRowSelect)="onRowSelect($event.data)"
+    [(selection)]="selectedSession"
+    [loading]="isLoading"
+    [paginator]="sessions.length > 1"
+    currentPageReportTemplate="{{sessions.length > 1 ?'{first} à {last} sur  {totalRecords} sessions':'' }}"
+    [globalFilterFields]="['date', 'setup', 'distance', 'position']"
+    [tableStyle]="{ 'min-width': '75rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">Date</th>
+        <th style="width: 25%">Setup</th>
+        <th style="width: 25%">Munition</th>
+        <th style="width: 20%">Distance</th>
+        <th style="width: 20%">Position</th>
+      </tr>
+      <tr>
+        <th pSortableColumn="date">
+          Date <p-sortIcon field="date"></p-sortIcon>
+        </th>
+        <th pSortableColumn="setup">
+          <p-columnFilter matchMode="equals" field="setup" [showMenu]="false">
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback">
+              <p-dropdown
+                [ngModel]="value"
+                [options]="userSetup"
+                (onChange)="filter($event.value.name)"
+                placeholder="Setup"
+                optionLabel="name"
+                [showClear]="true">
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter
+            matchMode="equals"
+            field="ammunition"
+            [showMenu]="false">
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback">
+              <p-dropdown
+                [ngModel]="value"
+                [options]="ammunitions"
+                (onChange)="filter($event.value.name)"
+                placeholder="Munition"
+                optionLabel="name"
+                [showClear]="true">
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter
+            field="distance"
+            matchMode="equals"
+            [showMenu]="false">
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback">
+              <p-dropdown
+                [ngModel]="value"
+                [options]="distances"
+                appendTo="body"
+                (onChange)="filter($event.value)"
+                placeholder="Distance"
+                optionValue="value"
+                optionLabel="name"
+                [showClear]="true">
+                <ng-template let-option pTemplate="item">
+                  <p-tag
+                    [value]="option.name"
+                    severity="{{option.severity}}"></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter field="position" matchMode="in" [showMenu]="false">
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback">
+              <p-multiSelect
+                [ngModel]="value"
+                [options]="positions"
+                placeholder="Position"
+                appendTo="body"
+                (onChange)="filter($event.value.name)"
+                optionLabel="name">
+                <ng-template let-option pTemplate="item">
+                  <div class="inline-block vertical-align-middle">
+                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-session>
+      <tr [pSelectableRow]="session">
+        <td>{{ session.date | date:'dd MMM yyyy'}}</td>
+        <td>{{session.setup}}</td>
+        <td>{{session.ammunition}}</td>
+        <td class="text-center">
+          <p-tag
+            [value]="session.distance"
+            severity="{{session.distanceSeverity}}"></p-tag>
+        </td>
+        <td>{{session.position}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">Aucune session trouvée.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -30,4 +30,12 @@ export class CustomMessageService {
       detail: detail
     });
   }
+
+  public infoMessage(summary: string, detail: string): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: summary,
+      detail: detail
+    });
+  }
 }

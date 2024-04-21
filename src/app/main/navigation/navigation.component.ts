@@ -93,8 +93,9 @@ export class NavigationComponent implements OnInit {
             routerLink: Routing.TRAINING + '/' + Routing.TRAINING_SESSION_FORM
           },
           {
-            label: 'Session passé',
-            icon: 'pi pi-fw pi-history'
+            label: 'Toutes mes sessions',
+            icon: 'pi pi-fw pi-history',
+            routerLink: Routing.TRAINING + '/' + Routing.TRAINING_SESSION_LIST
           },
           {
             label: 'Statistiques',
