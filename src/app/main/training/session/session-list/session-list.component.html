@@ -1,5 +1,12 @@
 <div class="card mt-6">
   <h2 class="text-center text-2xl text-primary">Toutes mes sessions de tir</h2>
+  <div class="text-right mb-2">
+    <a
+      [routerLink]="['/' + Routing.TRAINING + '/' + Routing.TRAINING_SESSION_FORM]"
+      class="p-button ml-5 no-underline"
+      >Ajouter Session</a
+    >
+  </div>
   <p-table
     #dt2
     [value]="sessions"
@@ -56,6 +63,7 @@
               let-filter="filterCallback">
               <p-dropdown
                 [ngModel]="value"
+                appendTo="body"
                 [options]="ammunitions"
                 (onChange)="filter($event.value.name)"
                 placeholder="Munition"

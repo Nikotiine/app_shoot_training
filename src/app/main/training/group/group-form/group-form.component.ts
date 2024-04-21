@@ -16,8 +16,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
 import { TableModule } from 'primeng/table';
-import { TrainingSessionCreateDto } from '../../../../core/api/models/training-session-create-dto';
-import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
 import { CustomConfirmationService } from '../../../../core/app/services/custom-confirmation.service';
 
 @Component({
@@ -37,11 +35,12 @@ import { CustomConfirmationService } from '../../../../core/app/services/custom-
 })
 export class GroupFormComponent {
   // Private field
-  public groups: TrainingSessionGroupCreateDto[] = [];
+
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
-  // Public field
 
+  // Public field
+  public groups: TrainingSessionGroupCreateDto[] = [];
   public form: FormGroup = inject(FormBuilder).group({
     totalShoots: [0],
     score: [0],
@@ -54,11 +53,12 @@ export class GroupFormComponent {
     new EventEmitter<TrainingSessionGroupCreateDto[]>();
   @Input() set trainingSession(groups: TrainingSessionGroupCreateDto[] | null) {
     if (groups) {
-      console.log(groups);
       this.groups = groups;
     }
   }
   public title: WritableSignal<string> = signal('titre');
+
+  //************************************ PUBLIC METHODS ************************************
 
   public add(): void {
     const sessionGroup: TrainingSessionGroupCreateDto = {
@@ -93,4 +93,5 @@ export class GroupFormComponent {
       this.groups.splice(index, 1);
     }
   }
+  //************************************ PRIVATE METHODS ************************************
 }

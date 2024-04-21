@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { AmmunitionSpeedHistoryCreateDto } from '../../../core/api/models/ammunition-speed-history-create-dto';
+import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-ammunition-speed-histories-form',
@@ -24,6 +25,8 @@ export class AmmunitionSpeedHistoriesFormComponent {
   private fb: FormBuilder = inject(FormBuilder);
   private _weapon!: WeaponDto;
   private _ammunition!: AmmunitionDto;
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
 
   // Public field
   public form: FormGroup = this.fb.group({
@@ -51,6 +54,9 @@ export class AmmunitionSpeedHistoriesFormComponent {
     new EventEmitter<AmmunitionSpeedHistoryCreateDto[]>();
 
   @Output() cancelSpeedHistories: EventEmitter<void> = new EventEmitter<void>();
+
+  //************************************ PUBLIC METHODS ************************************
+
   /**
    * Creation du Array pour les speedHistories
    */
@@ -58,7 +64,10 @@ export class AmmunitionSpeedHistoriesFormComponent {
     return this.form.controls['speedHistories'] as FormArray;
   }
 
-  // Ajout d'une nouvelle vitesse
+  /**
+   * Ajout d'une nouvelle vitesse
+   * Met a jour le tableau d'objet du formulaire
+   */
   public addNewSpeed(): void {
     this.speedArray.push(
       this.fb.group({
@@ -69,6 +78,10 @@ export class AmmunitionSpeedHistoriesFormComponent {
     );
   }
 
+  /**
+   * Enleve un element du tableau
+   * @param i index de l'element
+   */
   public removeSpeed(i: number): void {
     this.speedArray.removeAt(i);
   }
@@ -77,7 +90,22 @@ export class AmmunitionSpeedHistoriesFormComponent {
     this.save.emit(this.form.controls['speedHistories'].value);
   }
 
-  public cancel(): void {
+  /**
+   * Pop-up de confirmation de suppression des vitesses
+   * @param event Event
+   */
+  public async confirm(event: Event): Promise<void> {
+    const confirmed = await this.customConfirmationService.confirm(
+      event,
+      'Effacer toutes les vitesses ?',
+      'Vitesse des munition'
+    );
+    if (confirmed) {
+      this.cancel();
+    }
+  }
+
+  private cancel(): void {
     this.speedArray.clear();
     this.cancelSpeedHistories.emit();
   }

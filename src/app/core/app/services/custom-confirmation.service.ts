@@ -22,6 +22,8 @@ export class CustomConfirmationService {
         acceptIcon: 'none',
         rejectIcon: 'none',
         rejectButtonStyleClass: 'p-button-text',
+        acceptLabel: 'Oui',
+        rejectLabel: 'Non',
         accept: () => {
           resolve(true); // Résoudre la promesse avec true si l'utilisateur accepte
         },

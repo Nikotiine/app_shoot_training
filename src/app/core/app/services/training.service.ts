@@ -51,6 +51,7 @@ export class TrainingService {
     return this.mapperTrainingSessionService.getAllSessionByUser(id);
   }
 
+  // ***************** Affichage des different message de la page ************
   public successCreateMessage(): void {
     this.customMessageService.successMessage(
       this._currentPageMessageHeader,
@@ -65,6 +66,10 @@ export class TrainingService {
     );
   }
 
+  public savedForm(header: string): void {
+    this.customMessageService.infoMessage(header, 'Donnée enregistrées');
+  }
+
   public errorMessage(message: string): void {
     this.customMessageService.errorMessage(
       this._currentPageMessageHeader,
@@ -72,6 +77,9 @@ export class TrainingService {
     );
   }
 
+  /**
+   * Retourne le Dropdown des position de tir
+   */
   public getTrainingPositions(): DropdownModel[] {
     return [
       {
@@ -97,6 +105,9 @@ export class TrainingService {
     ];
   }
 
+  /**
+   * Retourne le Dropdown des support de tir
+   */
   public getWeaponSupports(): DropdownModel[] {
     return [
       {
@@ -117,10 +128,10 @@ export class TrainingService {
     ];
   }
 
-  public savedForm(header: string): void {
-    this.customMessageService.infoMessage(header, 'Donnée enregistrées');
-  }
-
+  /**
+   * Transforme les setup de l'utlisateur UserWeaponSetupDto[] en DropdownModel[]
+   * @param setups
+   */
   public mapSetupToDropdownModel(
     setups: UserWeaponSetupDto[]
   ): DropdownModel[] {
@@ -131,6 +142,11 @@ export class TrainingService {
       };
     });
   }
+
+  /**
+   * Transforme les munition utilisées par l'utilisateur AmmunitionDto[] en DropdownModel[]
+   * @param ammunition
+   */
   public mapAmmunitionToDropdownModel(
     ammunition: AmmunitionDto[]
   ): DropdownModel[] {
@@ -141,6 +157,11 @@ export class TrainingService {
       };
     });
   }
+
+  /**
+   * Transfome la liste des different distances faite par l'utilisateur lors de ses seance  en DropdownModel[]
+   * @param distances
+   */
   public mapDistanceToDropdownModel(distances: number[]): DropdownModel[] {
     const dropdown: DropdownModel[] = [];
     distances.forEach((distance, index) => {
@@ -172,14 +193,30 @@ export class TrainingService {
     });
   }
 
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Genere le nom du setup complet : Marque de l'arme / model + lunette associe avec zoom mini - maxi et diametre de
+   * lentille exterieur UserWeaponSetupDto
+   * @param setup
+   */
   private createSetupName(setup: UserWeaponSetupDto): string {
     return `${setup.weapon.factory.name}-${setup.weapon.model} + ${setup.optics.factory.name}-${setup.optics.name} ${setup.optics.minZoom}-${setup.optics.maxZoom}x${setup.optics.outletDiameter.label}`;
   }
 
+  /**
+   * Genere le nom de la munition avec Marque / modele et poids en grains
+   * @param ammo AmmunitionDto
+   */
   private createAmmunitionName(ammo: AmmunitionDto): string {
     return `${ammo.factory.name} - ${ammo.name} / ${ammo.weight.grains} grains`;
   }
 
+  /**
+   * Retroune la couleur des tag pour les diffente distance
+   * @param distance
+   * @private
+   */
   private getDistanceSeverity(distance: number | undefined): string {
     let severity: string = '';
     if (distance) {

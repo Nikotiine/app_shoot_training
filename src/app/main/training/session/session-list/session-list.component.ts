@@ -13,6 +13,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { forkJoin } from 'rxjs';
 import { TrainingSessionViewModel } from '../../../../core/app/model/TrainingSessionViewModel.model';
 import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
+import { RouterLink } from '@angular/router';
+import { Routing } from '../../../../core/app/enum/Routing.enum';
+import { TrainingSessionDto } from '../../../../core/api/models/training-session-dto';
 
 @Component({
   selector: 'app-session-list',
@@ -24,18 +27,22 @@ import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
     TagModule,
     DropdownModule,
     FormsModule,
-    MultiSelectModule
+    MultiSelectModule,
+    RouterLink
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss'
 })
 export class SessionListComponent implements OnInit {
   // Private field
+
   private readonly customUserService: CustomUserService =
     inject(CustomUserService);
   private readonly trainingService: TrainingService = inject(TrainingService);
+  protected readonly Routing = Routing;
 
   // Public field
+
   public sessions: TrainingSessionViewModel[] = [];
   public isLoading: boolean = true;
   public positions: DropdownModel[] =
@@ -43,37 +50,35 @@ export class SessionListComponent implements OnInit {
   public distances: DropdownModel[] = [];
   public userSetup: DropdownModel[] = [];
   public selectedSession!: TrainingSessionViewModel;
-  // Public method
   public ammunitions: DropdownModel[] = [];
-  ngOnInit(): void {
+  //************************************ PUBLIC METHODS ************************************
+
+  public ngOnInit(): void {
     const user = this.customUserService.getProfile();
     if (user) {
       this.loadData(user.id);
     }
   }
 
+  public onRowSelect(session: TrainingSessionViewModel): void {
+    console.log(session);
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge les donnee depuis l'api
+   * Toutes les sessions de l'utilisateur
+   * Tout les setup de l'utilisateur
+   * @param id de l'utilisateur
+   */
   private loadData(id: number): void {
     forkJoin([
       this.trainingService.getTrainingSessionById(id),
       this.trainingService.getUserSetups(id)
     ]).subscribe({
       next: (data) => {
-        this.sessions = this.trainingService.createTrainingSessionViewModel(
-          data[0]
-        );
-        const ammunitions: AmmunitionDto[] = [];
-        const distances: number[] = [];
-        for (const session of data[0]) {
-          if (session.distance) {
-            distances.push(session.distance);
-          }
-          ammunitions.push(session.ammunition);
-        }
-        this.distances =
-          this.trainingService.mapDistanceToDropdownModel(distances);
-        this.ammunitions =
-          this.trainingService.mapAmmunitionToDropdownModel(ammunitions);
-
+        this.generateSessionViewModels(data[0]);
         this.userSetup = this.trainingService.mapSetupToDropdownModel(data[1]);
         this.isLoading = false;
       },
@@ -82,34 +87,24 @@ export class SessionListComponent implements OnInit {
       }
     });
   }
-  getSeverity(status: string): string {
-    console.log(status);
-    let color: string = '';
-    switch (status) {
-      case TrainingPosition.STANDING:
-        color = 'danger';
-        break;
 
-      case TrainingPosition.LYING:
-        color = 'success';
-        break;
-
-      case TrainingPosition.KNEELING:
-        color = 'info';
-        break;
-
-      case TrainingPosition.SEATED:
-        color = 'warning';
-        break;
-
-      default:
-        color = '';
-        break;
+  /**
+   * Creer les differents view model en rapport avec les sessions
+   * @param sessions TrainingSessionDto[]
+   */
+  private generateSessionViewModels(sessions: TrainingSessionDto[]) {
+    this.sessions =
+      this.trainingService.createTrainingSessionViewModel(sessions);
+    const ammunitions: AmmunitionDto[] = [];
+    const distances: number[] = [];
+    for (const session of sessions) {
+      if (session.distance) {
+        distances.push(session.distance);
+      }
+      ammunitions.push(session.ammunition);
     }
-    return color;
-  }
-
-  onRowSelect(session: TrainingSessionViewModel) {
-    console.log(session);
+    this.distances = this.trainingService.mapDistanceToDropdownModel(distances);
+    this.ammunitions =
+      this.trainingService.mapAmmunitionToDropdownModel(ammunitions);
   }
 }
