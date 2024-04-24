@@ -83,7 +83,7 @@ export class OpticsFormComponent implements OnInit {
     ),
     isParallax: [false]
   });
-  protected title: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
   @Output() edited: EventEmitter<OpticsDto> = new EventEmitter<OpticsDto>();
 
@@ -96,25 +96,10 @@ export class OpticsFormComponent implements OnInit {
     }
   }
 
+  //************************************ PUBLIC METHODS ************************************
+
   public ngOnInit(): void {
     this.loadDataCollection();
-  }
-
-  /**
-   * Charge les donnée necessaires pour remplir le formulaire
-   */
-  private loadDataCollection(): void {
-    this.opticsService.getOpticsDataCollection().subscribe({
-      next: (data) => {
-        this.opticsDataCollection = data;
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
   }
 
   /**
@@ -143,6 +128,37 @@ export class OpticsFormComponent implements OnInit {
     } else {
       this.editOptic(optics);
     }
+  }
+
+  public opticUnitSelected(unitId: number): void {
+    const value = this.opticsDataCollection.opticsUnitList.find(
+      (unit) => unit.id === unitId
+    );
+    if (value?.label === OpticsUnit.MOA) {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
+      this.form.controls['opticsValueOfOneClick'].enable();
+    } else {
+      this.opticsClickValues = OpticsClickValue.getClickValuesMil();
+      this.form.controls['opticsValueOfOneClick'].setValue(1);
+    }
+  }
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge les donnée necessaires pour remplir le formulaire
+   */
+  private loadDataCollection(): void {
+    this.opticsService.getOpticsDataCollection().subscribe({
+      next: (data) => {
+        this.opticsDataCollection = data;
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 
   /**
@@ -226,7 +242,6 @@ export class OpticsFormComponent implements OnInit {
    * Pour garde une logique propoe en base de donnee
    * @param moa les moa passer en param
    * @param unitId l id de l unite choisi
-   * @private
    */
   private convertMilToMoa(moa: number, unitId: number): number {
     const opticsUnit: OpticsUnitDto = this.getOpticsUnit(unitId);
@@ -234,19 +249,6 @@ export class OpticsFormComponent implements OnInit {
       moa = Math.round(moa * 3.4377);
     }
     return moa;
-  }
-
-  public opticUnitSelected(unitId: number): void {
-    const value = this.opticsDataCollection.opticsUnitList.find(
-      (unit) => unit.id === unitId
-    );
-    if (value?.label === OpticsUnit.MOA) {
-      this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
-      this.form.controls['opticsValueOfOneClick'].enable();
-    } else {
-      this.opticsClickValues = OpticsClickValue.getClickValuesMil();
-      this.form.controls['opticsValueOfOneClick'].setValue(1);
-    }
   }
 
   /**
@@ -337,12 +339,13 @@ export class OpticsFormComponent implements OnInit {
         }
       });
   }
+
   /**
    * Defini le titre a afficher selon creatin ou edition
    */
   private setTitle(): void {
     this._isEditOptics
-      ? this.title.set("Modifier l'optique")
-      : this.title.set('Ajouter un nouveau calibre');
+      ? this.$title.set("Modifier l'optique")
+      : this.$title.set('Ajouter un nouveau calibre');
   }
 }

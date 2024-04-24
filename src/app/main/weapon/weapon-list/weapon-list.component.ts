@@ -45,39 +45,18 @@ export class WeaponListComponent implements OnInit {
   private readonly _currentPageMessageHeader: string =
     'Administration des armes';
   private _weapons: WeaponDto[] = [];
-  // Public field
 
+  // Public field
   public filteredWeapons: WeaponDto[] = [];
   public isShowFormComponent: boolean = false;
   public factories: FactoryDto[] = [];
-  public currentCaliberId = signal(0);
-  public selectedWeapon: WritableSignal<WeaponDto | null> = signal(null);
-  ngOnInit(): void {
-    this.loadData();
-  }
+  public $currentCaliberId: WritableSignal<number> = signal(0);
+  public $selectedWeapon: WritableSignal<WeaponDto | null> = signal(null);
 
-  /**
-   * Charge les donnees necessaire a l'effichage de la page
-   */
-  private loadData(): void {
-    forkJoin([
-      this.weaponService.getAllWeapon(),
-      this.factoryService.getAllFactoryByType({
-        type: FactoryType.WEAPON
-      })
-    ]).subscribe({
-      next: (data) => {
-        this._weapons = data[0];
-        this.filteredWeapons = data[0];
-        this.factories = data[1];
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
+  //************************************ PUBLIC METHODS ************************************
+
+  public ngOnInit(): void {
+    this.loadData();
   }
 
   /**
@@ -87,7 +66,7 @@ export class WeaponListComponent implements OnInit {
    */
   public showAddForm(): void {
     if (this.isShowFormComponent) {
-      this.selectedWeapon.set(null);
+      this.$selectedWeapon.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
   }
@@ -101,7 +80,7 @@ export class WeaponListComponent implements OnInit {
     this._weapons.push(weapon);
     const caliberId = weapon.caliber.id;
     this.filterByCaliber(caliberId);
-    this.currentCaliberId.set(caliberId);
+    this.$currentCaliberId.set(caliberId);
     this.isShowFormComponent = false;
   }
 
@@ -128,6 +107,54 @@ export class WeaponListComponent implements OnInit {
       this.disableWeapon(weapon.id);
     }
   }
+  /**
+   * Affiche le formulaire d'edition de l'arme
+   * @param weapon WeaponDto qui sera passe en input dans le formulaire
+   */
+  public showEditForm(weapon: WeaponDto): void {
+    this.isShowFormComponent = !this.isShowFormComponent;
+    this.$selectedWeapon.set(weapon);
+  }
+
+  /**
+   * Une fois l'arme correctement editée, met a jour le tableau d'arme avec l'arme editée
+   * Efface le filtre du calibre selectioné
+   * @param weapon
+   */
+  public editedEvent(weapon: WeaponDto): void {
+    const index = this._weapons.findIndex((w) => w.id === weapon.id);
+    this._weapons.splice(index, 1);
+    this._weapons.push(weapon);
+    this.filteredWeapons = this._weapons;
+    this.$currentCaliberId.set(0);
+    this.isShowFormComponent = false;
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge les donnees necessaire a l'effichage de la page
+   */
+  private loadData(): void {
+    forkJoin([
+      this.weaponService.getAllWeapon(),
+      this.factoryService.getAllFactoryByType({
+        type: FactoryType.WEAPON
+      })
+    ]).subscribe({
+      next: (data) => {
+        this._weapons = data[0];
+        this.filteredWeapons = data[0];
+        this.factories = data[1];
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
+  }
 
   /**
    * Dective l'arme en base de donnée
@@ -153,28 +180,5 @@ export class WeaponListComponent implements OnInit {
           );
         }
       });
-  }
-
-  /**
-   * Affiche le formulaire d'edition de l'arme
-   * @param weapon WeaponDto qui sera passe en input dans le formulaire
-   */
-  public showEditForm(weapon: WeaponDto): void {
-    this.isShowFormComponent = !this.isShowFormComponent;
-    this.selectedWeapon.set(weapon);
-  }
-
-  /**
-   * Une fois l'arme correctement editée, met a jour le tableau d'arme avec l'arme editée
-   * Efface le filtre du calibre selectioné
-   * @param weapon
-   */
-  public editedEvent(weapon: WeaponDto): void {
-    const index = this._weapons.findIndex((w) => w.id === weapon.id);
-    this._weapons.splice(index, 1);
-    this._weapons.push(weapon);
-    this.filteredWeapons = this._weapons;
-    this.currentCaliberId.set(0);
-    this.isShowFormComponent = false;
   }
 }

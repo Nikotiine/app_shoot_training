@@ -35,11 +35,12 @@ export class CaliberFormComponent {
   private _isEditCaliber: boolean = false;
   private _caliber!: CaliberDto;
   private readonly _currentPageMessageHeader: string = 'Gestion des calibres';
+
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
     label: ['', Validators.required]
   });
-  protected title: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<CaliberDto> = new EventEmitter<CaliberDto>();
   @Output() edited: EventEmitter<CaliberDto> = new EventEmitter<CaliberDto>();
   @Input() set caliber(caliber: CaliberDto | null) {
@@ -50,6 +51,8 @@ export class CaliberFormComponent {
       this.autoCompleteForm(caliber);
     }
   }
+
+  //************************************ PUBLIC METHODS ************************************
 
   public submit(): void {
     const caliber: CaliberCreateDto = {
@@ -62,6 +65,7 @@ export class CaliberFormComponent {
     }
   }
 
+  //************************************ PRIVATE METHODS ************************************
   private autoCompleteForm(caliber: CaliberDto): void {
     this.form.controls['label'].setValue(caliber.label);
   }
@@ -115,12 +119,13 @@ export class CaliberFormComponent {
         }
       });
   }
+
   /**
    * Defini le titre a afficher selon creatin ou edition
    */
   private setTitle(): void {
     this._isEditCaliber
-      ? this.title.set('Modifier le calibre')
-      : this.title.set('Ajouter un nouveau calibre');
+      ? this.$title.set('Modifier le calibre')
+      : this.$title.set('Ajouter un nouveau calibre');
   }
 }

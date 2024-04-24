@@ -1,7 +1,7 @@
 @if (!isShowFormComponent){
 
 <app-caliber-dropdown
-  [initDropdown]="currentCaliberId()"
+  [initDropdown]="$currentCaliberId()"
   (selectedCaliber)="filterByCaliber($event.id)"></app-caliber-dropdown>
 <p-table [value]="filteredWeapons" [tableStyle]="{ 'min-width': '50rem' }">
   <ng-template pTemplate="header">
@@ -54,6 +54,6 @@
   <app-weapon-form
     (weaponAdded)="addedEvent($event)"
     (weaponEdited)="editedEvent($event)"
-    [weaponForm]="selectedWeapon()"></app-weapon-form>
+    [weaponForm]="$selectedWeapon()"></app-weapon-form>
   } }
 </div>

@@ -32,7 +32,7 @@ export class AccountActivationComponent implements OnInit {
   };
   public form: FormGroup;
   private _email: string = '';
-
+  //TODO supprimer le constructeur pour des inject
   constructor(
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,

@@ -8,7 +8,6 @@ import {
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import { AmmunitionService } from '../../../core/api/services/ammunition.service';
 import { CaliberService } from '../../../core/api/services/caliber.service';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
@@ -33,18 +32,21 @@ import { AppWeightService } from '../../../core/app/services/app-weight.service'
 })
 export class JouleComponent implements OnInit {
   // Private field
-
   private readonly appWeightService: AppWeightService =
     inject(AppWeightService);
+  private _weights: AmmunitionWeightDto[] = [];
+
+  // Public field
   public form: FormGroup;
   public result: string = '';
   public calibers: CaliberDto[] = [];
   public weightsVM: WeightViewModel[] = [];
-  private weights: AmmunitionWeightDto[] = [];
   public typeOfWeight: WeightViewModel[] =
     this.appWeightService.getTypesOfWeight();
+  //TODO passer cette variable en signal
   public legend: string = 'Parametres pre definis';
   public predefinedParams: boolean = true;
+  // TODO supprimer le constructeur pour des inject()
   constructor(
     private fb: FormBuilder,
     private readonly caliberService: CaliberService,
@@ -106,7 +108,7 @@ export class JouleComponent implements OnInit {
    * @param id id du poids
    */
   public preDefineWeightSelected(id: number): void {
-    const weight = <AmmunitionWeightDto>this.weights.find((w) => w.id === id);
+    const weight = <AmmunitionWeightDto>this._weights.find((w) => w.id === id);
     this.form.controls['weight'].setValue(weight.grams);
   }
 
@@ -130,7 +132,7 @@ export class JouleComponent implements OnInit {
    * @param weights AmmunitionWeightDto[]
    */
   private createWeightVM(weights: Array<AmmunitionWeightDto>): void {
-    this.weights = weights;
+    this._weights = weights;
     this.weightsVM = weights.map((weight) => {
       return {
         id: weight.id,

@@ -55,7 +55,7 @@ export class GroupFormComponent {
       this.groups = groups;
     }
   }
-  public $_title: WritableSignal<string> = signal('titre');
+  public $title: WritableSignal<string> = signal('titre');
 
   //************************************ PUBLIC METHODS ************************************
 

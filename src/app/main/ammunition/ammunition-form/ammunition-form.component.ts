@@ -74,7 +74,7 @@ export class AmmunitionFormComponent implements OnInit {
   public calibers: CaliberDto[] = [];
   public factories: FactoryDto[] = [];
   public weights: WeightViewModel[] = [];
-  protected title: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<AmmunitionDto> =
     new EventEmitter<AmmunitionDto>();
   @Output() edited: EventEmitter<AmmunitionDto> =
@@ -88,32 +88,10 @@ export class AmmunitionFormComponent implements OnInit {
       this.autoCompleteForm(ammunition);
     }
   }
+
+  //************************************ PUBLIC METHODS ************************************
   public ngOnInit(): void {
     this.loadData();
-  }
-
-  /**
-   * Charge les calibre et les marque de munitions
-   * @private
-   */
-  private loadData(): void {
-    forkJoin([
-      this.caliberService.getAllCalibers(),
-      this.factoryService.getAllFactoryByType({
-        type: FactoryType.AMMUNITION
-      })
-    ]).subscribe({
-      next: (data) => {
-        this.calibers = data[0];
-        this.factories = data[1];
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
   }
 
   public submit(): void {
@@ -145,6 +123,31 @@ export class AmmunitionFormComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);
+      }
+    });
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge les calibre et les marque de munitions
+   */
+  private loadData(): void {
+    forkJoin([
+      this.caliberService.getAllCalibers(),
+      this.factoryService.getAllFactoryByType({
+        type: FactoryType.AMMUNITION
+      })
+    ]).subscribe({
+      next: (data) => {
+        this.calibers = data[0];
+        this.factories = data[1];
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
       }
     });
   }
@@ -238,12 +241,13 @@ export class AmmunitionFormComponent implements OnInit {
         }
       });
   }
+
   /**
    * Defini le titre a afficher selon creatin ou edition
    */
   private setTitle(): void {
     this._isEditAmmunition
-      ? this.title.set('Modifier la munition')
-      : this.title.set('Ajouter un nouvelle munition');
+      ? this.$title.set('Modifier la munition')
+      : this.$title.set('Ajouter un nouvelle munition');
   }
 }

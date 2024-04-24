@@ -37,30 +37,16 @@ export class OpticsListComponent implements OnInit {
     inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
+
   // Public field
   public optics: OpticsDto[] = [];
   public isShowFormComponent: boolean = false;
-  public selectedOptics: WritableSignal<OpticsDto | null> = signal(null);
+  public $selectedOptics: WritableSignal<OpticsDto | null> = signal(null);
+
+  //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
     this.loadOptics();
-  }
-
-  /**
-   * Charge la liste de toutes les optiques (active ou non)
-   */
-  private loadOptics(): void {
-    this.opticsService.getAllOptics().subscribe({
-      next: (optics) => {
-        this.optics = optics;
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
   }
 
   /**
@@ -69,7 +55,7 @@ export class OpticsListComponent implements OnInit {
    */
   public showAddForm(): void {
     if (this.isShowFormComponent) {
-      this.selectedOptics.set(null);
+      this.$selectedOptics.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
   }
@@ -100,6 +86,48 @@ export class OpticsListComponent implements OnInit {
   }
 
   /**
+   * Affiche le formualaire d'edition de l'optique
+   * ajoute l'object OpticsDto au signal opticsToEdit pour pre remplir le formulaire d'edition
+   * @param optic OpticsDto
+   */
+  public showEditForm(optic: OpticsDto): void {
+    this.$selectedOptics.set(optic);
+    this.isShowFormComponent = !this.isShowFormComponent;
+  }
+
+  /**
+   * Met a jour la liste des optique apres edition d'une optique
+   * Cherche et trouve l'optique modifie , la supprime du tableau et ajoute l'optique modifie
+   * Passe le signal opticsToEdit a null
+   * @param optics OpticsDto
+   */
+  public editedEvent(optics: OpticsDto): void {
+    const index = this.optics.findIndex((o) => o.id === optics.id);
+    this.optics.splice(index, 1);
+    this.optics.push(optics);
+    this.isShowFormComponent = !this.isShowFormComponent;
+    this.$selectedOptics.set(null);
+  }
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge la liste de toutes les optiques (active ou non)
+   */
+  private loadOptics(): void {
+    this.opticsService.getAllOptics().subscribe({
+      next: (optics) => {
+        this.optics = optics;
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
+  }
+
+  /**
    * Soummission de la desactivation de l'optique
    * Met a jour la liste des optique une fois celle ci desactive
    * @param id de l'optique
@@ -120,29 +148,5 @@ export class OpticsListComponent implements OnInit {
           );
         }
       });
-  }
-
-  /**
-   * Affiche le formualaire d'edition de l'optique
-   * ajoute l'object OpticsDto au signal opticsToEdit pour pre remplir le formulaire d'edition
-   * @param optic OpticsDto
-   */
-  public showEditForm(optic: OpticsDto): void {
-    this.selectedOptics.set(optic);
-    this.isShowFormComponent = !this.isShowFormComponent;
-  }
-
-  /**
-   * Met a jour la liste des optique apres edition d'une optique
-   * Cherche et trouve l'optique modifie , la supprime du tableau et ajoute l'optique modifie
-   * Passe le signal opticsToEdit a null
-   * @param optics OpticsDto
-   */
-  public editedEvent(optics: OpticsDto): void {
-    const index = this.optics.findIndex((o) => o.id === optics.id);
-    this.optics.splice(index, 1);
-    this.optics.push(optics);
-    this.isShowFormComponent = !this.isShowFormComponent;
-    this.selectedOptics.set(null);
   }
 }

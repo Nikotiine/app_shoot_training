@@ -34,12 +34,12 @@ export class FactoryTableListComponent {
   // Private field
   private _factory!: FactoryType;
   private readonly factoryService: FactoryService = inject(FactoryService);
-  private readonly currentPageMessageHeader: string = 'Gestion des marques';
+  private readonly _currentPageMessageHeader: string = 'Gestion des marques';
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
 
   // Public field
-  public factoryToEdit: WritableSignal<FactoryDto | null> = signal(null);
+  public $factoryToEdit: WritableSignal<FactoryDto | null> = signal(null);
   public factories: FactoryDto[] = [];
   public newFactoryForm: boolean = false;
   @Input() set factoryType(factory: FactoryType) {
@@ -50,28 +50,7 @@ export class FactoryTableListComponent {
   get factory() {
     return this._factory;
   }
-
-  /**
-   * Charge la liste des marque en fonction du type demander
-   * @param type FactoryType
-   */
-  private loadFactory(type: FactoryType): void {
-    this.factoryService
-      .getAllFactoryByType({
-        type: type
-      })
-      .subscribe({
-        next: (factories) => {
-          this.factories = factories;
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
-  }
+  //************************************ PUBLIC METHODS ************************************
 
   /**
    * Affiche le formulaire pour une nouvelle marque
@@ -79,7 +58,7 @@ export class FactoryTableListComponent {
    */
   public addFactory(): void {
     if (this.newFactoryForm) {
-      this.factoryToEdit.set(null);
+      this.$factoryToEdit.set(null);
     }
     this.newFactoryForm = !this.newFactoryForm;
   }
@@ -99,7 +78,7 @@ export class FactoryTableListComponent {
    */
   public edit(factory: FactoryDto): void {
     this.newFactoryForm = !this.newFactoryForm;
-    this.factoryToEdit.set(factory);
+    this.$factoryToEdit.set(factory);
   }
 
   /**
@@ -110,7 +89,31 @@ export class FactoryTableListComponent {
     const index = this.factories.findIndex((f) => f.id === factory.id);
     this.factories.splice(index, 1);
     this.factories.push(factory);
-    this.factoryToEdit.set(null);
+    this.$factoryToEdit.set(null);
     this.newFactoryForm = !this.newFactoryForm;
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge la liste des marque en fonction du type demander
+   * @param type FactoryType
+   */
+  private loadFactory(type: FactoryType): void {
+    this.factoryService
+      .getAllFactoryByType({
+        type: type
+      })
+      .subscribe({
+        next: (factories) => {
+          this.factories = factories;
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            this._currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
   }
 }

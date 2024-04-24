@@ -32,6 +32,6 @@
 @defer (when visible){ @if (visible){
 <app-caliber-form
   (added)="newCaliber($event)"
-  [caliber]="caliberToEdit()"
+  [caliber]="$caliberToEdit()"
   (edited)="caliberEdited($event)"></app-caliber-form>
 } }

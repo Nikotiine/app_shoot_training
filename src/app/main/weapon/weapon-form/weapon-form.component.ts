@@ -66,7 +66,7 @@ export class WeaponFormComponent implements OnInit {
     variation: ['']
   });
   public isLoading: boolean = true;
-  protected title: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
 
   @Output() weaponAdded: EventEmitter<WeaponDto> =
     new EventEmitter<WeaponDto>();
@@ -82,26 +82,9 @@ export class WeaponFormComponent implements OnInit {
     }
   }
 
+  //************************************ PUBLIC METHODS ************************************
   public ngOnInit(): void {
     this.loadData();
-  }
-
-  /**
-   * Charge la liste des donnee obligatoire pour creer une nouvelle arme
-   */
-  private loadData(): void {
-    this.weaponService.getWeaponDataCollection().subscribe({
-      next: (data) => {
-        this.weaponDataCollection = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
   }
 
   /**
@@ -125,6 +108,25 @@ export class WeaponFormComponent implements OnInit {
     } else {
       this.editWeapon(weapon);
     }
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+  /**
+   * Charge la liste des donnee obligatoire pour creer une nouvelle arme
+   */
+  private loadData(): void {
+    this.weaponService.getWeaponDataCollection().subscribe({
+      next: (data) => {
+        this.weaponDataCollection = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 
   private getWeaponCategoryDto(): WeaponCategoryDto {
@@ -229,7 +231,7 @@ export class WeaponFormComponent implements OnInit {
    */
   private setTitle(): void {
     this._isEditWeapon
-      ? this.title.set("Modifier l'arme")
-      : this.title.set('Ajouter une nouvelle arme');
+      ? this.$title.set("Modifier l'arme")
+      : this.$title.set('Ajouter une nouvelle arme');
   }
 }

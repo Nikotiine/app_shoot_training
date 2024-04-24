@@ -105,6 +105,8 @@ export class AmmunitionSpeedHistoriesFormComponent {
     }
   }
 
+  //************************************ PRIVATE METHODS ************************************
+
   private cancel(): void {
     this.speedArray.clear();
     this.cancelSpeedHistories.emit();

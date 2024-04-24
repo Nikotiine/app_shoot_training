@@ -34,6 +34,7 @@ export class NewPasswordComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private _email: string = '';
   public form: FormGroup;
+  //TODO supprimer le constructeur pour des inject
   constructor(
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,

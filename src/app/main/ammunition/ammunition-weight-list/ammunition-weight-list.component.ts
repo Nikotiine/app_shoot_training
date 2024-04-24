@@ -5,7 +5,6 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { AmmunitionService } from '../../../core/api/services/ammunition.service';
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
 import { ButtonModule } from 'primeng/button';
@@ -34,7 +33,6 @@ import { AppWeightService } from '../../../core/app/services/app-weight.service'
 export class AmmunitionWeightListComponent implements OnInit {
   // Private field
   private readonly _currentPageMessageHeader: string = 'Poids des munitions';
-
   private readonly appWeightService: AppWeightService =
     inject(AppWeightService);
   private readonly customConfirmationService: CustomConfirmationService =
@@ -46,14 +44,16 @@ export class AmmunitionWeightListComponent implements OnInit {
   public filteredWeights: AmmunitionWeightDto[] = [];
   public weights: AmmunitionWeightDto[] = [];
   public isShowForm: boolean = false;
-  public result: WritableSignal<number> = signal(0);
-  public disableDropdown: WritableSignal<boolean> = signal(false);
-  public selectedCaliberId: WritableSignal<number> = signal(0);
-  public selectedWeight: WritableSignal<AmmunitionWeightDto | null> =
+  public $result: WritableSignal<number> = signal(0);
+  public $disableDropdown: WritableSignal<boolean> = signal(false);
+  public $selectedCaliberId: WritableSignal<number> = signal(0);
+  public $selectedWeight: WritableSignal<AmmunitionWeightDto | null> =
     signal(null);
+
   public ngOnInit(): void {
     this.loadData();
   }
+  //************************************ PUBLIC METHODS ************************************
 
   /**
    * Popup de confirmation de suppression du poids selectioner
@@ -79,10 +79,10 @@ export class AmmunitionWeightListComponent implements OnInit {
    */
   public showAddForm(): void {
     if (this.isShowForm) {
-      this.selectedWeight.set(null);
+      this.$selectedWeight.set(null);
     }
     this.isShowForm = !this.isShowForm;
-    this.disableDropdown.set(this.isShowForm);
+    this.$disableDropdown.set(this.isShowForm);
   }
 
   /**
@@ -92,27 +92,8 @@ export class AmmunitionWeightListComponent implements OnInit {
    */
   public addedEvent(weight: AmmunitionWeightDto): void {
     this.filteredWeights.push(weight);
-    this.filterByCaliber(this.selectedCaliberId());
+    this.filterByCaliber(this.$selectedCaliberId());
     this.showAddForm();
-  }
-
-  /**
-   * Sousmission du formulaire de desactivation du poids
-   * @param weight AmmunitionWeightDto
-   */
-  private disableAmmunitionWeight(weight: AmmunitionWeightDto): void {
-    this.appWeightService.disableWeight(weight.id).subscribe({
-      next: (data) => {
-        this.weights = data;
-        this.filterByCaliber(this.selectedCaliberId());
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
   }
 
   /**
@@ -120,7 +101,7 @@ export class AmmunitionWeightListComponent implements OnInit {
    * @param id du calibre
    */
   public filterByCaliber(id: number): void {
-    this.selectedCaliberId.set(id);
+    this.$selectedCaliberId.set(id);
     if (id === 0) {
       this.filteredWeights = this.weights;
     } else {
@@ -129,26 +110,7 @@ export class AmmunitionWeightListComponent implements OnInit {
       });
     }
 
-    this.result.set(this.filteredWeights.length);
-  }
-
-  /**
-   * Charge les poids a l'init du template
-   */
-  private loadData(): void {
-    this.appWeightService.getAllWeight().subscribe({
-      next: (data) => {
-        this.filteredWeights = data;
-        this.weights = data;
-        this.result.set(data.length);
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
+    this.$result.set(this.filteredWeights.length);
   }
 
   /**
@@ -157,8 +119,8 @@ export class AmmunitionWeightListComponent implements OnInit {
    */
   public showEditForm(weight: AmmunitionWeightDto): void {
     this.isShowForm = !this.isShowForm;
-    this.disableDropdown.set(this.isShowForm);
-    this.selectedWeight.set(weight);
+    this.$disableDropdown.set(this.isShowForm);
+    this.$selectedWeight.set(weight);
   }
 
   /**
@@ -171,9 +133,49 @@ export class AmmunitionWeightListComponent implements OnInit {
     const index = this.weights.findIndex((w) => w.id === weight.id);
     this.weights.splice(index, 1);
     this.weights.push(weight);
-    this.filterByCaliber(this.selectedCaliberId());
+    this.filterByCaliber(this.$selectedCaliberId());
     this.isShowForm = false;
-    this.disableDropdown.set(false);
-    this.selectedWeight.set(null);
+    this.$disableDropdown.set(false);
+    this.$selectedWeight.set(null);
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Sousmission du formulaire de desactivation du poids
+   * @param weight AmmunitionWeightDto
+   */
+  private disableAmmunitionWeight(weight: AmmunitionWeightDto): void {
+    this.appWeightService.disableWeight(weight.id).subscribe({
+      next: (data) => {
+        this.weights = data;
+        this.filterByCaliber(this.$selectedCaliberId());
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
+  }
+
+  /**
+   * Charge les poids a l'init du template
+   */
+  private loadData(): void {
+    this.appWeightService.getAllWeight().subscribe({
+      next: (data) => {
+        this.filteredWeights = data;
+        this.weights = data;
+        this.$result.set(data.length);
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 }

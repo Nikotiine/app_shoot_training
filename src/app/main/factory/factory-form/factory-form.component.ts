@@ -34,17 +34,17 @@ export class FactoryFormComponent {
   private _factory!: FactoryType;
   private _editedFactory!: FactoryDto;
   private _isEditFactory: boolean = false;
-  private readonly currentPageMessageHeader: string = 'Gestion des marques';
+  private readonly _currentPageMessageHeader: string = 'Gestion des marques';
   private readonly factoryService: FactoryService = inject(FactoryService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  // Public field
 
+  // Public field
   public form: FormGroup = inject(FormBuilder).group({
     name: ['', Validators.required]
   });
-  public factoryLabel = signal('');
-  protected title: WritableSignal<string> = signal('');
+  public $factoryLabel: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
 
   @Output() newFactory: EventEmitter<FactoryDto> =
     new EventEmitter<FactoryDto>();
@@ -66,6 +66,7 @@ export class FactoryFormComponent {
     }
   }
 
+  //************************************ PUBLIC METHODS ************************************
   /**
    * Soussimision du formulaire en fonction de creation ou d'edition
    */
@@ -81,6 +82,8 @@ export class FactoryFormComponent {
     }
   }
 
+  //************************************ PRIVATE METHODS ************************************
+
   /**
    * Defifini le label de factory en fonction du type passer en param
    * @param type FactoryType
@@ -88,19 +91,19 @@ export class FactoryFormComponent {
   private setFactoryTypeLabel(type: FactoryType): void {
     switch (type) {
       case FactoryType.WEAPON:
-        this.factoryLabel.set("d'arme");
+        this.$factoryLabel.set("d'arme");
         break;
       case FactoryType.AMMUNITION:
-        this.factoryLabel.set('de munition');
+        this.$factoryLabel.set('de munition');
         break;
       case FactoryType.OPTICS:
-        this.factoryLabel.set("d'optique");
+        this.$factoryLabel.set("d'optique");
         break;
       case FactoryType.SOUND_REDUCER:
-        this.factoryLabel.set('de moderateur de son');
+        this.$factoryLabel.set('de moderateur de son');
         break;
       default:
-        this.factoryLabel.set('');
+        this.$factoryLabel.set('');
     }
   }
 
@@ -124,14 +127,14 @@ export class FactoryFormComponent {
       .subscribe({
         next: (res) => {
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
-            `Nouvelle marque ${this.factoryLabel()} disponible`
+            this._currentPageMessageHeader,
+            `Nouvelle marque ${this.$factoryLabel()} disponible`
           );
           this.newFactory.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -157,14 +160,14 @@ export class FactoryFormComponent {
         next: (res) => {
           console.log(res);
           this.customMessageService.successMessage(
-            this.currentPageMessageHeader,
-            `Marque ${this.factoryLabel()} modifiée`
+            this._currentPageMessageHeader,
+            `Marque ${this.$factoryLabel()} modifiée`
           );
           this.editedFactory.emit(res);
         },
         error: (err) => {
           this.customMessageService.errorMessage(
-            this.currentPageMessageHeader,
+            this._currentPageMessageHeader,
             err.error.message
           );
         }
@@ -176,7 +179,7 @@ export class FactoryFormComponent {
    */
   private setTitle(): void {
     this._isEditFactory
-      ? this.title.set('Modifier la marque')
-      : this.title.set('Ajouter une nouvelle marque');
+      ? this.$title.set('Modifier la marque')
+      : this.$title.set('Ajouter une nouvelle marque');
   }
 }

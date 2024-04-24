@@ -105,6 +105,7 @@ export class SessionFormComponent implements OnInit {
 
   @Output() newSessionAdded: EventEmitter<TrainingSessionDto> =
     new EventEmitter();
+
   //************************************ PUBLIC METHODS ************************************
   public ngOnInit(): void {
     const user = this.customUserService.getProfile();

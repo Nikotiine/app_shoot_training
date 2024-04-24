@@ -4,15 +4,11 @@ import {
   inject,
   Input,
   Output,
-  signal
+  signal,
+  WritableSignal
 } from '@angular/core';
 import { CaliberService } from '../../../core/api/services/caliber.service';
-import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
@@ -25,6 +21,20 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
   styleUrl: './caliber-dropdown.component.scss'
 })
 export class CaliberDropdownComponent {
+  // Private field
+  private _id: number = 0;
+  private readonly caliberService: CaliberService = inject(CaliberService);
+
+  // Public field
+  public $customPlaceholder: WritableSignal<string> =
+    signal('Filter par calibre');
+  public form: FormGroup = inject(FormBuilder).group({
+    caliber: [this.id]
+  });
+  public calibers: CaliberDto[] = [];
+
+  @Output() selectedCaliber: EventEmitter<CaliberDto> =
+    new EventEmitter<CaliberDto>();
   @Input() set initDropdown(caliberId: number) {
     this._id = caliberId;
     this.loadCalibers();
@@ -41,30 +51,28 @@ export class CaliberDropdownComponent {
 
   @Input() set placeholder(placeholder: string) {
     if (placeholder) {
-      this.customPlaceholder.set(placeholder);
+      this.$customPlaceholder.set(placeholder);
     }
   }
   get id(): number {
     return this._id;
   }
 
-  @Output() selectedCaliber: EventEmitter<CaliberDto> =
-    new EventEmitter<CaliberDto>();
+  //************************************ PUBLIC METHODS ************************************
 
-  private _id: number = 0;
-  public customPlaceholder = signal('Filter par calibre');
+  /**
+   * Emet l'id du calibre choisi dans le dropdown
+   * @param id
+   */
+  public sendId(id: number): void {
+    const caliber = this.calibers.find((c) => c.id === id);
+    this.selectedCaliber.emit(caliber);
+  }
 
-  private readonly caliberService: CaliberService = inject(CaliberService);
-
-  // Init du formulaire.
-  public form: FormGroup = inject(FormBuilder).group({
-    caliber: [this.id]
-  });
-  public calibers: CaliberDto[] = [];
+  //************************************ PRIVATE METHODS ************************************
 
   /**
    * Charge la liste de tous les calibres disponibles
-   * @private
    */
   private loadCalibers() {
     this.caliberService.getAllCalibers().subscribe({
@@ -78,14 +86,5 @@ export class CaliberDropdownComponent {
         );
       }
     });
-  }
-
-  /**
-   * Emet l'id du calibre choisi dans le dropdown
-   * @param id
-   */
-  sendId(id: number) {
-    const caliber = this.calibers.find((c) => c.id === id);
-    this.selectedCaliber.emit(caliber);
   }
 }

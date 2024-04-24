@@ -8,7 +8,6 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { AmmunitionService } from '../../../core/api/services/ammunition.service';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -54,8 +53,6 @@ import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
 })
 export class AmmunitionWeightFormComponent implements OnInit {
   // Private field
-  private readonly ammunitionService: AmmunitionService =
-    inject(AmmunitionService);
   private readonly appWeightService: AppWeightService =
     inject(AppWeightService);
   private readonly caliberService: CaliberService = inject(CaliberService);
@@ -74,7 +71,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
   public typesOfWeight: WeightViewModel[] =
     this.appWeightService.getTypesOfWeight();
   public calibers: CaliberDto[] = [];
-  protected title: WritableSignal<string> = signal('');
+  protected $title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<AmmunitionWeightDto> =
     new EventEmitter<AmmunitionWeightDto>();
   @Output() edited: EventEmitter<AmmunitionWeightDto> =
@@ -92,6 +89,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
       this.autoCompleteForm(weight);
     }
   }
+  //************************************ PUBLIC METHODS ************************************
 
   /**
    * Sousmission du formulaire pour l'ajout d'un poid
@@ -105,9 +103,11 @@ export class AmmunitionWeightFormComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadData();
   }
+
+  //************************************ PRIVATE METHODS ************************************
 
   /**
    * Charge la liste des calibres pour le mulitselect
@@ -167,8 +167,8 @@ export class AmmunitionWeightFormComponent implements OnInit {
    */
   private setTitle(): void {
     this._isEditAmmunitionWeight
-      ? this.title.set('Modifier le poids')
-      : this.title.set('Ajouter un nouveau poids');
+      ? this.$title.set('Modifier le poids')
+      : this.$title.set('Ajouter un nouveau poids');
   }
 
   private createNewAmmunitionWeight(): void {

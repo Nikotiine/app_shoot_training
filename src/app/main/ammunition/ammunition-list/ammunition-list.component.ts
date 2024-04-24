@@ -42,34 +42,17 @@ export class AmmunitionListComponent implements OnInit {
   private readonly _currentPageMessageHeader: string =
     'Administration des munitions';
   // Public field
-  public currentCaliberId = signal(0);
-  public totalAmmunition = signal(0);
-  public selectedAmmunition: WritableSignal<AmmunitionDto | null> =
+  public $currentCaliberId = signal(0);
+  public $totalAmmunition = signal(0);
+  public $selectedAmmunition: WritableSignal<AmmunitionDto | null> =
     signal(null);
   public filteredAmmunition: AmmunitionDto[] = [];
   public isShowFormComponent: boolean = false;
 
-  ngOnInit(): void {
-    this.loadAmmunition();
-  }
+  //************************************ PUBLIC METHODS ************************************
 
-  /**
-   * Charge la liste des munitions disponibles
-   */
-  private loadAmmunition(): void {
-    this.ammunitionService.getAllAmmunition().subscribe({
-      next: (data) => {
-        this._ammunition = data;
-        this.filteredAmmunition = data;
-        this.totalAmmunition.set(data.length);
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
-      }
-    });
+  public ngOnInit(): void {
+    this.loadAmmunition();
   }
 
   /**
@@ -80,7 +63,7 @@ export class AmmunitionListComponent implements OnInit {
     this.filteredAmmunition = this._ammunition.filter(
       (ammo) => ammo.caliber.id === id
     );
-    this.totalAmmunition.set(this.filteredAmmunition.length);
+    this.$totalAmmunition.set(this.filteredAmmunition.length);
   }
 
   /**
@@ -99,36 +82,14 @@ export class AmmunitionListComponent implements OnInit {
     }
   }
 
-  /**
-   * Soumission du formulaire de suppression de la munition
-   * @param ammo AmmunitionDto
-   */
-  private disableAmmunition(ammo: AmmunitionDto) {
-    this.ammunitionService
-      .disableAmmunition({
-        id: ammo.id
-      })
-      .subscribe({
-        next: (res) => {
-          this._ammunition = res;
-          this.filterByCaliber(ammo.caliber.id);
-          this.currentCaliberId.set(ammo.caliber.id);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
-  }
   public showEditForm(ammunition: AmmunitionDto): void {
     this.isShowFormComponent = !this.isShowFormComponent;
-    this.selectedAmmunition.set(ammunition);
+    this.$selectedAmmunition.set(ammunition);
   }
+
   public showAddForm(): void {
     if (this.isShowFormComponent) {
-      this.selectedAmmunition.set(null);
+      this.$selectedAmmunition.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
   }
@@ -155,6 +116,51 @@ export class AmmunitionListComponent implements OnInit {
     this._ammunition.push(ammunition);
     this.filterByCaliber(ammunition.caliber.id);
     this.isShowFormComponent = !this.isShowFormComponent;
-    this.selectedAmmunition.set(null);
+    this.$selectedAmmunition.set(null);
+  }
+
+  //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Charge la liste des munitions disponibles
+   */
+  private loadAmmunition(): void {
+    this.ammunitionService.getAllAmmunition().subscribe({
+      next: (data) => {
+        this._ammunition = data;
+        this.filteredAmmunition = data;
+        this.$totalAmmunition.set(data.length);
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
+  }
+
+  /**
+   * Soumission du formulaire de suppression de la munition
+   * @param ammo AmmunitionDto
+   */
+  private disableAmmunition(ammo: AmmunitionDto) {
+    this.ammunitionService
+      .disableAmmunition({
+        id: ammo.id
+      })
+      .subscribe({
+        next: (res) => {
+          this._ammunition = res;
+          this.filterByCaliber(ammo.caliber.id);
+          this.$currentCaliberId.set(ammo.caliber.id);
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            this._currentPageMessageHeader,
+            err.error.message
+          );
+        }
+      });
   }
 }

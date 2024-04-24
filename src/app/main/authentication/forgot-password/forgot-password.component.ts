@@ -24,6 +24,7 @@ import { ForgotPasswordService } from '../../../core/api/services/forgot-passwor
 })
 export class ForgotPasswordComponent {
   public form: FormGroup;
+  //TODO supprimer le constructeur pour des inject
   constructor(
     private readonly fb: FormBuilder,
     private readonly forgotPasswordService: ForgotPasswordService,

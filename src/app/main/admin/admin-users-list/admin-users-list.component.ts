@@ -42,7 +42,7 @@ export class AdminUsersListComponent implements OnInit {
     inject(CustomConfirmationService);
   private readonly _currentPageMessageHeader: string =
     'Administration des utilisateurs';
-  private selectedUser: UserProfileDto | null = null;
+  private _selectedUser: UserProfileDto | null = null;
   //public field
 
   protected readonly Routing = Routing;
@@ -88,7 +88,7 @@ export class AdminUsersListComponent implements OnInit {
       );
     } else {
       this.form.controls['role'].setValue(user.role);
-      this.selectedUser = user;
+      this._selectedUser = user;
       this.showChangeRoleForm = !this.showChangeRoleForm;
     }
   }
@@ -97,11 +97,11 @@ export class AdminUsersListComponent implements OnInit {
    * Soumission du formulaire pour le changmement de role de l'utilisateur
    */
   public submitChangeRole(): void {
-    if (this.selectedUser) {
-      this.selectedUser.role = this.form.controls['role'].value;
+    if (this._selectedUser) {
+      this._selectedUser.role = this.form.controls['role'].value;
       this.adminService
         .editUserRole({
-          body: this.selectedUser
+          body: this._selectedUser
         })
         .subscribe({
           next: (res) => {

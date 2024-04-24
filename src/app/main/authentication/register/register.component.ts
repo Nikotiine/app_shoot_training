@@ -24,6 +24,7 @@ import { UserRegistrationDto } from '../../../core/api/models/user-registration-
 export class RegisterComponent {
   public form: FormGroup;
   protected readonly Routing = Routing;
+  //TODO supprimer le constructeur pour des inject
   constructor(
     private readonly fb: FormBuilder,
     private readonly registrationService: RegistrationService,

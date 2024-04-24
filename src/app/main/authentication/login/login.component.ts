@@ -26,6 +26,7 @@ export class LoginComponent {
   protected readonly Routing = Routing;
 
   public form: FormGroup;
+  //TODO supprimer le constructeur pour des inject
   constructor(
     private readonly fb: FormBuilder,
     private readonly authenticationService: AuthenticationService,

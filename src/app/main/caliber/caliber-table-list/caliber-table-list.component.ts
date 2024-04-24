@@ -25,14 +25,61 @@ export class CaliberTableListComponent implements OnInit {
   private readonly caliberService: CaliberService = inject(CaliberService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly currentPageMessageHeader: string = 'Gestion des calibres';
+  private readonly _currentPageMessageHeader: string = 'Gestion des calibres';
+
   // Public field
   public calibers: CaliberDto[] = [];
   public visible: boolean = false;
-  public caliberToEdit: WritableSignal<CaliberDto | null> = signal(null);
-  ngOnInit(): void {
+  public $caliberToEdit: WritableSignal<CaliberDto | null> = signal(null);
+
+  //************************************ PUBLIC METHODS ************************************
+
+  public ngOnInit(): void {
     this.loadData();
   }
+
+  /**
+   * Affiche le formulaire d'ajout de calibre
+   * Set le signal $caliberToEdit a null
+   */
+  public add(): void {
+    if (this.visible) {
+      this.$caliberToEdit.set(null);
+    }
+    this.visible = !this.visible;
+  }
+
+  /**
+   * Une fois le calibre ajoute en base de données met a jour le tableau des caloibres disponibles
+   * @param newCaliber CaliberDto
+   */
+  public newCaliber(newCaliber: CaliberDto): void {
+    this.visible = false;
+    this.calibers.push(newCaliber);
+  }
+
+  /**
+   * Affiche le formulaire d'edition de calibre, set le signal $caliberToEdit avec la valeur du calibrea modifier
+   * @param caliber
+   */
+  public edit(caliber: CaliberDto): void {
+    this.visible = !this.visible;
+    this.$caliberToEdit.set(caliber);
+  }
+
+  /**
+   * Une fois le calibre modifier met a jour le tableau des calibres disponible
+   * Passe le signal $caliberToEdit a null
+   * @param caliber
+   */
+  public caliberEdited(caliber: CaliberDto): void {
+    const index = this.calibers.findIndex((c) => c.id === caliber.id);
+    this.calibers.splice(index, 1);
+    this.calibers.push(caliber);
+    this.visible = false;
+    this.$caliberToEdit.set(null);
+  }
+  //************************************ PRIVATE METHODS ************************************
 
   private loadData() {
     this.caliberService.getAllCalibers().subscribe({
@@ -41,34 +88,10 @@ export class CaliberTableListComponent implements OnInit {
       },
       error: (err) => {
         this.customMessageService.errorMessage(
-          this.currentPageMessageHeader,
+          this._currentPageMessageHeader,
           err.error.message
         );
       }
     });
-  }
-  public add(): void {
-    if (this.visible) {
-      this.caliberToEdit.set(null);
-    }
-    this.visible = !this.visible;
-  }
-
-  public newCaliber(newCaliber: CaliberDto): void {
-    this.visible = false;
-    this.calibers.push(newCaliber);
-  }
-
-  public edit(caliber: CaliberDto): void {
-    this.visible = !this.visible;
-    this.caliberToEdit.set(caliber);
-  }
-
-  public caliberEdited(caliber: CaliberDto): void {
-    const index = this.calibers.findIndex((c) => c.id === caliber.id);
-    this.calibers.splice(index, 1);
-    this.calibers.push(caliber);
-    this.visible = false;
-    this.caliberToEdit.set(null);
   }
 }
