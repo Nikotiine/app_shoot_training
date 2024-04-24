@@ -67,8 +67,8 @@ export class SessionFormComponent implements OnInit {
   private readonly fb: FormBuilder = inject(FormBuilder);
   private _sessionGroup: TrainingSessionGroupCreateDto[] = [];
   private _speedHistories: AmmunitionSpeedHistoryCreateDto[] = [];
-  // Public field
 
+  // Public field
   public form: FormGroup = this.fb.group({
     date: [new Date(), Validators.required],
     distance: [50],
@@ -80,7 +80,8 @@ export class SessionFormComponent implements OnInit {
     ),
     setup: [0, Validators.min(1)],
     position: [null, Validators.required],
-    support: [null, Validators.required]
+    support: [null, Validators.required],
+    pressure: [0]
   });
 
   public ammunitions: DropdownModel[] = [];
@@ -89,15 +90,15 @@ export class SessionFormComponent implements OnInit {
     this.trainingService.getTrainingPositions();
   public supports: DropdownModel[] = this.trainingService.getWeaponSupports();
   public isLoading: boolean = true;
-  public title: WritableSignal<string> = signal('Nouvelle session');
-  public ammunitionNotSelected: WritableSignal<boolean> = signal(true);
-  public ammunitionSelected: WritableSignal<AmmunitionDto | null> =
+  public $_title: WritableSignal<string> = signal('Nouvelle session');
+  public $_ammunitionNotSelected: WritableSignal<boolean> = signal(true);
+  public $_ammunitionSelected: WritableSignal<AmmunitionDto | null> =
     signal(null);
-  public weaponSelected: WritableSignal<WeaponDto | null> = signal(null);
-  public speedHistoriesSaved: WritableSignal<
+  public $_weaponSelected: WritableSignal<WeaponDto | null> = signal(null);
+  public $_speedHistoriesSaved: WritableSignal<
     AmmunitionSpeedHistoryCreateDto[] | null
   > = signal(null);
-  public groupsSaved: WritableSignal<TrainingSessionGroupCreateDto[] | null> =
+  public $_groupsSaved: WritableSignal<TrainingSessionGroupCreateDto[] | null> =
     signal(null);
   public isSpeedHistoryForm: boolean = false;
   public isSessionGroupForm: boolean = false;
@@ -144,7 +145,8 @@ export class SessionFormComponent implements OnInit {
       speedHistories: this._speedHistories,
       trainingSessionGroups: this._sessionGroup,
       position: this.form.controls['position'].value,
-      support: this.form.controls['support'].value
+      support: this.form.controls['support'].value,
+      pressure: this.form.controls['pressure'].value
     };
 
     this.trainingService.saveTrainingSession(session).subscribe({
@@ -166,9 +168,9 @@ export class SessionFormComponent implements OnInit {
    * Set le choix la munition pour l'enregistrement des vitesse ( vitesse initial constructeur )
    */
   public onChangeAmmunition(): void {
-    this.ammunitionSelected.set(this.getAmmunition());
-    this.weaponSelected.set(this.getSetup().weapon);
-    this.ammunitionNotSelected.set(false);
+    this.$_ammunitionSelected.set(this.getAmmunition());
+    this.$_weaponSelected.set(this.getSetup().weapon);
+    this.$_ammunitionNotSelected.set(false);
   }
   public showSpeedHistoriesForm(): void {
     this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
@@ -192,7 +194,7 @@ export class SessionFormComponent implements OnInit {
    */
   public setSessionGroup(sessionGroups: TrainingSessionGroupCreateDto[]): void {
     this._sessionGroup = sessionGroups;
-    this.groupsSaved.set(sessionGroups);
+    this.$_groupsSaved.set(sessionGroups);
     this.isSessionGroupForm = !this.isSessionGroupForm;
     this.trainingService.savedForm('Resultats et groupememnts');
   }
@@ -205,7 +207,7 @@ export class SessionFormComponent implements OnInit {
     speedHistories: AmmunitionSpeedHistoryCreateDto[]
   ): void {
     this._speedHistories = speedHistories;
-    this.speedHistoriesSaved.set(speedHistories);
+    this.$_speedHistoriesSaved.set(speedHistories);
     this.isSpeedHistoryForm = !this.isSpeedHistoryForm;
     this.trainingService.savedForm('Vitesse des munitions');
   }

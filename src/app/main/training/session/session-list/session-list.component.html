@@ -19,8 +19,8 @@
     (onRowSelect)="onRowSelect($event.data)"
     [(selection)]="selectedSession"
     [loading]="isLoading"
-    [paginator]="sessions.length > 1"
-    currentPageReportTemplate="{{sessions.length > 1 ?'{first} à {last} sur  {totalRecords} sessions':'' }}"
+    [paginator]="sessions.length > 10"
+    currentPageReportTemplate="{{sessions.length > 10 ?'{first} à {last} sur  {totalRecords} sessions':'' }}"
     [globalFilterFields]="['date', 'setup', 'distance', 'position']"
     [tableStyle]="{ 'min-width': '75rem' }">
     <ng-template pTemplate="header">
@@ -134,7 +134,7 @@
             [value]="session.distance"
             severity="{{session.distanceSeverity}}"></p-tag>
         </td>
-        <td>{{session.position}}</td>
+        <td class="text-center">{{session.position}}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -144,3 +144,13 @@
     </ng-template>
   </p-table>
 </div>
+@defer (when isShowSessionView){
+
+<p-dialog
+  header="Session selectionnée"
+  [(visible)]="isShowSessionView"
+  [style]="{width: '75%'}">
+  <app-session-view [trainingSession]="$_sessionView()"></app-session-view>
+</p-dialog>
+
+}

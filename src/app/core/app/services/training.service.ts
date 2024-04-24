@@ -10,7 +10,13 @@ import { CustomMessageService } from './custom-message.service';
 import { TrainingPosition, WeaponSupport } from '../enum/TrainingSession.enum';
 import { DropdownModel } from '../model/DropdownModel';
 import { MapperTrainingSessionService } from '../api-service-mapper/mapper-training-session.service';
-import { TrainingSessionViewModel } from '../model/TrainingSessionViewModel.model';
+import {
+  TrainingGroup,
+  TrainingSessionTableViewModel,
+  TrainingSessionViewModel
+} from '../model/TrainingSessionViewModel.model';
+import { TrainingSessionGroupDto } from '../../api/models/training-session-group-dto';
+import { ColorService } from './color.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +31,7 @@ export class TrainingService {
     inject(AmmunitionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly colorService: ColorService = inject(ColorService);
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
 
   public getUserSetups(id: number): Observable<UserWeaponSetupDto[]> {
@@ -169,28 +176,67 @@ export class TrainingService {
         id: index,
         name: distance.toString(),
         value: distance,
-        severity: this.getDistanceSeverity(distance)
+        severity: this.colorService.getDistanceSeverity(distance)
       });
     });
     return dropdown;
   }
 
-  public createTrainingSessionViewModel(
+  /**
+   * Map TrainingSessionDto[] en TrainingSessionTableViewModel[]
+   * @param sessions TrainingSessionDto[]
+   */
+  public createTrainingSessionTableVM(
     sessions: TrainingSessionDto[]
-  ): TrainingSessionViewModel[] {
+  ): TrainingSessionTableViewModel[] {
     return sessions.map((session) => {
       return {
         id: session.id,
         distance: session.distance,
-        distanceSeverity: this.getDistanceSeverity(session.distance),
+        distanceSeverity: this.colorService.getDistanceSeverity(
+          session.distance
+        ),
         setup: this.createSetupName(session.setup),
-        position: this.getTrainingPositions().find(
-          (po) => po.apiEnum === session.position
-        )?.name,
+        position: this.getPositionLabel(session.position),
         date: new Date(session.date),
         ammunition: this.createAmmunitionName(session.ammunition)
       };
     });
+  }
+
+  /**
+   * Map TrainingSessionDto en  TrainingSessionViewModel
+   * @param session TrainingSessionDto
+   */
+  public createTrainingViewModel(
+    session: TrainingSessionDto
+  ): TrainingSessionViewModel {
+    const bestScore: number = this.getBestScore(session.trainingSessionGroups);
+    const bestAverage: number = this.getBestAverage(
+      session.trainingSessionGroups
+    );
+    return {
+      id: session.id,
+      distance: session.distance,
+      distanceSeverity: this.colorService.getDistanceSeverity(session.distance),
+      setup: this.createSetupName(session.setup),
+      position: this.getPositionLabel(session.position),
+      date: new Date(session.date),
+      ammunition: this.createAmmunitionName(session.ammunition),
+      support: this.getSupportLabel(session.support),
+      windSpeed: session.windSpeed,
+      windSpeedTextColor: this.colorService.getWindSpeedColor(
+        session.windSpeed
+      ),
+      pressure: session.pressure,
+      bestScore: bestScore,
+      bestScoreTextColor: this.colorService.getScoreColor(bestScore),
+      bestAverageGap: bestAverage,
+      groups: this.createSessionGroups(
+        session.trainingSessionGroups,
+        bestAverage
+      )
+    };
   }
 
   //************************************ PRIVATE METHODS ************************************
@@ -213,23 +259,117 @@ export class TrainingService {
   }
 
   /**
-   * Retroune la couleur des tag pour les diffente distance
-   * @param distance
-   * @private
+   * Retourne le label en fonction de la position de la session
+   * @param positionApiEnum
    */
-  private getDistanceSeverity(distance: number | undefined): string {
-    let severity: string = '';
-    if (distance) {
-      if (distance > 1 && distance < 49) {
-        severity = 'info';
-      } else if (distance < 149) {
-        severity = 'primary';
-      } else if (distance < 299) {
-        severity = 'warning';
-      } else {
-        severity = 'danger';
+  private getPositionLabel(positionApiEnum: string | undefined): string {
+    let position = '';
+    switch (positionApiEnum) {
+      case TrainingPosition.LYING:
+        position = 'Couché';
+        break;
+      case TrainingPosition.SEATED:
+        position = 'Assis';
+        break;
+      case TrainingPosition.KNEELING:
+        position = 'A genoux';
+        break;
+      case TrainingPosition.STANDING:
+        position = 'Debout';
+        break;
+      default:
+        position = TrainingPosition.STANDING;
+    }
+    return position;
+  }
+
+  /**
+   * Retourne le label en fontion du spport de la sesion utilise
+   * @param supportApiEnum
+   */
+  private getSupportLabel(supportApiEnum: string | undefined): string {
+    let supportLabel = '';
+    switch (supportApiEnum) {
+      case WeaponSupport.BIPOD:
+        supportLabel = 'Bipied';
+        break;
+      case WeaponSupport.BAG:
+        supportLabel = 'Sac de tir';
+        break;
+      case WeaponSupport.HAND:
+        supportLabel = 'Bras francs';
+        break;
+    }
+    return supportLabel;
+  }
+
+  /**
+   * Compare et retourne le meuilleur score
+   * @param trainingSessionGroups TrainingSessionGroupDto[]
+   */
+  private getBestScore(
+    trainingSessionGroups: TrainingSessionGroupDto[]
+  ): number {
+    let score: number = 0;
+    for (const sessionGroup of trainingSessionGroups) {
+      if (sessionGroup.score && score < sessionGroup.score) {
+        score = sessionGroup.score;
+      }
+      if (sessionGroup.totalShoots != 0) {
+        score = (score * 10) / sessionGroup.totalShoots;
       }
     }
-    return severity;
+    return score;
+  }
+
+  /**
+   * Genere le traningGroupViewModel et attribue les couleur des score et des groupement
+   * @param trainingSessionGroups TrainingSessionGroupDto[]
+   * @param bestAverageGap number le meuilleur groupement de toute les enregistrement de la session
+   * permet de comparer les different groupement et attribue une couleur en fontion d'un % d'ecart
+   */
+  private createSessionGroups(
+    trainingSessionGroups: TrainingSessionGroupDto[],
+    bestAverageGap: number
+  ): TrainingGroup[] {
+    return trainingSessionGroups.map((group) => {
+      let averageGap = 0;
+      if (group.horizontalGap && group.verticalGap) {
+        averageGap = group.horizontalGap + group.verticalGap;
+      }
+      return {
+        score: group.score,
+        horizontalGap: group.horizontalGap,
+        verticalGap: group.verticalGap,
+        averageGap: averageGap,
+        scoreColor: this.colorService.getScoreColor(group.score),
+        totalShoots: group.totalShoots,
+        averageGapColor: this.colorService.getAverageGapColor(
+          bestAverageGap,
+          averageGap
+        )
+      };
+    });
+  }
+
+  /**
+   * Compare et reourne le meuilleur groupement de la session
+   * @param trainingSessionGroups TrainingSessionGroupDto[]
+   */
+  private getBestAverage(
+    trainingSessionGroups: TrainingSessionGroupDto[]
+  ): number {
+    let averageGap = null;
+    for (const session of trainingSessionGroups) {
+      if (session.verticalGap && session.horizontalGap) {
+        const average = session.verticalGap + session.horizontalGap;
+        if (averageGap === null) {
+          averageGap = average;
+        } else if (averageGap > average) {
+          averageGap = average;
+        }
+      }
+    }
+    return averageGap ? averageGap : 0;
   }
 }

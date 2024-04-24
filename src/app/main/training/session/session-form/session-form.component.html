@@ -4,7 +4,7 @@
   @if (!isSpeedHistoryForm && !isSessionGroupForm){
 
   <fieldset class="mt-4">
-    <legend class="text-blue-500">{{title()}}</legend>
+    <legend class="text-blue-500">{{$_title()}}</legend>
 
     <div class="formgrid grid">
       <div class="field col-12 md:col-6">
@@ -35,7 +35,15 @@
             placeholder="Selectionnez une munition"></p-dropdown>
         </div>
       </div>
-
+      <div class="field col-12 md:col-12">
+        <label for="date">Date</label>
+        <div>
+          <p-calendar
+            formControlName="date"
+            id="date"
+            dateFormat="dd.mm.yy"></p-calendar>
+        </div>
+      </div>
       <div class="field col-12 md:col-6">
         <label for="distance">Distance</label>
         <div>
@@ -62,7 +70,19 @@
             formControlName="temperature"></p-inputNumber>
         </div>
       </div>
-
+      <div class="field col-12 md:col-6">
+        <label for="pressure">Pression atmosherique</label>
+        <div>
+          <p-inputNumber
+            mode="decimal"
+            suffix=" °"
+            [max]="60"
+            [maxFractionDigits]="1"
+            inputId="minmaxfraction"
+            id="pressure"
+            formControlName="pressure"></p-inputNumber>
+        </div>
+      </div>
       <div class="field col-12 md:col-6">
         <label for="windSpeed">Vitesse du vent</label>
         <div>
@@ -76,15 +96,7 @@
             formControlName="windSpeed"></p-inputNumber>
         </div>
       </div>
-      <div class="field col-12 md:col-6">
-        <label for="date">Date</label>
-        <div>
-          <p-calendar
-            formControlName="date"
-            id="date"
-            dateFormat="dd.mm.yy"></p-calendar>
-        </div>
-      </div>
+
       <div class="field col-12 md:col-6">
         <label for="position">Position de tir</label>
         <div>
@@ -114,13 +126,13 @@
       <div class="field col-12 flex justify-content-center">
         <p-button
           label="Ajouter resultats"
-          [disabled]="ammunitionNotSelected()"
+          [disabled]="$_ammunitionNotSelected()"
           [severity]="'info'"
           class="mr-3"
           (onClick)="showSessionGroupForm()"></p-button>
         <p-button
           label="Enregister vitesse"
-          [disabled]="ammunitionNotSelected()"
+          [disabled]="$_ammunitionNotSelected()"
           [severity]="'info'"
           class=""
           (onClick)="showSpeedHistoriesForm()"></p-button>
@@ -136,15 +148,15 @@
   </fieldset>
   } @else { @if (isSpeedHistoryForm) {
   <app-ammunition-speed-histories-form
-    [weapon]="weaponSelected()"
-    [ammunition]="ammunitionSelected()"
-    [speedHistories]="speedHistoriesSaved()"
+    [weapon]="$_weaponSelected()"
+    [ammunition]="$_ammunitionSelected()"
+    [speedHistories]="$_speedHistoriesSaved()"
     (save)="setSpeedHistories($event)"
     (cancelSpeedHistories)="cancelSpeedHistories()"></app-ammunition-speed-histories-form>
   } @if (isSessionGroupForm){
   <app-group-form
     (cancel)="cancelSessionGroup()"
-    [trainingSession]="groupsSaved()"
+    [trainingSession]="$_groupsSaved()"
     (sessionGroup)="setSessionGroup($event)"></app-group-form>
   } }
 </form>

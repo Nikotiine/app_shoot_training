@@ -35,7 +35,6 @@ import { CustomConfirmationService } from '../../../../core/app/services/custom-
 })
 export class GroupFormComponent {
   // Private field
-
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
 
@@ -56,7 +55,7 @@ export class GroupFormComponent {
       this.groups = groups;
     }
   }
-  public title: WritableSignal<string> = signal('titre');
+  public $_title: WritableSignal<string> = signal('titre');
 
   //************************************ PUBLIC METHODS ************************************
 

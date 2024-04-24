@@ -1,21 +1,32 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { CustomUserService } from '../../../../core/app/services/custom-user.service';
 import { TrainingService } from '../../../../core/app/services/training.service';
-import { TableModule, TableRowSelectEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe } from '@angular/common';
 import { TagModule } from 'primeng/tag';
-import { TrainingPosition } from '../../../../core/app/enum/TrainingSession.enum';
+
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { DropdownModel } from '../../../../core/app/model/DropdownModel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { forkJoin } from 'rxjs';
-import { TrainingSessionViewModel } from '../../../../core/app/model/TrainingSessionViewModel.model';
+import {
+  TrainingSessionTableViewModel,
+  TrainingSessionViewModel
+} from '../../../../core/app/model/TrainingSessionViewModel.model';
 import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
 import { RouterLink } from '@angular/router';
 import { Routing } from '../../../../core/app/enum/Routing.enum';
 import { TrainingSessionDto } from '../../../../core/api/models/training-session-dto';
+import { SessionViewComponent } from '../session-view/session-view.component';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-session-list',
@@ -28,29 +39,33 @@ import { TrainingSessionDto } from '../../../../core/api/models/training-session
     DropdownModule,
     FormsModule,
     MultiSelectModule,
-    RouterLink
+    RouterLink,
+    SessionViewComponent,
+    DialogModule
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss'
 })
 export class SessionListComponent implements OnInit {
   // Private field
-
   private readonly customUserService: CustomUserService =
     inject(CustomUserService);
   private readonly trainingService: TrainingService = inject(TrainingService);
   protected readonly Routing = Routing;
+  private _trainingSessionDto: TrainingSessionDto[] = [];
 
   // Public field
-
-  public sessions: TrainingSessionViewModel[] = [];
+  public sessions: TrainingSessionTableViewModel[] = [];
   public isLoading: boolean = true;
   public positions: DropdownModel[] =
     this.trainingService.getTrainingPositions();
   public distances: DropdownModel[] = [];
   public userSetup: DropdownModel[] = [];
-  public selectedSession!: TrainingSessionViewModel;
+  public selectedSession!: TrainingSessionTableViewModel;
   public ammunitions: DropdownModel[] = [];
+  public isShowSessionView: boolean = false;
+  public $_sessionView: WritableSignal<TrainingSessionViewModel | null> =
+    signal(null);
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
@@ -60,8 +75,20 @@ export class SessionListComponent implements OnInit {
     }
   }
 
-  public onRowSelect(session: TrainingSessionViewModel): void {
-    console.log(session);
+  /**
+   * A la selection de la ligne affiche la modale de session view et met a jour le signal $_sessionView
+   * @param session TrainingSessionTableViewModel
+   */
+  public onRowSelect(session: TrainingSessionTableViewModel): void {
+    this.isShowSessionView = !this.isShowSessionView;
+    const selectedSession: TrainingSessionDto = <TrainingSessionDto>(
+      this._trainingSessionDto.find(
+        (sessionDto) => sessionDto.id === session.id
+      )
+    );
+    this.$_sessionView.set(
+      this.trainingService.createTrainingViewModel(selectedSession)
+    );
   }
 
   //************************************ PRIVATE METHODS ************************************
@@ -78,6 +105,7 @@ export class SessionListComponent implements OnInit {
       this.trainingService.getUserSetups(id)
     ]).subscribe({
       next: (data) => {
+        this._trainingSessionDto = data[0];
         this.generateSessionViewModels(data[0]);
         this.userSetup = this.trainingService.mapSetupToDropdownModel(data[1]);
         this.isLoading = false;
@@ -93,8 +121,7 @@ export class SessionListComponent implements OnInit {
    * @param sessions TrainingSessionDto[]
    */
   private generateSessionViewModels(sessions: TrainingSessionDto[]) {
-    this.sessions =
-      this.trainingService.createTrainingSessionViewModel(sessions);
+    this.sessions = this.trainingService.createTrainingSessionTableVM(sessions);
     const ammunitions: AmmunitionDto[] = [];
     const distances: number[] = [];
     for (const session of sessions) {
