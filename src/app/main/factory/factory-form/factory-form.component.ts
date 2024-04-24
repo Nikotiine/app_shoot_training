@@ -158,7 +158,6 @@ export class FactoryFormComponent {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.customMessageService.successMessage(
             this._currentPageMessageHeader,
             `Marque ${this.$factoryLabel()} modifiée`

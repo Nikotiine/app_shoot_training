@@ -95,7 +95,6 @@ export class JouleComponent implements OnInit {
     this.appWeightService.getWeightByCaliber(caliberId).subscribe({
       next: (weights) => {
         this.createWeightVM(weights);
-        console.log(weights);
       },
       error: (err) => {
         this.customMessageService.errorMessage('Calibre', err.error.message);
