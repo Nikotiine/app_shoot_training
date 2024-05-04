@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { WeaponSetupService } from '../../api/services/weapon-setup.service';
-import { AmmunitionService } from '../../api/services/ammunition.service';
+
 import { Observable } from 'rxjs';
 import { UserWeaponSetupDto } from '../../api/models/user-weapon-setup-dto';
 import { AmmunitionDto } from '../../api/models/ammunition-dto';
@@ -17,6 +16,8 @@ import {
 } from '../model/TrainingSessionViewModel.model';
 import { TrainingSessionGroupDto } from '../../api/models/training-session-group-dto';
 import { ColorService } from './color.service';
+import { MapperAmminitionService } from '../api-service-mapper/mapper-amminition.service';
+import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,25 +26,23 @@ export class TrainingService {
   // Private field
   private readonly mapperTrainingSessionService: MapperTrainingSessionService =
     inject(MapperTrainingSessionService);
-  private readonly userSetupService: WeaponSetupService =
-    inject(WeaponSetupService);
-  private readonly ammunitionService: AmmunitionService =
-    inject(AmmunitionService);
+  private readonly mapperUserSetupService: MapperUserSetupService = inject(
+    MapperUserSetupService
+  );
+  private readonly mapperAmmunitionService: MapperAmminitionService = inject(
+    MapperAmminitionService
+  );
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly colorService: ColorService = inject(ColorService);
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
 
   public getUserSetups(id: number): Observable<UserWeaponSetupDto[]> {
-    return this.userSetupService.getAllUserWeaponSetup({
-      id: id
-    });
+    return this.mapperUserSetupService.getAllSetupByUser(id);
   }
 
   public getAmmunitionByCaliber(id: number): Observable<AmmunitionDto[]> {
-    return this.ammunitionService.getAmmunitionByCaliber({
-      id: id
-    });
+    return this.mapperAmmunitionService.getAmmunitionByCaliber(id);
   }
 
   public saveTrainingSession(

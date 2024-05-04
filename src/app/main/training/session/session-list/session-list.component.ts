@@ -5,7 +5,7 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { CustomUserService } from '../../../../core/app/services/custom-user.service';
+import { UserService } from '../../../../core/app/services/user.service';
 import { TrainingService } from '../../../../core/app/services/training.service';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
@@ -48,8 +48,7 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class SessionListComponent implements OnInit {
   // Private field
-  private readonly customUserService: CustomUserService =
-    inject(CustomUserService);
+  private readonly customUserService: UserService = inject(UserService);
   private readonly trainingService: TrainingService = inject(TrainingService);
   protected readonly Routing = Routing;
   private _trainingSessionDto: TrainingSessionDto[] = [];
@@ -64,7 +63,7 @@ export class SessionListComponent implements OnInit {
   public selectedSession!: TrainingSessionTableViewModel;
   public ammunitions: DropdownModel[] = [];
   public isShowSessionView: boolean = false;
-  public $_sessionView: WritableSignal<TrainingSessionViewModel | null> =
+  public $sessionView: WritableSignal<TrainingSessionViewModel | null> =
     signal(null);
   //************************************ PUBLIC METHODS ************************************
 
@@ -86,7 +85,7 @@ export class SessionListComponent implements OnInit {
         (sessionDto) => sessionDto.id === session.id
       )
     );
-    this.$_sessionView.set(
+    this.$sessionView.set(
       this.trainingService.createTrainingViewModel(selectedSession)
     );
   }

@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { SecurityService } from '../services/security.service';
 import { AuthenticationService } from '../../api/services/authentication.service';
-import { CustomUserService } from '../services/custom-user.service';
+import { UserService } from '../services/user.service';
 import { catchError, map } from 'rxjs/operators';
 import { Routing } from '../enum/Routing.enum';
 
@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (!inject(SecurityService).isLogged()) {
     return router.navigate(['/authentication/login']);
   }
-  if (!inject(CustomUserService).getProfile()) {
+  if (!inject(UserService).getProfile()) {
     return authenticationService.me().pipe(
       map((user) => {
         return !!user;

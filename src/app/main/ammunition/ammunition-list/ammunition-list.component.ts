@@ -11,10 +11,9 @@ import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber
 import { DatePipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { AmmunitionService } from '../../../core/api/services/ammunition.service';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
+import { AmmunitionService } from '../../../core/app/services/ammunition.service';
 
 @Component({
   selector: 'app-ammunition-list',
@@ -34,13 +33,9 @@ export class AmmunitionListComponent implements OnInit {
   // Private field
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
   private _ammunition: AmmunitionDto[] = [];
-  private readonly _currentPageMessageHeader: string =
-    'Administration des munitions';
   // Public field
   public $currentCaliberId = signal(0);
   public $totalAmmunition = signal(0);
@@ -75,7 +70,7 @@ export class AmmunitionListComponent implements OnInit {
     const confirmed = await this.customConfirmationService.confirm(
       event,
       'Supprimer cette munition ?',
-      this._currentPageMessageHeader
+      this.ammunitionService.getCurrentMessageHeader()
     );
     if (confirmed) {
       this.disableAmmunition(ammo);
@@ -125,17 +120,14 @@ export class AmmunitionListComponent implements OnInit {
    * Charge la liste des munitions disponibles
    */
   private loadAmmunition(): void {
-    this.ammunitionService.getAllAmmunition().subscribe({
+    this.ammunitionService.getAll().subscribe({
       next: (data) => {
         this._ammunition = data;
         this.filteredAmmunition = data;
         this.$totalAmmunition.set(data.length);
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.ammunitionService.errorMessage(err.error.message);
       }
     });
   }
@@ -145,22 +137,16 @@ export class AmmunitionListComponent implements OnInit {
    * @param ammo AmmunitionDto
    */
   private disableAmmunition(ammo: AmmunitionDto) {
-    this.ammunitionService
-      .disableAmmunition({
-        id: ammo.id
-      })
-      .subscribe({
-        next: (res) => {
-          this._ammunition = res;
-          this.filterByCaliber(ammo.caliber.id);
-          this.$currentCaliberId.set(ammo.caliber.id);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.ammunitionService.disable(ammo.id).subscribe({
+      next: (res) => {
+        this._ammunition = res;
+        this.filterByCaliber(ammo.caliber.id);
+        this.$currentCaliberId.set(ammo.caliber.id);
+        this.ammunitionService.successMessage('Munition supprimée');
+      },
+      error: (err) => {
+        this.ammunitionService.errorMessage(err.error.message);
+      }
+    });
   }
 }

@@ -34,7 +34,7 @@
   @defer (when newFactoryForm){ @if (newFactoryForm){
   <app-factory-form
     [factoryType]="factory"
-    [factoryForm]="factoryToEdit()"
+    [factoryForm]="$factoryToEdit()"
     (editedFactory)="editedFactory($event)"
     (newFactory)="newFactory($event)"></app-factory-form>
   } }

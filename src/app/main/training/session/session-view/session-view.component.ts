@@ -44,7 +44,7 @@ export class SessionViewComponent {
   public data!: ChartData;
   public options!: ChartOptions;
 
-  public $_chartDisplay: WritableSignal<ChartDisplay> = signal(
+  public $chartDisplay: WritableSignal<ChartDisplay> = signal(
     this.chartService.getChartDisplay(1)
   );
 
@@ -66,7 +66,7 @@ export class SessionViewComponent {
 
   public nextChart(id: number): void {
     const nextChartId: number = id === 3 ? 1 : id + 1;
-    this.$_chartDisplay.set(this.chartService.getChartDisplay(nextChartId));
+    this.$chartDisplay.set(this.chartService.getChartDisplay(nextChartId));
     if (this._session.groups) {
       this.data = this.chartService.getData(this._session.groups, nextChartId);
       this.options = this.chartService.getOptions(nextChartId);
@@ -75,7 +75,7 @@ export class SessionViewComponent {
 
   public previousChart(id: number): void {
     const nextChartId: number = id === 1 ? 3 : id - 1;
-    this.$_chartDisplay.set(this.chartService.getChartDisplay(nextChartId));
+    this.$chartDisplay.set(this.chartService.getChartDisplay(nextChartId));
     if (this._session.groups) {
       this.data = this.chartService.getData(this._session.groups, nextChartId);
       this.options = this.chartService.getOptions(nextChartId);

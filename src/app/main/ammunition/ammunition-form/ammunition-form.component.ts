@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { AmmunitionService } from '../../../core/api/services/ammunition.service';
+
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -24,15 +24,11 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
-import { CaliberService } from '../../../core/api/services/caliber.service';
-import { FactoryService } from '../../../core/api/services/factory.service';
 import { forkJoin } from 'rxjs';
-import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
 import { AmmunitionCreateDto } from '../../../core/api/models/ammunition-create-dto';
 import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
-import { AppWeightService } from '../../../core/app/services/app-weight.service';
+import { AmmunitionService } from '../../../core/app/services/ammunition.service';
 
 @Component({
   selector: 'app-ammunition-form',
@@ -52,16 +48,9 @@ export class AmmunitionFormComponent implements OnInit {
   // Private field
   private _weights: AmmunitionWeightDto[] = [];
   private _isEditAmmunition: boolean = false;
-  private readonly _currentPageMessageHeader: string = 'Gestion des munitions';
   private _editedAmmunition!: AmmunitionDto;
   private readonly ammunitionService: AmmunitionService =
     inject(AmmunitionService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
-  private readonly caliberService: CaliberService = inject(CaliberService);
-  private readonly factoryService: FactoryService = inject(FactoryService);
-  private readonly appWeightService: AppWeightService =
-    inject(AppWeightService);
 
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
@@ -75,6 +64,7 @@ export class AmmunitionFormComponent implements OnInit {
   public factories: FactoryDto[] = [];
   public weights: WeightViewModel[] = [];
   protected $title: WritableSignal<string> = signal('');
+  protected $isLoading: WritableSignal<boolean> = signal(true);
   @Output() added: EventEmitter<AmmunitionDto> =
     new EventEmitter<AmmunitionDto>();
   @Output() edited: EventEmitter<AmmunitionDto> =
@@ -94,6 +84,10 @@ export class AmmunitionFormComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Sousmission du formulaire.
+   * TODO: Mettre en place le coef balistique
+   */
   public submit(): void {
     const ammunition: AmmunitionCreateDto = {
       name: this.form.controls['name'].value,
@@ -115,14 +109,14 @@ export class AmmunitionFormComponent implements OnInit {
    * @param caliberId number
    */
   public selectedCaliber(caliberId: number): void {
-    this.appWeightService.getWeightByCaliber(caliberId).subscribe({
+    this.ammunitionService.getWeightByCaliber(caliberId).subscribe({
       next: (weight) => {
-        this.weights = this.appWeightService.createWeightVM(weight);
+        this.weights = this.ammunitionService.createWeightVM(weight);
         this._weights = weight;
         this.form.controls['weight'].enable();
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Admin', err.error.message);
+        this.ammunitionService.errorMessage(err.error.message);
       }
     });
   }
@@ -134,20 +128,16 @@ export class AmmunitionFormComponent implements OnInit {
    */
   private loadData(): void {
     forkJoin([
-      this.caliberService.getAllCalibers(),
-      this.factoryService.getAllFactoryByType({
-        type: FactoryType.AMMUNITION
-      })
+      this.ammunitionService.getAllCalibers(),
+      this.ammunitionService.getFactories()
     ]).subscribe({
       next: (data) => {
         this.calibers = data[0];
         this.factories = data[1];
+        this.$isLoading.set(true);
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.ammunitionService.errorMessage(err.error.message);
       }
     });
   }
@@ -193,25 +183,15 @@ export class AmmunitionFormComponent implements OnInit {
   }
 
   private createAmmunition(ammunition: AmmunitionCreateDto) {
-    this.ammunitionService
-      .newAmmunition({
-        body: ammunition
-      })
-      .subscribe({
-        next: (res) => {
-          this.added.emit(res);
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Muntion ajoutée'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.ammunitionService.save(ammunition).subscribe({
+      next: (res) => {
+        this.added.emit(res);
+        this.ammunitionService.successMessage('Muntion ajoutée');
+      },
+      error: (err) => {
+        this.ammunitionService.errorMessage(err.error.message);
+      }
+    });
   }
 
   private editAmmunition(ammunition: AmmunitionCreateDto) {
@@ -221,25 +201,15 @@ export class AmmunitionFormComponent implements OnInit {
       active: this._editedAmmunition.active,
       createdAt: this._editedAmmunition.createdAt
     };
-    this.ammunitionService
-      .editAmmunition({
-        body: editedAmmunition
-      })
-      .subscribe({
-        next: (res) => {
-          this.edited.emit(res);
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Munition modifiée'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.ammunitionService.edit(editedAmmunition).subscribe({
+      next: (res) => {
+        this.edited.emit(res);
+        this.ammunitionService.successMessage('Munition modifiée');
+      },
+      error: (err) => {
+        this.ammunitionService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**

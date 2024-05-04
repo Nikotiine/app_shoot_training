@@ -11,9 +11,10 @@ import { OpticsFormComponent } from '../optics-form/optics-form.component';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { OpticsDto } from '../../../core/api/models/optics-dto';
-import { OpticsService } from '../../../core/api/services/optics.service';
+
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
+import { OpticsService } from '../../../core/app/services/optics.service';
 
 @Component({
   selector: 'app-optics-list',
@@ -30,11 +31,7 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
 })
 export class OpticsListComponent implements OnInit {
   // Private field
-  private readonly _currentPageMessageHeader: string =
-    'Administration des optiques';
   private readonly opticsService: OpticsService = inject(OpticsService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
 
@@ -78,7 +75,7 @@ export class OpticsListComponent implements OnInit {
     const confirmed = await this.customConfirmationService.confirm(
       event,
       'Supprimer cette optique ?',
-      this._currentPageMessageHeader
+      this.opticsService.getCurrentServiceMessageHeader()
     );
     if (confirmed) {
       this.disableOptics(optics.id);
@@ -114,15 +111,12 @@ export class OpticsListComponent implements OnInit {
    * Charge la liste de toutes les optiques (active ou non)
    */
   private loadOptics(): void {
-    this.opticsService.getAllOptics().subscribe({
+    this.opticsService.getAll().subscribe({
       next: (optics) => {
         this.optics = optics;
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.opticsService.errorMessage(err.error.message);
       }
     });
   }
@@ -133,20 +127,13 @@ export class OpticsListComponent implements OnInit {
    * @param id de l'optique
    */
   private disableOptics(id: number): void {
-    this.opticsService
-      .disableOptics({
-        id: id
-      })
-      .subscribe({
-        next: (res) => {
-          this.optics = res;
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.opticsService.disable(id).subscribe({
+      next: (res) => {
+        this.optics = res;
+      },
+      error: (err) => {
+        this.opticsService.errorMessage(err.error.message);
+      }
+    });
   }
 }

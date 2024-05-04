@@ -5,13 +5,14 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { CaliberService } from '../../../core/api/services/caliber.service';
+
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CaliberFormComponent } from '../caliber-form/caliber-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { CaliberService } from '../../../core/app/services/caliber.service';
 
 @Component({
   selector: 'app-caliber-table-list',
@@ -23,9 +24,6 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 export class CaliberTableListComponent implements OnInit {
   // Private field
   private readonly caliberService: CaliberService = inject(CaliberService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
-  private readonly _currentPageMessageHeader: string = 'Gestion des calibres';
 
   // Public field
   public calibers: CaliberDto[] = [];
@@ -82,15 +80,12 @@ export class CaliberTableListComponent implements OnInit {
   //************************************ PRIVATE METHODS ************************************
 
   private loadData() {
-    this.caliberService.getAllCalibers().subscribe({
+    this.caliberService.getAll().subscribe({
       next: (calibers) => {
         this.calibers = calibers;
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.caliberService.errorMessage(err.error.message);
       }
     });
   }

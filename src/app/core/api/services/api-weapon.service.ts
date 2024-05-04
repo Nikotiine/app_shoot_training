@@ -9,27 +9,30 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { disableWeapon } from '../fn/weapon/disable-weapon';
-import { DisableWeapon$Params } from '../fn/weapon/disable-weapon';
-import { editWeapon } from '../fn/weapon/edit-weapon';
-import { EditWeapon$Params } from '../fn/weapon/edit-weapon';
-import { getActiveAllWeapon } from '../fn/weapon/get-active-all-weapon';
-import { GetActiveAllWeapon$Params } from '../fn/weapon/get-active-all-weapon';
-import { getAllWeapon } from '../fn/weapon/get-all-weapon';
-import { GetAllWeapon$Params } from '../fn/weapon/get-all-weapon';
-import { getWeaponDataCollection } from '../fn/weapon/get-weapon-data-collection';
-import { GetWeaponDataCollection$Params } from '../fn/weapon/get-weapon-data-collection';
-import { newWeapon } from '../fn/weapon/new-weapon';
-import { NewWeapon$Params } from '../fn/weapon/new-weapon';
-import { WeaponDataCollection } from '../models/weapon-data-collection';
+import { disableWeapon } from '../fn/api-weapon/disable-weapon';
+import { DisableWeapon$Params } from '../fn/api-weapon/disable-weapon';
+import { editWeapon } from '../fn/api-weapon/edit-weapon';
+import { EditWeapon$Params } from '../fn/api-weapon/edit-weapon';
+import { getActiveAllWeapon } from '../fn/api-weapon/get-active-all-weapon';
+import { GetActiveAllWeapon$Params } from '../fn/api-weapon/get-active-all-weapon';
+import { getAllActiveCategories } from '../fn/api-weapon/get-all-active-categories';
+import { GetAllActiveCategories$Params } from '../fn/api-weapon/get-all-active-categories';
+import { getAllActiveType } from '../fn/api-weapon/get-all-active-type';
+import { GetAllActiveType$Params } from '../fn/api-weapon/get-all-active-type';
+import { getAllWeapon } from '../fn/api-weapon/get-all-weapon';
+import { GetAllWeapon$Params } from '../fn/api-weapon/get-all-weapon';
+import { newWeapon } from '../fn/api-weapon/new-weapon';
+import { NewWeapon$Params } from '../fn/api-weapon/new-weapon';
+import { WeaponCategoryDto } from '../models/weapon-category-dto';
 import { WeaponDto } from '../models/weapon-dto';
+import { WeaponTypeDto } from '../models/weapon-type-dto';
 
 
 /**
  * Weapon Controller
  */
 @Injectable({ providedIn: 'root' })
-export class WeaponService extends BaseService {
+export class ApiWeaponService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
@@ -84,31 +87,6 @@ export class WeaponService extends BaseService {
     );
   }
 
-  /** Path part for operation `getWeaponDataCollection()` */
-  static readonly GetWeaponDataCollectionPath = '/api/weapon/data-collection';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getWeaponDataCollection()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getWeaponDataCollection$Response(params?: GetWeaponDataCollection$Params, context?: HttpContext): Observable<StrictHttpResponse<WeaponDataCollection>> {
-    return getWeaponDataCollection(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getWeaponDataCollection$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getWeaponDataCollection(params?: GetWeaponDataCollection$Params, context?: HttpContext): Observable<WeaponDataCollection> {
-    return this.getWeaponDataCollection$Response(params, context).pipe(
-      map((r: StrictHttpResponse<WeaponDataCollection>): WeaponDataCollection => r.body)
-    );
-  }
-
   /** Path part for operation `getAllWeapon()` */
   static readonly GetAllWeaponPath = '/api/weapon/all';
 
@@ -131,6 +109,56 @@ export class WeaponService extends BaseService {
   getAllWeapon(params?: GetAllWeapon$Params, context?: HttpContext): Observable<Array<WeaponDto>> {
     return this.getAllWeapon$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<WeaponDto>>): Array<WeaponDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllActiveType()` */
+  static readonly GetAllActiveTypePath = '/api/weapon/all-types';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllActiveType()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveType$Response(params?: GetAllActiveType$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponTypeDto>>> {
+    return getAllActiveType(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllActiveType$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveType(params?: GetAllActiveType$Params, context?: HttpContext): Observable<Array<WeaponTypeDto>> {
+    return this.getAllActiveType$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WeaponTypeDto>>): Array<WeaponTypeDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllActiveCategories()` */
+  static readonly GetAllActiveCategoriesPath = '/api/weapon/all-categories';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllActiveCategories()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveCategories$Response(params?: GetAllActiveCategories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponCategoryDto>>> {
+    return getAllActiveCategories(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllActiveCategories$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllActiveCategories(params?: GetAllActiveCategories$Params, context?: HttpContext): Observable<Array<WeaponCategoryDto>> {
+    return this.getAllActiveCategories$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WeaponCategoryDto>>): Array<WeaponCategoryDto> => r.body)
     );
   }
 

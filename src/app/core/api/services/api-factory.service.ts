@@ -9,22 +9,22 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { disableFactory } from '../fn/factory/disable-factory';
-import { DisableFactory$Params } from '../fn/factory/disable-factory';
-import { editFactory } from '../fn/factory/edit-factory';
-import { EditFactory$Params } from '../fn/factory/edit-factory';
+import { disableFactory } from '../fn/api-factory/disable-factory';
+import { DisableFactory$Params } from '../fn/api-factory/disable-factory';
+import { editFactory } from '../fn/api-factory/edit-factory';
+import { EditFactory$Params } from '../fn/api-factory/edit-factory';
 import { FactoryDto } from '../models/factory-dto';
-import { getAllFactoryByType } from '../fn/factory/get-all-factory-by-type';
-import { GetAllFactoryByType$Params } from '../fn/factory/get-all-factory-by-type';
-import { saveFactory } from '../fn/factory/save-factory';
-import { SaveFactory$Params } from '../fn/factory/save-factory';
+import { getAllFactoryByType } from '../fn/api-factory/get-all-factory-by-type';
+import { GetAllFactoryByType$Params } from '../fn/api-factory/get-all-factory-by-type';
+import { saveFactory } from '../fn/api-factory/save-factory';
+import { SaveFactory$Params } from '../fn/api-factory/save-factory';
 
 
 /**
  * Factory Controller
  */
 @Injectable({ providedIn: 'root' })
-export class FactoryService extends BaseService {
+export class ApiFactoryService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

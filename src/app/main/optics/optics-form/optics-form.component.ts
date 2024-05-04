@@ -8,7 +8,6 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { OpticsService } from '../../../core/api/services/optics.service';
 import {
   FormBuilder,
   FormControl,
@@ -21,7 +20,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
-import { OpticsDataCollection } from '../../../core/api/models/optics-data-collection';
+
 import { OpticsBodyDiameterDto } from '../../../core/api/models/optics-body-diameter-dto';
 import { OpticsFocalPlaneDto } from '../../../core/api/models/optics-focal-plane-dto';
 import { OpticsOutletDiameterDto } from '../../../core/api/models/optics-outlet-diameter-dto';
@@ -35,6 +34,8 @@ import {
 } from '../../../core/app/model/OpticsClickValue';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
+import { OpticsService } from '../../../core/app/services/optics.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-optics-form',
@@ -53,14 +54,16 @@ import { OpticsCreateDto } from '../../../core/api/models/optics-create-dto';
 export class OpticsFormComponent implements OnInit {
   // Private field
   private _editedOptic!: OpticsDto;
-  private readonly _currentPageMessageHeader: string = 'Gestion des optiques';
   private _isEditOptics: boolean = false;
   private readonly opticsService: OpticsService = inject(OpticsService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
 
   // Public field
-  public opticsDataCollection!: OpticsDataCollection;
+  public opticsUnits: OpticsUnitDto[] = [];
+  public opticsBodyDiameter: OpticsBodyDiameterDto[] = [];
+  public opticsFocalPlane: OpticsFocalPlaneDto[] = [];
+  public opticsOutletDiameter: OpticsOutletDiameterDto[] = [];
+  public factories: FactoryDto[] = [];
+  public $isLoading: WritableSignal<boolean> = signal(true);
   public opticsClickValues: OpticsClickValueInterface[] =
     OpticsClickValue.getClickValuesMoa();
   public form: FormGroup = inject(FormBuilder).group({
@@ -131,9 +134,7 @@ export class OpticsFormComponent implements OnInit {
   }
 
   public opticUnitSelected(unitId: number): void {
-    const value = this.opticsDataCollection.opticsUnitList.find(
-      (unit) => unit.id === unitId
-    );
+    const value = this.opticsUnits.find((unit) => unit.id === unitId);
     if (value?.label === OpticsUnit.MOA) {
       this.opticsClickValues = OpticsClickValue.getClickValuesMoa();
       this.form.controls['opticsValueOfOneClick'].enable();
@@ -148,15 +149,23 @@ export class OpticsFormComponent implements OnInit {
    * Charge les donnée necessaires pour remplir le formulaire
    */
   private loadDataCollection(): void {
-    this.opticsService.getOpticsDataCollection().subscribe({
+    forkJoin([
+      this.opticsService.getUnits(),
+      this.opticsService.getFocalPlanes(),
+      this.opticsService.getOutletDiameters(),
+      this.opticsService.getBodyDiameters(),
+      this.opticsService.getOpticsFactory()
+    ]).subscribe({
       next: (data) => {
-        this.opticsDataCollection = data;
+        this.opticsUnits = data[0];
+        this.opticsFocalPlane = data[1];
+        this.opticsOutletDiameter = data[2];
+        this.opticsBodyDiameter = data[3];
+        this.factories = data[4];
+        this.$isLoading.set(false);
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.opticsService.errorMessage(err.error.message);
       }
     });
   }
@@ -167,9 +176,7 @@ export class OpticsFormComponent implements OnInit {
   private getOpticsBodyDiameter(): OpticsBodyDiameterDto {
     const id = this.form.controls['opticsBodyDiameter'].value;
     return <OpticsBodyDiameterDto>(
-      this.opticsDataCollection.opticsBodyDiameterList.find(
-        (bodyDiameter) => bodyDiameter.id === id
-      )
+      this.opticsBodyDiameter.find((bodyDiameter) => bodyDiameter.id === id)
     );
   }
 
@@ -178,9 +185,7 @@ export class OpticsFormComponent implements OnInit {
    */
   private getOpticsUnit(id: number): OpticsUnitDto {
     return <OpticsUnitDto>(
-      this.opticsDataCollection.opticsUnitList.find(
-        (clickType) => clickType.id === id
-      )
+      this.opticsUnits.find((clickType) => clickType.id === id)
     );
   }
 
@@ -189,11 +194,7 @@ export class OpticsFormComponent implements OnInit {
    */
   private getOpticsFactory(): FactoryDto {
     const id = this.form.controls['opticsFactory'].value;
-    return <FactoryDto>(
-      this.opticsDataCollection.opticsFactoryList.find(
-        (factory) => factory.id === id
-      )
-    );
+    return <FactoryDto>this.factories.find((factory) => factory.id === id);
   }
 
   /**
@@ -202,9 +203,7 @@ export class OpticsFormComponent implements OnInit {
   private getFocalPlane(): OpticsFocalPlaneDto {
     const id = this.form.controls['opticsFocalPlan'].value;
     return <OpticsFocalPlaneDto>(
-      this.opticsDataCollection.opticsFocalPlaneList.find(
-        (focalPlane) => focalPlane.id === id
-      )
+      this.opticsFocalPlane.find((focalPlane) => focalPlane.id === id)
     );
   }
 
@@ -214,7 +213,7 @@ export class OpticsFormComponent implements OnInit {
   private getOpticsOutletDiameter(): OpticsOutletDiameterDto {
     const id = this.form.controls['opticsOutletDiameter'].value;
     return <OpticsOutletDiameterDto>(
-      this.opticsDataCollection.opticsOutletDiameterList.find(
+      this.opticsOutletDiameter.find(
         (outletDiameter) => outletDiameter.id === id
       )
     );
@@ -286,25 +285,15 @@ export class OpticsFormComponent implements OnInit {
    * @param newOptics OpticsCreateDto
    */
   private createNewOptics(newOptics: OpticsCreateDto) {
-    this.opticsService
-      .newOptics({
-        body: newOptics
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Nouvelle optique ajoutée'
-          );
-          this.added.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.opticsService.save(newOptics).subscribe({
+      next: (res) => {
+        this.opticsService.successMessage('Nouvelle optique ajoutée');
+        this.added.emit(res);
+      },
+      error: (err) => {
+        this.opticsService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**
@@ -319,25 +308,15 @@ export class OpticsFormComponent implements OnInit {
       createdAt: this._editedOptic.createdAt
     };
 
-    this.opticsService
-      .editOptics({
-        body: editOptics
-      })
-      .subscribe({
-        next: (res) => {
-          this.edited.emit(res);
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Optique correctement modifiée'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.opticsService.edit(editOptics).subscribe({
+      next: (res) => {
+        this.edited.emit(res);
+        this.opticsService.successMessage('Optique correctement modifiée');
+      },
+      error: (err) => {
+        this.opticsService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**
@@ -346,6 +325,6 @@ export class OpticsFormComponent implements OnInit {
   private setTitle(): void {
     this._isEditOptics
       ? this.$title.set("Modifier l'optique")
-      : this.$title.set('Ajouter un nouveau calibre');
+      : this.$title.set('Ajouter une nouvelle optique');
   }
 }

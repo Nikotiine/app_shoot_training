@@ -10,23 +10,23 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AmmunitionWeightDto } from '../models/ammunition-weight-dto';
-import { disableAmmunitionWeight } from '../fn/weight/disable-ammunition-weight';
-import { DisableAmmunitionWeight$Params } from '../fn/weight/disable-ammunition-weight';
-import { editWeight } from '../fn/weight/edit-weight';
-import { EditWeight$Params } from '../fn/weight/edit-weight';
-import { getAllWeight } from '../fn/weight/get-all-weight';
-import { GetAllWeight$Params } from '../fn/weight/get-all-weight';
-import { getWeightByCaliber } from '../fn/weight/get-weight-by-caliber';
-import { GetWeightByCaliber$Params } from '../fn/weight/get-weight-by-caliber';
-import { newWeight } from '../fn/weight/new-weight';
-import { NewWeight$Params } from '../fn/weight/new-weight';
+import { disableAmmunitionWeight } from '../fn/api-ammunition-weight/disable-ammunition-weight';
+import { DisableAmmunitionWeight$Params } from '../fn/api-ammunition-weight/disable-ammunition-weight';
+import { editWeight } from '../fn/api-ammunition-weight/edit-weight';
+import { EditWeight$Params } from '../fn/api-ammunition-weight/edit-weight';
+import { getAllWeight } from '../fn/api-ammunition-weight/get-all-weight';
+import { GetAllWeight$Params } from '../fn/api-ammunition-weight/get-all-weight';
+import { getWeightByCaliber } from '../fn/api-ammunition-weight/get-weight-by-caliber';
+import { GetWeightByCaliber$Params } from '../fn/api-ammunition-weight/get-weight-by-caliber';
+import { newWeight } from '../fn/api-ammunition-weight/new-weight';
+import { NewWeight$Params } from '../fn/api-ammunition-weight/new-weight';
 
 
 /**
  * Ammunition Weight Controller
  */
 @Injectable({ providedIn: 'root' })
-export class WeightService extends BaseService {
+export class ApiAmmunitionWeightService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

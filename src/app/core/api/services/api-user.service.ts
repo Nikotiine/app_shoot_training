@@ -9,8 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { editProfile } from '../fn/user/edit-profile';
-import { EditProfile$Params } from '../fn/user/edit-profile';
+import { editProfile } from '../fn/api-user/edit-profile';
+import { EditProfile$Params } from '../fn/api-user/edit-profile';
 import { UserProfileDto } from '../models/user-profile-dto';
 
 
@@ -18,7 +18,7 @@ import { UserProfileDto } from '../models/user-profile-dto';
  * User Controller
  */
 @Injectable({ providedIn: 'root' })
-export class UserService extends BaseService {
+export class ApiUserService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

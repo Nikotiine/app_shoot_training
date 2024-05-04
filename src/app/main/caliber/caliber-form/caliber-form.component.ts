@@ -13,12 +13,11 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { CaliberService } from '../../../core/api/services/caliber.service';
 import { CaliberCreateDto } from '../../../core/api/models/caliber-create-dto';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { CaliberService } from '../../../core/app/services/caliber.service';
 
 @Component({
   selector: 'app-caliber-form',
@@ -30,11 +29,8 @@ import { InputTextModule } from 'primeng/inputtext';
 export class CaliberFormComponent {
   // Private field
   private readonly caliberService: CaliberService = inject(CaliberService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
   private _isEditCaliber: boolean = false;
   private _caliber!: CaliberDto;
-  private readonly _currentPageMessageHeader: string = 'Gestion des calibres';
 
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
@@ -71,25 +67,15 @@ export class CaliberFormComponent {
   }
 
   private createCaliber(caliber: CaliberCreateDto) {
-    this.caliberService
-      .saveCaliber({
-        body: caliber
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Nouveau calibre ajouté'
-          );
-          this.added.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.caliberService.save(caliber).subscribe({
+      next: (res) => {
+        this.caliberService.successMessage('Nouveau calibre ajouté');
+        this.added.emit(res);
+      },
+      error: (err) => {
+        this.caliberService.errorMessage(err.error.message);
+      }
+    });
   }
 
   private editCaliber(caliber: CaliberCreateDto): void {
@@ -99,25 +85,15 @@ export class CaliberFormComponent {
       active: this._caliber.active,
       createdAt: this._caliber.createdAt
     };
-    this.caliberService
-      .editCaliber({
-        body: editedCaliber
-      })
-      .subscribe({
-        next: (res) => {
-          this.edited.emit(res);
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Calibre edité'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.caliberService.edit(editedCaliber).subscribe({
+      next: (res) => {
+        this.edited.emit(res);
+        this.caliberService.successMessage('Calibre edité');
+      },
+      error: (err) => {
+        this.caliberService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**

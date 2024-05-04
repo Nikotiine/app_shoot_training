@@ -8,14 +8,15 @@ import {
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import { CaliberService } from '../../../core/api/services/caliber.service';
+
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
 import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
-import { AppWeightService } from '../../../core/app/services/app-weight.service';
+import { WeightService } from '../../../core/app/services/weight.service';
+import { CaliberService } from '../../../core/app/services/caliber.service';
 
 @Component({
   selector: 'app-joule',
@@ -32,8 +33,8 @@ import { AppWeightService } from '../../../core/app/services/app-weight.service'
 })
 export class JouleComponent implements OnInit {
   // Private field
-  private readonly appWeightService: AppWeightService =
-    inject(AppWeightService);
+  private readonly weightService: WeightService = inject(WeightService);
+  private readonly caliberService: CaliberService = inject(CaliberService);
   private _weights: AmmunitionWeightDto[] = [];
 
   // Public field
@@ -42,14 +43,13 @@ export class JouleComponent implements OnInit {
   public calibers: CaliberDto[] = [];
   public weightsVM: WeightViewModel[] = [];
   public typeOfWeight: WeightViewModel[] =
-    this.appWeightService.getTypesOfWeight();
+    this.weightService.getTypesOfWeight();
   //TODO passer cette variable en signal
   public legend: string = 'Parametres pre definis';
   public predefinedParams: boolean = true;
   // TODO supprimer le constructeur pour des inject()
   constructor(
     private fb: FormBuilder,
-    private readonly caliberService: CaliberService,
     private readonly customMessageService: CustomMessageService
   ) {
     this.form = this.fb.group({
@@ -63,7 +63,7 @@ export class JouleComponent implements OnInit {
 
   /**
    * Calcul la puissance en joules des parametre passe
-   * TODO : Utiliser le service AppWeightService
+   * TODO : Utiliser le service WeightService
    */
   public calculate(): void {
     let weight = this.form.controls['weight'].value;
@@ -77,7 +77,7 @@ export class JouleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.caliberService.getAllCalibers().subscribe({
+    this.caliberService.getAll().subscribe({
       next: (calibers) => {
         this.calibers = calibers;
       },
@@ -92,7 +92,7 @@ export class JouleComponent implements OnInit {
    * @param caliberId
    */
   public caliberSelected(caliberId: number): void {
-    this.appWeightService.getWeightByCaliber(caliberId).subscribe({
+    this.weightService.getWeightByCaliber(caliberId).subscribe({
       next: (weights) => {
         this.createWeightVM(weights);
       },

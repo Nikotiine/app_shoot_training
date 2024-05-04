@@ -10,21 +10,21 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { CaliberDto } from '../models/caliber-dto';
-import { disableCaliber } from '../fn/caliber/disable-caliber';
-import { DisableCaliber$Params } from '../fn/caliber/disable-caliber';
-import { editCaliber } from '../fn/caliber/edit-caliber';
-import { EditCaliber$Params } from '../fn/caliber/edit-caliber';
-import { getAllCalibers } from '../fn/caliber/get-all-calibers';
-import { GetAllCalibers$Params } from '../fn/caliber/get-all-calibers';
-import { saveCaliber } from '../fn/caliber/save-caliber';
-import { SaveCaliber$Params } from '../fn/caliber/save-caliber';
+import { disableCaliber } from '../fn/api-caliber/disable-caliber';
+import { DisableCaliber$Params } from '../fn/api-caliber/disable-caliber';
+import { editCaliber } from '../fn/api-caliber/edit-caliber';
+import { EditCaliber$Params } from '../fn/api-caliber/edit-caliber';
+import { getAllCalibers } from '../fn/api-caliber/get-all-calibers';
+import { GetAllCalibers$Params } from '../fn/api-caliber/get-all-calibers';
+import { saveCaliber } from '../fn/api-caliber/save-caliber';
+import { SaveCaliber$Params } from '../fn/api-caliber/save-caliber';
 
 
 /**
  * Caliber Controller
  */
 @Injectable({ providedIn: 'root' })
-export class CaliberService extends BaseService {
+export class ApiCaliberService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

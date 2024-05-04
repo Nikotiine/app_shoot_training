@@ -14,8 +14,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { WeaponService } from '../../../core/api/services/weapon.service';
-import { WeaponDataCollection } from '../../../core/api/models/weapon-data-collection';
+
 import { DropdownModule } from 'primeng/dropdown';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,9 +24,10 @@ import { WeaponCategoryDto } from '../../../core/api/models/weapon-category-dto'
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import { WeaponTypeDto } from '../../../core/api/models/weapon-type-dto';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { WeaponCreateDto } from '../../../core/api/models/weapon-create-dto';
+import { WeaponService } from '../../../core/app/services/weapon.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-weapon-form',
@@ -48,11 +48,11 @@ export class WeaponFormComponent implements OnInit {
   private _editedWeapon!: WeaponDto;
   private _isEditWeapon = false;
   private readonly weaponService: WeaponService = inject(WeaponService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
-  private readonly _currentPageMessageHeader: string = 'Gestion des armes';
   // Public field
-  public weaponDataCollection!: WeaponDataCollection;
+  public weaponCategories: WeaponCategoryDto[] = [];
+  public calibers: CaliberDto[] = [];
+  public weaponTypes: WeaponTypeDto[] = [];
+  public factories: FactoryDto[] = [];
   public form: FormGroup = inject(FormBuilder).group({
     weaponCaliber: [0, Validators.min(1)],
     weaponCategory: [0, Validators.min(1)],
@@ -115,16 +115,21 @@ export class WeaponFormComponent implements OnInit {
    * Charge la liste des donnee obligatoire pour creer une nouvelle arme
    */
   private loadData(): void {
-    this.weaponService.getWeaponDataCollection().subscribe({
+    forkJoin([
+      this.weaponService.getWeaponCategories(),
+      this.weaponService.getWeaponFactories(),
+      this.weaponService.getWeaponTypes(),
+      this.weaponService.getWeaponCalibers()
+    ]).subscribe({
       next: (data) => {
-        this.weaponDataCollection = data;
+        this.weaponCategories = data[0];
+        this.factories = data[1];
+        this.weaponTypes = data[2];
+        this.calibers = data[3];
         this.isLoading = false;
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.weaponService.errorMessage(err.error.message);
       }
     });
   }
@@ -133,36 +138,26 @@ export class WeaponFormComponent implements OnInit {
     const id = this.form.controls['weaponCategory'].value;
 
     return <WeaponCategoryDto>(
-      this.weaponDataCollection.weaponCategoryList.find(
-        (category) => category.id === id
-      )
+      this.weaponCategories.find((category) => category.id === id)
     );
   }
 
   private getCaliberDto(): CaliberDto {
     const id = this.form.controls['weaponCaliber'].value;
 
-    return <CaliberDto>(
-      this.weaponDataCollection.caliberList.find((caliber) => caliber.id === id)
-    );
+    return <CaliberDto>this.calibers.find((caliber) => caliber.id === id);
   }
 
   private getWeaponFactoryDto(): FactoryDto {
     const id = this.form.controls['weaponFactory'].value;
 
-    return <FactoryDto>(
-      this.weaponDataCollection.weaponFactoryList.find(
-        (factory) => factory.id === id
-      )
-    );
+    return <FactoryDto>this.factories.find((factory) => factory.id === id);
   }
 
   private getWeaponTypeDto(): WeaponTypeDto {
     const id = this.form.controls['weaponType'].value;
 
-    return <WeaponTypeDto>(
-      this.weaponDataCollection.weaponTypeList.find((type) => type.id === id)
-    );
+    return <WeaponTypeDto>this.weaponTypes.find((type) => type.id === id);
   }
 
   private autoCompleteForm(weapon: WeaponDto): void {
@@ -178,25 +173,15 @@ export class WeaponFormComponent implements OnInit {
   }
 
   private createNewWeapon(newWeapon: WeaponCreateDto) {
-    this.weaponService
-      .newWeapon({
-        body: newWeapon
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Nouvelle arme ajoutée'
-          );
-          this.weaponAdded.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.weaponService.createWeapon(newWeapon).subscribe({
+      next: (res) => {
+        this.weaponService.successMessage('Nouvelle arme ajoutée');
+        this.weaponAdded.emit(res);
+      },
+      error: (err) => {
+        this.weaponService.errorMessage(err.error.message);
+      }
+    });
   }
 
   private editWeapon(weapon: WeaponCreateDto) {
@@ -206,25 +191,15 @@ export class WeaponFormComponent implements OnInit {
       active: this._editedWeapon.active,
       createdAt: this._editedWeapon.createdAt
     };
-    this.weaponService
-      .editWeapon({
-        body: editWeapon
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Arme correctement modifiée'
-          );
-          this.weaponEdited.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.weaponService.editWeapon(editWeapon).subscribe({
+      next: (res) => {
+        this.weaponService.successMessage('Arme correctement modifiée');
+        this.weaponEdited.emit(res);
+      },
+      error: (err) => {
+        this.weaponService.errorMessage(err.error.message);
+      }
+    });
   }
   /**
    * Defini le titre a afficher selon creatin ou edition

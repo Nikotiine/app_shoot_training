@@ -15,7 +15,6 @@ export { FactoryDto } from './models/factory-dto';
 export { NewPasswordRequestDto } from './models/new-password-request-dto';
 export { OpticsBodyDiameterDto } from './models/optics-body-diameter-dto';
 export { OpticsCreateDto } from './models/optics-create-dto';
-export { OpticsDataCollection } from './models/optics-data-collection';
 export { OpticsDto } from './models/optics-dto';
 export { OpticsFocalPlaneDto } from './models/optics-focal-plane-dto';
 export { OpticsOutletDiameterDto } from './models/optics-outlet-diameter-dto';
@@ -34,7 +33,6 @@ export { UserWeaponSetupCreateDto } from './models/user-weapon-setup-create-dto'
 export { UserWeaponSetupDto } from './models/user-weapon-setup-dto';
 export { WeaponCategoryDto } from './models/weapon-category-dto';
 export { WeaponCreateDto } from './models/weapon-create-dto';
-export { WeaponDataCollection } from './models/weapon-data-collection';
 export { WeaponDto } from './models/weapon-dto';
 export { WeaponSoundReducerDto } from './models/weapon-sound-reducer-dto';
 export { WeaponTypeDto } from './models/weapon-type-dto';

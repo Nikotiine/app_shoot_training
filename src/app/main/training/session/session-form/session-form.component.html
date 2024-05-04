@@ -4,7 +4,7 @@
   @if (!isSpeedHistoryForm && !isSessionGroupForm){
 
   <fieldset class="mt-4">
-    <legend class="text-blue-500">{{$_title()}}</legend>
+    <legend class="text-blue-500">{{$title()}}</legend>
 
     <div class="formgrid grid">
       <div class="field col-12 md:col-6">
@@ -126,13 +126,13 @@
       <div class="field col-12 flex justify-content-center">
         <p-button
           label="Ajouter resultats"
-          [disabled]="$_ammunitionNotSelected()"
+          [disabled]="$ammunitionNotSelected()"
           [severity]="'info'"
           class="mr-3"
           (onClick)="showSessionGroupForm()"></p-button>
         <p-button
           label="Enregister vitesse"
-          [disabled]="$_ammunitionNotSelected()"
+          [disabled]="$ammunitionNotSelected()"
           [severity]="'info'"
           class=""
           (onClick)="showSpeedHistoriesForm()"></p-button>
@@ -148,15 +148,15 @@
   </fieldset>
   } @else { @if (isSpeedHistoryForm) {
   <app-ammunition-speed-histories-form
-    [weapon]="$_weaponSelected()"
-    [ammunition]="$_ammunitionSelected()"
-    [speedHistories]="$_speedHistoriesSaved()"
+    [weapon]="$weaponSelected()"
+    [ammunition]="$ammunitionSelected()"
+    [speedHistories]="$speedHistoriesSaved()"
     (save)="setSpeedHistories($event)"
     (cancelSpeedHistories)="cancelSpeedHistories()"></app-ammunition-speed-histories-form>
   } @if (isSessionGroupForm){
   <app-group-form
     (cancel)="cancelSessionGroup()"
-    [trainingSession]="$_groupsSaved()"
+    [trainingSession]="$groupsSaved()"
     (sessionGroup)="setSessionGroup($event)"></app-group-form>
   } }
 </form>

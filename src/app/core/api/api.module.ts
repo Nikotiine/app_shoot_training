@@ -4,15 +4,15 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { WeightService } from './services/weight.service';
-import { WeaponService } from './services/weapon.service';
-import { OpticsService } from './services/optics.service';
-import { FactoryService } from './services/factory.service';
-import { CaliberService } from './services/caliber.service';
-import { AmmunitionService } from './services/ammunition.service';
-import { UserService } from './services/user.service';
+import { ApiAmmunitionWeightService } from './services/api-ammunition-weight.service';
+import { ApiWeaponService } from './services/api-weapon.service';
+import { ApiOpticsService } from './services/api-optics.service';
+import { ApiFactoryService } from './services/api-factory.service';
+import { ApiCaliberService } from './services/api-caliber.service';
+import { ApiAmmunitionService } from './services/api-ammunition.service';
+import { ApiUserService } from './services/api-user.service';
 import { ApiTrainingSessionService } from './services/api-training-session.service';
-import { WeaponSetupService } from './services/weapon-setup.service';
+import { ApiUserWeaponSetupService } from './services/api-user-weapon-setup.service';
 import { RegistrationService } from './services/registration.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
 import { AuthenticationService } from './services/authentication.service';
@@ -26,15 +26,15 @@ import { AdminService } from './services/admin.service';
   exports: [],
   declarations: [],
   providers: [
-    WeightService,
-    WeaponService,
-    OpticsService,
-    FactoryService,
-    CaliberService,
-    AmmunitionService,
-    UserService,
+    ApiAmmunitionWeightService,
+    ApiWeaponService,
+    ApiOpticsService,
+    ApiFactoryService,
+    ApiCaliberService,
+    ApiAmmunitionService,
+    ApiUserService,
     ApiTrainingSessionService,
-    WeaponSetupService,
+    ApiUserWeaponSetupService,
     RegistrationService,
     ForgotPasswordService,
     AuthenticationService,

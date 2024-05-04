@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { ToastModule } from 'primeng/toast';
-import { CustomUserService } from '../../core/app/services/custom-user.service';
+import { UserService } from '../../core/app/services/user.service';
 
 import { UserProfileDto } from '../../core/api/models/user-profile-dto';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -23,7 +23,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 })
 export class LayoutComponent implements OnInit {
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-  private userService: CustomUserService = inject(CustomUserService);
+  private userService: UserService = inject(UserService);
   ngOnInit(): void {
     const userProfile: UserProfileDto = this.activatedRoute.snapshot.data[0];
     if (userProfile) {

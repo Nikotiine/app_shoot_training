@@ -9,7 +9,7 @@
         <label for="weaponCategory">Catégorie</label>
         <div>
           <p-dropdown
-            [options]="weaponDataCollection.weaponCategoryList"
+            [options]="weaponCategories"
             id="weaponCategory"
             optionLabel="label"
             class="ml-2"
@@ -23,7 +23,7 @@
         <label for="weaponType">Type d'arme</label>
         <div>
           <p-dropdown
-            [options]="weaponDataCollection.weaponTypeList"
+            [options]="weaponTypes"
             id="weaponType"
             optionLabel="label"
             class="ml-2"
@@ -37,7 +37,7 @@
         <label for="weaponCaliber">Calibre</label>
         <div>
           <p-dropdown
-            [options]="weaponDataCollection.caliberList"
+            [options]="calibers"
             id="weaponCaliber"
             optionLabel="label"
             [style]="{'width':'100%'}"
@@ -52,7 +52,7 @@
         <label for="weaponFactory">Marque</label>
         <div>
           <p-dropdown
-            [options]="weaponDataCollection.weaponFactoryList"
+            [options]="factories"
             id="weaponFactory"
             optionLabel="name"
             class="ml-2"

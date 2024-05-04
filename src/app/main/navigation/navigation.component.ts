@@ -7,7 +7,7 @@ import { MenuModule } from 'primeng/menu';
 
 import { Routing } from '../../core/app/enum/Routing.enum';
 import { SecurityService } from '../../core/app/services/security.service';
-import { CustomUserService } from '../../core/app/services/custom-user.service';
+import { UserService } from '../../core/app/services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,8 +20,7 @@ import { Router } from '@angular/router';
 export class NavigationComponent implements OnInit {
   // Private field
   private readonly securityService: SecurityService = inject(SecurityService);
-  private readonly userProfileService: CustomUserService =
-    inject(CustomUserService);
+  private readonly userProfileService: UserService = inject(UserService);
   private readonly router: Router = inject(Router);
   protected readonly Routing = Routing;
 

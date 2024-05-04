@@ -70,15 +70,13 @@
       <div class="flex justify-content-between align-items-center">
         <p-button
           icon="pi pi-arrow-circle-left"
-          (onClick)="previousChart($_chartDisplay().id)"
+          (onClick)="previousChart($chartDisplay().id)"
           [rounded]="true"
           [text]="true"></p-button>
-        <h3 class="text-center text-primary mx-2">
-          {{$_chartDisplay().label}}
-        </h3>
+        <h3 class="text-center text-primary mx-2">{{$chartDisplay().label}}</h3>
         <p-button
           icon="pi pi-arrow-circle-right"
-          (onClick)="nextChart($_chartDisplay().id)"
+          (onClick)="nextChart($chartDisplay().id)"
           [rounded]="true"
           [text]="true"></p-button>
       </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -8,23 +8,23 @@ import {
 } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
-import { WeaponService } from '../../../core/api/services/weapon.service';
 
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { WeaponFormComponent } from '../../weapon/weapon-form/weapon-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { OpticsService } from '../../../core/api/services/optics.service';
+
 import { OpticsDto } from '../../../core/api/models/optics-dto';
 
 import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-import { CustomUserService } from '../../../core/app/services/custom-user.service';
-import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
+import { UserService } from '../../../core/app/services/user.service';
+
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { UserWeaponSetupCreateDto } from '../../../core/api/models/user-weapon-setup-create-dto';
+import { UserSetupService } from '../../../core/app/services/user-setup.service';
 
 export interface DropdownViewModel {
   id: number;
@@ -46,6 +46,10 @@ export interface DropdownViewModel {
   styleUrl: './user-weapon-setup-add.component.scss'
 })
 export class UserWeaponSetupAddComponent implements OnInit {
+  // Private field
+  private readonly userSetupService: UserSetupService =
+    inject(UserSetupService);
+
   @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
     new EventEmitter<UserWeaponSetupDto>();
 
@@ -61,12 +65,9 @@ export class UserWeaponSetupAddComponent implements OnInit {
   public isNewOptics: boolean = false;
 
   constructor(
-    private readonly weaponService: WeaponService,
     private readonly fb: FormBuilder,
     private readonly customMessageService: CustomMessageService,
-    private readonly opticsService: OpticsService,
-    private readonly appUserService: CustomUserService,
-    private readonly weaponSetupService: WeaponSetupService
+    private readonly appUserService: UserService
   ) {
     this.form = this.fb.group({
       weaponFactory: [0, Validators.required],
@@ -98,7 +99,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * Charge la liste des armes disponible en bdd et creer le dropdown pour le choix de la marque de l'arme
    */
   private loadWeaponsList(): void {
-    this.weaponService.getAllWeapon().subscribe({
+    this.userSetupService.getAllWeapons().subscribe({
       next: (data) => {
         this.weapons = data;
         this.createWeaponFactoriesDropdown(data);
@@ -186,7 +187,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * Charge la liste des optiques disponible apres que l'utilisateur est choisi son arme
    */
   private loadOpticsList(): void {
-    this.opticsService.getAllActiveOptics().subscribe({
+    this.userSetupService.getAllActivesOptics().subscribe({
       next: (optics) => {
         this.optics = optics;
         this.createOpticsFactoriesDropdown(optics);
@@ -290,25 +291,21 @@ export class UserWeaponSetupAddComponent implements OnInit {
         user: user
       };
 
-      this.weaponSetupService
-        .newSetup({
-          body: newSetup
-        })
-        .subscribe({
-          next: (res) => {
-            this.setupAdded.emit(res);
-            this.customMessageService.successMessage(
-              'Setup service',
-              'Nouveau setup enregistré'
-            );
-          },
-          error: (err) => {
-            this.customMessageService.errorMessage(
-              'Setup service',
-              err.error.message
-            );
-          }
-        });
+      this.userSetupService.save(newSetup).subscribe({
+        next: (res) => {
+          this.setupAdded.emit(res);
+          this.customMessageService.successMessage(
+            'Setup service',
+            'Nouveau setup enregistré'
+          );
+        },
+        error: (err) => {
+          this.customMessageService.errorMessage(
+            'Setup service',
+            err.error.message
+          );
+        }
+      });
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,11 +7,9 @@ import {
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
-import { UserService } from '../../../core/api/services/user.service';
 import { UserEditDto } from '../../../core/api/models/user-edit-dto';
+import { UserService } from '../../../core/app/services/user.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -21,6 +19,9 @@ import { UserEditDto } from '../../../core/api/models/user-edit-dto';
   styleUrl: './user-edit.component.scss'
 })
 export class UserEditComponent {
+  // Private filed
+  private readonly userService: UserService = inject(UserService);
+
   public isChangePassword: boolean = false;
   @Input() set profile(profile: UserProfileDto) {
     this._shooterProfile = profile;
@@ -35,20 +36,13 @@ export class UserEditComponent {
     new EventEmitter<UserProfileDto>();
 
   private _shooterProfile!: UserProfileDto;
-  public form: FormGroup;
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly userService: UserService,
-    private readonly customMessageService: CustomMessageService
-  ) {
-    this.form = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      oldPassword: [null],
-      password: [null],
-      confirmPassword: [null]
-    });
-  }
+  public form: FormGroup = inject(FormBuilder).group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    oldPassword: [null],
+    password: [null],
+    confirmPassword: [null]
+  });
 
   public submit(): void {
     const editProfile: UserEditDto = {
@@ -68,24 +62,17 @@ export class UserEditComponent {
       }
     }
 
-    this.userService
-      .editProfile({
-        body: editProfile
-      })
-      .subscribe({
-        next: (res) => {
-          this._shooterProfile = res;
-          this.customMessageService.successMessage(
-            'Compte',
-            'Profile modifié avec succes'
-          );
-          this.profileChange.emit(res);
-        },
-        error: (err) => {
-          this.form.controls['oldPassword'].setValue(null);
-          this.customMessageService.errorMessage('Compte', err.error.message);
-        }
-      });
+    this.userService.editProfile(editProfile).subscribe({
+      next: (res) => {
+        this._shooterProfile = res;
+        this.userService.successMessage('Profile modifié avec succes');
+        this.profileChange.emit(res);
+      },
+      error: (err) => {
+        this.form.controls['oldPassword'].setValue(null);
+        this.userService.errorMessage(err.error.message);
+      }
+    });
   }
 
   private isPasswordMatch(): boolean {

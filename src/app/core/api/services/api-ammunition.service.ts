@@ -10,23 +10,23 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AmmunitionDto } from '../models/ammunition-dto';
-import { disableAmmunition } from '../fn/ammunition/disable-ammunition';
-import { DisableAmmunition$Params } from '../fn/ammunition/disable-ammunition';
-import { editAmmunition } from '../fn/ammunition/edit-ammunition';
-import { EditAmmunition$Params } from '../fn/ammunition/edit-ammunition';
-import { getAllAmmunition } from '../fn/ammunition/get-all-ammunition';
-import { GetAllAmmunition$Params } from '../fn/ammunition/get-all-ammunition';
-import { getAmmunitionByCaliber } from '../fn/ammunition/get-ammunition-by-caliber';
-import { GetAmmunitionByCaliber$Params } from '../fn/ammunition/get-ammunition-by-caliber';
-import { newAmmunition } from '../fn/ammunition/new-ammunition';
-import { NewAmmunition$Params } from '../fn/ammunition/new-ammunition';
+import { disableAmmunition } from '../fn/api-ammunition/disable-ammunition';
+import { DisableAmmunition$Params } from '../fn/api-ammunition/disable-ammunition';
+import { editAmmunition } from '../fn/api-ammunition/edit-ammunition';
+import { EditAmmunition$Params } from '../fn/api-ammunition/edit-ammunition';
+import { getAllAmmunition } from '../fn/api-ammunition/get-all-ammunition';
+import { GetAllAmmunition$Params } from '../fn/api-ammunition/get-all-ammunition';
+import { getAmmunitionByCaliber } from '../fn/api-ammunition/get-ammunition-by-caliber';
+import { GetAmmunitionByCaliber$Params } from '../fn/api-ammunition/get-ammunition-by-caliber';
+import { newAmmunition } from '../fn/api-ammunition/new-ammunition';
+import { NewAmmunition$Params } from '../fn/api-ammunition/new-ammunition';
 
 
 /**
  * Ammunition Controller
  */
 @Injectable({ providedIn: 'root' })
-export class AmmunitionService extends BaseService {
+export class ApiAmmunitionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

@@ -9,10 +9,10 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { getAllUserWeaponSetup } from '../fn/weapon-setup/get-all-user-weapon-setup';
-import { GetAllUserWeaponSetup$Params } from '../fn/weapon-setup/get-all-user-weapon-setup';
-import { newSetup } from '../fn/weapon-setup/new-setup';
-import { NewSetup$Params } from '../fn/weapon-setup/new-setup';
+import { getAllUserWeaponSetup } from '../fn/api-user-weapon-setup/get-all-user-weapon-setup';
+import { GetAllUserWeaponSetup$Params } from '../fn/api-user-weapon-setup/get-all-user-weapon-setup';
+import { newSetup } from '../fn/api-user-weapon-setup/new-setup';
+import { NewSetup$Params } from '../fn/api-user-weapon-setup/new-setup';
 import { UserWeaponSetupDto } from '../models/user-weapon-setup-dto';
 
 
@@ -20,7 +20,7 @@ import { UserWeaponSetupDto } from '../models/user-weapon-setup-dto';
  * User Weapon Setup Controller
  */
 @Injectable({ providedIn: 'root' })
-export class WeaponSetupService extends BaseService {
+export class ApiUserWeaponSetupService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

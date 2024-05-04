@@ -15,12 +15,13 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { FactoryService } from '../../../core/api/services/factory.service';
+
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FactoryCreateDto } from '../../../core/api/models/factory-create-dto';
+import { FactoryService } from '../../../core/app/services/factory.service';
 
 @Component({
   selector: 'app-factory-form',
@@ -34,10 +35,7 @@ export class FactoryFormComponent {
   private _factory!: FactoryType;
   private _editedFactory!: FactoryDto;
   private _isEditFactory: boolean = false;
-  private readonly _currentPageMessageHeader: string = 'Gestion des marques';
   private readonly factoryService: FactoryService = inject(FactoryService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
 
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
@@ -120,25 +118,17 @@ export class FactoryFormComponent {
    * @param factory FactoryCreateDto
    */
   private createFactory(factory: FactoryCreateDto): void {
-    this.factoryService
-      .saveFactory({
-        body: factory
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            `Nouvelle marque ${this.$factoryLabel()} disponible`
-          );
-          this.newFactory.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.factoryService.save(factory).subscribe({
+      next: (res) => {
+        this.factoryService.successMessage(
+          `Nouvelle marque ${this.$factoryLabel()} disponible`
+        );
+        this.newFactory.emit(res);
+      },
+      error: (err) => {
+        this.factoryService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**
@@ -152,25 +142,17 @@ export class FactoryFormComponent {
       createdAt: this._editedFactory.createdAt,
       active: this._editedFactory.active
     };
-    this.factoryService
-      .editFactory({
-        body: editedFactory
-      })
-      .subscribe({
-        next: (res) => {
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            `Marque ${this.$factoryLabel()} modifiée`
-          );
-          this.editedFactory.emit(res);
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.factoryService.edit(editedFactory).subscribe({
+      next: (res) => {
+        this.factoryService.successMessage(
+          `Marque ${this.$factoryLabel()} modifiée`
+        );
+        this.editedFactory.emit(res);
+      },
+      error: (err) => {
+        this.factoryService.errorMessage(err.error.message);
+      }
+    });
   }
 
   /**

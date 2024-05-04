@@ -8,17 +8,18 @@ import {
 import { forkJoin } from 'rxjs';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
-import { WeaponService } from '../../../core/api/services/weapon.service';
+
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-import { FactoryService } from '../../../core/api/services/factory.service';
+
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
-import { FactoryType } from '../../../core/app/enum/FactoryType.enum';
+
 import { ButtonModule } from 'primeng/button';
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
 import { DatePipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { WeaponFormComponent } from '../weapon-form/weapon-form.component';
+import { WeaponService } from '../../../core/app/services/weapon.service';
 
 @Component({
   selector: 'app-weapon-list',
@@ -39,7 +40,6 @@ export class WeaponListComponent implements OnInit {
   private readonly weaponService: WeaponService = inject(WeaponService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly factoryService: FactoryService = inject(FactoryService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
   private readonly _currentPageMessageHeader: string =
@@ -137,10 +137,8 @@ export class WeaponListComponent implements OnInit {
    */
   private loadData(): void {
     forkJoin([
-      this.weaponService.getAllWeapon(),
-      this.factoryService.getAllFactoryByType({
-        type: FactoryType.WEAPON
-      })
+      this.weaponService.getAllWeapons(),
+      this.weaponService.getWeaponFactories()
     ]).subscribe({
       next: (data) => {
         this._weapons = data[0];
@@ -161,24 +159,20 @@ export class WeaponListComponent implements OnInit {
    * @param id
    */
   private disableWeapon(id: number): void {
-    this.weaponService
-      .disableWeapon({
-        id: id
-      })
-      .subscribe({
-        next: (res) => {
-          this._weapons = res;
-          this.customMessageService.successMessage(
-            this._currentPageMessageHeader,
-            'Arme desactivée'
-          );
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.weaponService.disableWeapon(id).subscribe({
+      next: (res) => {
+        this._weapons = res;
+        this.customMessageService.successMessage(
+          this._currentPageMessageHeader,
+          'Arme desactivée'
+        );
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 }

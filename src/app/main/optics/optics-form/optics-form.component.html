@@ -1,4 +1,4 @@
-@if (opticsDataCollection){
+@if (!$isLoading()){
 
 <form [formGroup]="form">
   <fieldset class="formgrid grid">
@@ -8,7 +8,7 @@
       <div class="mt-2">
         <label for="opticsFocalPlan">Plan Focal (*)</label>
         <p-dropdown
-          [options]="opticsDataCollection.opticsFocalPlaneList"
+          [options]="opticsFocalPlane"
           id="opticsFocalPlan"
           optionLabel="label"
           class="ml-2"
@@ -19,7 +19,7 @@
       <div class="mt-2">
         <label for="opticsClickType">Type de reglage des tourelles (*)</label>
         <p-dropdown
-          [options]="opticsDataCollection.opticsUnitList"
+          [options]="opticsUnits"
           id="opticsClickType"
           optionLabel="label"
           class="ml-2"
@@ -42,7 +42,7 @@
       <div class="mt-2">
         <label for="opticsOutletDiameter">Diametre de sortie (*)</label>
         <p-dropdown
-          [options]="opticsDataCollection.opticsOutletDiameterList"
+          [options]="opticsOutletDiameter"
           id="opticsOutletDiameter"
           optionLabel="label"
           class="ml-2"
@@ -54,7 +54,7 @@
       <div class="mt-2">
         <label for="opticsBodyDiameter">Diametre du tube (*)</label>
         <p-dropdown
-          [options]="opticsDataCollection.opticsBodyDiameterList"
+          [options]="opticsBodyDiameter"
           id="opticsBodyDiameter"
           optionLabel="label"
           class="ml-2"
@@ -65,7 +65,7 @@
       <div class="mt-2">
         <label for="opticsFactory">Marque (*)</label>
         <p-dropdown
-          [options]="opticsDataCollection.opticsFactoryList"
+          [options]="factories"
           id="opticsFactory"
           optionLabel="name"
           class="ml-2"
@@ -102,7 +102,7 @@
           class="ml-2"
           formControlName="opticsMaxElevation"></p-inputNumber>
         <p-dropdown
-          [options]="opticsDataCollection.opticsUnitList"
+          [options]="opticsUnits"
           optionLabel="label"
           class="ml-2"
           formControlName="maxElevationUnit"
@@ -117,7 +117,7 @@
           class="ml-2"
           formControlName="opticsMaxDerivation"></p-inputNumber>
         <p-dropdown
-          [options]="opticsDataCollection.opticsUnitList"
+          [options]="opticsUnits"
           optionLabel="label"
           class="ml-2"
           formControlName="maxDerivationUnit"

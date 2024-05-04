@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CustomUserService } from '../../../core/app/services/custom-user.service';
+import { UserService } from '../../../core/app/services/user.service';
 
 import { DatePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -15,10 +15,10 @@ import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
   styleUrl: './user-view.component.scss'
 })
 export class UserViewComponent implements OnInit {
-  private userService: CustomUserService = inject(CustomUserService);
+  private userService: UserService = inject(UserService);
   public shooterProfile!: UserProfileDto;
   public isEdit: boolean = false;
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const user = this.userService.getProfile();
     if (user) {
       this.shooterProfile = user;
@@ -29,7 +29,7 @@ export class UserViewComponent implements OnInit {
     this.isEdit = !this.isEdit;
   }
 
-  profileChange($event: UserProfileDto) {
+  public profileChange($event: UserProfileDto): void {
     this.shooterProfile = $event;
     this.isEdit = false;
   }

@@ -7,11 +7,11 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import { CaliberService } from '../../../core/api/services/caliber.service';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { CaliberService } from '../../../core/app/services/caliber.service';
 
 @Component({
   selector: 'app-caliber-dropdown',
@@ -75,15 +75,12 @@ export class CaliberDropdownComponent {
    * Charge la liste de tous les calibres disponibles
    */
   private loadCalibers() {
-    this.caliberService.getAllCalibers().subscribe({
+    this.caliberService.getAll().subscribe({
       next: (calibers) => {
         this.calibers = calibers;
       },
       error: (err) => {
-        inject(CustomMessageService).errorMessage(
-          'Calibre service',
-          err.error.message
-        );
+        this.caliberService.errorMessage(err.error.message);
       }
     });
   }

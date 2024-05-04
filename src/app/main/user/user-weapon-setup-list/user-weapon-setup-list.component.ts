@@ -2,12 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { UserWeaponSetupAddComponent } from '../user-weapon-setup-add/user-weapon-setup-add.component';
-import { WeaponSetupService } from '../../../core/api/services/weapon-setup.service';
-import { CustomUserService } from '../../../core/app/services/custom-user.service';
+import { UserService } from '../../../core/app/services/user.service';
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { TableModule } from 'primeng/table';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { RouterLink } from '@angular/router';
+import { UserSetupService } from '../../../core/app/services/user-setup.service';
 
 @Component({
   selector: 'app-user-weapon-setup-list',
@@ -25,8 +25,8 @@ import { RouterLink } from '@angular/router';
 export class UserWeaponSetupListComponent implements OnInit {
   public isAddNewSetup: boolean = false;
   public weaponsSetups: UserWeaponSetupDto[] = [];
-  private weaponSetupService: WeaponSetupService = inject(WeaponSetupService);
-  private appUserService: CustomUserService = inject(CustomUserService);
+  private userSetupService: UserSetupService = inject(UserSetupService);
+  private appUserService: UserService = inject(UserService);
   private customMessageService: CustomMessageService =
     inject(CustomMessageService);
 
@@ -38,21 +38,17 @@ export class UserWeaponSetupListComponent implements OnInit {
   }
 
   private loadData(id: number): void {
-    this.weaponSetupService
-      .getAllUserWeaponSetup({
-        id: id
-      })
-      .subscribe({
-        next: (data) => {
-          this.weaponsSetups = data;
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            'Setup liste',
-            err.error.message
-          );
-        }
-      });
+    this.userSetupService.getSetupByUserId(id).subscribe({
+      next: (data) => {
+        this.weaponsSetups = data;
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          'Setup liste',
+          err.error.message
+        );
+      }
+    });
   }
 
   /**

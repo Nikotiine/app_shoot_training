@@ -23,15 +23,13 @@ import {
 import { CaliberDropdownComponent } from '../../caliber/caliber-dropdown/caliber-dropdown.component';
 import { CaliberDto } from '../../../core/api/models/caliber-dto';
 import {
-  AppWeightService,
+  WeightService,
   GrainsAndGrams
-} from '../../../core/app/services/app-weight.service';
+} from '../../../core/app/services/weight.service';
 import { AmmunitionWeight } from '../../../core/app/enum/AmmunitionWeight.enum';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { CaliberService } from '../../../core/api/services/caliber.service';
 import { AmmunitionWeightCreateDto } from '../../../core/api/models/ammunition-weight-create-dto';
 import { AmmunitionWeightDto } from '../../../core/api/models/ammunition-weight-dto';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
 
 @Component({
@@ -53,14 +51,9 @@ import { WeightViewModel } from '../../../core/app/model/WeightViewModel';
 })
 export class AmmunitionWeightFormComponent implements OnInit {
   // Private field
-  private readonly appWeightService: AppWeightService =
-    inject(AppWeightService);
-  private readonly caliberService: CaliberService = inject(CaliberService);
-  private readonly customMessageService: CustomMessageService =
-    inject(CustomMessageService);
+  private readonly weightService: WeightService = inject(WeightService);
   private _weights: AmmunitionWeightDto[] = [];
   private _weight!: AmmunitionWeightDto;
-  private _currentPageMessageHeader: string = "Gestion des poids d'ogive";
   private _isEditAmmunitionWeight: boolean = false;
   // Public field
   public form: FormGroup = inject(FormBuilder).group({
@@ -69,7 +62,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
     selectedCalibers: [null, Validators.required]
   });
   public typesOfWeight: WeightViewModel[] =
-    this.appWeightService.getTypesOfWeight();
+    this.weightService.getTypesOfWeight();
   public calibers: CaliberDto[] = [];
   protected $title: WritableSignal<string> = signal('');
   @Output() added: EventEmitter<AmmunitionWeightDto> =
@@ -113,15 +106,12 @@ export class AmmunitionWeightFormComponent implements OnInit {
    * Charge la liste des calibres pour le mulitselect
    */
   private loadData(): void {
-    this.caliberService.getAllCalibers().subscribe({
+    this.weightService.getAllCalibers().subscribe({
       next: (data) => {
         this.calibers = data;
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.weightService.errorMessage(err.error.message);
       }
     });
   }
@@ -135,19 +125,13 @@ export class AmmunitionWeightFormComponent implements OnInit {
     let isExist: boolean = false;
     const grains = grainAndGram.grains;
     if (grains < 1) {
-      this.customMessageService.warningMessage(
-        this._currentPageMessageHeader,
-        'Le poids en grain est trop leger'
-      );
+      this.weightService.warningMessage('Le poids en grain est trop leger');
       this.form.controls['weight'].setValue(null);
       return true;
     }
     for (const weight of this._weights) {
       if (weight.grains === grains) {
-        this.customMessageService.warningMessage(
-          this._currentPageMessageHeader,
-          'Ce poids existe deja'
-        );
+        this.weightService.warningMessage('Ce poids existe deja');
         isExist = true;
         this.form.controls['weight'].setValue(null);
       }
@@ -174,7 +158,7 @@ export class AmmunitionWeightFormComponent implements OnInit {
   private createNewAmmunitionWeight(): void {
     const weight = this.form.controls['weight'].value;
     const typeOfWeight = this.form.controls['typeOfWeight'].value;
-    const grainAndGram = this.appWeightService.convert(weight, typeOfWeight);
+    const grainAndGram = this.weightService.convert(weight, typeOfWeight);
     const weightExist: boolean = this.verifyWeights(grainAndGram);
     if (!weightExist) {
       const calibers = this.form.controls['selectedCalibers'].value;
@@ -183,15 +167,13 @@ export class AmmunitionWeightFormComponent implements OnInit {
         grams: grainAndGram.grams,
         calibers: calibers
       };
-      this.appWeightService.create(ammunitionWeightCreate).subscribe({
+      this.weightService.create(ammunitionWeightCreate).subscribe({
         next: (res) => {
           this.added.emit(res);
+          this.weightService.successMessage('poids correctement ajouté');
         },
         error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
+          this.weightService.errorMessage(err.error.message);
         }
       });
     }
@@ -202,19 +184,13 @@ export class AmmunitionWeightFormComponent implements OnInit {
       ...this._weight,
       calibers: this.form.controls['selectedCalibers'].value
     };
-    this.appWeightService.edit(weight).subscribe({
+    this.weightService.edit(weight).subscribe({
       next: (res) => {
         this.edited.emit(res);
-        this.customMessageService.successMessage(
-          this._currentPageMessageHeader,
-          'Calibre ajoute au poids'
-        );
+        this.weightService.successMessage('Poids ajouté au calibre');
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          this._currentPageMessageHeader,
-          err.error.message
-        );
+        this.weightService.errorMessage(err.error.message);
       }
     });
   }

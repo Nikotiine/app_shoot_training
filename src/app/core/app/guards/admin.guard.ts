@@ -1,17 +1,16 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { CustomUserService } from '../services/custom-user.service';
+
 import { Routing } from '../enum/Routing.enum';
 import { catchError, map } from 'rxjs/operators';
-import { AuthenticationService, UserService } from '../../api/services';
-import { CustomMessageService } from '../services/custom-message.service';
-import { of } from 'rxjs';
+import { AuthenticationService } from '../../api/services';
+import { UserService } from '../services/user.service';
 
 export const adminGuard: CanActivateFn = (route, state) => {
-  const appUserService = inject(CustomUserService);
+  const userService = inject(UserService);
   const router = inject(Router);
 
-  if (!appUserService.getProfile()) {
+  if (!userService.getProfile()) {
     return inject(AuthenticationService)
       .me()
       .pipe(
@@ -28,5 +27,5 @@ export const adminGuard: CanActivateFn = (route, state) => {
         })
       );
   }
-  return appUserService.isAdmin();
+  return userService.isAdmin();
 };

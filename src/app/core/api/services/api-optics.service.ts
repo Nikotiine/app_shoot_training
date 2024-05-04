@@ -9,27 +9,36 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { disableOptics } from '../fn/optics/disable-optics';
-import { DisableOptics$Params } from '../fn/optics/disable-optics';
-import { editOptics } from '../fn/optics/edit-optics';
-import { EditOptics$Params } from '../fn/optics/edit-optics';
-import { getAllActiveOptics } from '../fn/optics/get-all-active-optics';
-import { GetAllActiveOptics$Params } from '../fn/optics/get-all-active-optics';
-import { getAllOptics } from '../fn/optics/get-all-optics';
-import { GetAllOptics$Params } from '../fn/optics/get-all-optics';
-import { getOpticsDataCollection } from '../fn/optics/get-optics-data-collection';
-import { GetOpticsDataCollection$Params } from '../fn/optics/get-optics-data-collection';
-import { newOptics } from '../fn/optics/new-optics';
-import { NewOptics$Params } from '../fn/optics/new-optics';
-import { OpticsDataCollection } from '../models/optics-data-collection';
+import { disableOptics } from '../fn/api-optics/disable-optics';
+import { DisableOptics$Params } from '../fn/api-optics/disable-optics';
+import { editOptics } from '../fn/api-optics/edit-optics';
+import { EditOptics$Params } from '../fn/api-optics/edit-optics';
+import { getAllActiveOptics } from '../fn/api-optics/get-all-active-optics';
+import { GetAllActiveOptics$Params } from '../fn/api-optics/get-all-active-optics';
+import { getAllOptics } from '../fn/api-optics/get-all-optics';
+import { GetAllOptics$Params } from '../fn/api-optics/get-all-optics';
+import { getOpticsBodyDiameter } from '../fn/api-optics/get-optics-body-diameter';
+import { GetOpticsBodyDiameter$Params } from '../fn/api-optics/get-optics-body-diameter';
+import { getOpticsFocalPlane } from '../fn/api-optics/get-optics-focal-plane';
+import { GetOpticsFocalPlane$Params } from '../fn/api-optics/get-optics-focal-plane';
+import { getOpticsOutletDiameter } from '../fn/api-optics/get-optics-outlet-diameter';
+import { GetOpticsOutletDiameter$Params } from '../fn/api-optics/get-optics-outlet-diameter';
+import { getOpticsUnits } from '../fn/api-optics/get-optics-units';
+import { GetOpticsUnits$Params } from '../fn/api-optics/get-optics-units';
+import { newOptics } from '../fn/api-optics/new-optics';
+import { NewOptics$Params } from '../fn/api-optics/new-optics';
+import { OpticsBodyDiameterDto } from '../models/optics-body-diameter-dto';
 import { OpticsDto } from '../models/optics-dto';
+import { OpticsFocalPlaneDto } from '../models/optics-focal-plane-dto';
+import { OpticsOutletDiameterDto } from '../models/optics-outlet-diameter-dto';
+import { OpticsUnitDto } from '../models/optics-unit-dto';
 
 
 /**
  * Optics Controller
  */
 @Injectable({ providedIn: 'root' })
-export class OpticsService extends BaseService {
+export class ApiOpticsService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
@@ -84,28 +93,103 @@ export class OpticsService extends BaseService {
     );
   }
 
-  /** Path part for operation `getOpticsDataCollection()` */
-  static readonly GetOpticsDataCollectionPath = '/api/optics/data-collection';
+  /** Path part for operation `getOpticsUnits()` */
+  static readonly GetOpticsUnitsPath = '/api/optics/units';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getOpticsDataCollection()` instead.
+   * To access only the response body, use `getOpticsUnits()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getOpticsDataCollection$Response(params?: GetOpticsDataCollection$Params, context?: HttpContext): Observable<StrictHttpResponse<OpticsDataCollection>> {
-    return getOpticsDataCollection(this.http, this.rootUrl, params, context);
+  getOpticsUnits$Response(params?: GetOpticsUnits$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsUnitDto>>> {
+    return getOpticsUnits(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getOpticsDataCollection$Response()` instead.
+   * To access the full response (for headers, for example), `getOpticsUnits$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getOpticsDataCollection(params?: GetOpticsDataCollection$Params, context?: HttpContext): Observable<OpticsDataCollection> {
-    return this.getOpticsDataCollection$Response(params, context).pipe(
-      map((r: StrictHttpResponse<OpticsDataCollection>): OpticsDataCollection => r.body)
+  getOpticsUnits(params?: GetOpticsUnits$Params, context?: HttpContext): Observable<Array<OpticsUnitDto>> {
+    return this.getOpticsUnits$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsUnitDto>>): Array<OpticsUnitDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getOpticsOutletDiameter()` */
+  static readonly GetOpticsOutletDiameterPath = '/api/optics/outlet-diameter';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOpticsOutletDiameter()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsOutletDiameter$Response(params?: GetOpticsOutletDiameter$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsOutletDiameterDto>>> {
+    return getOpticsOutletDiameter(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOpticsOutletDiameter$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsOutletDiameter(params?: GetOpticsOutletDiameter$Params, context?: HttpContext): Observable<Array<OpticsOutletDiameterDto>> {
+    return this.getOpticsOutletDiameter$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsOutletDiameterDto>>): Array<OpticsOutletDiameterDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getOpticsFocalPlane()` */
+  static readonly GetOpticsFocalPlanePath = '/api/optics/focal-plane';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOpticsFocalPlane()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsFocalPlane$Response(params?: GetOpticsFocalPlane$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsFocalPlaneDto>>> {
+    return getOpticsFocalPlane(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOpticsFocalPlane$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsFocalPlane(params?: GetOpticsFocalPlane$Params, context?: HttpContext): Observable<Array<OpticsFocalPlaneDto>> {
+    return this.getOpticsFocalPlane$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsFocalPlaneDto>>): Array<OpticsFocalPlaneDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getOpticsBodyDiameter()` */
+  static readonly GetOpticsBodyDiameterPath = '/api/optics/body-diameter';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOpticsBodyDiameter()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsBodyDiameter$Response(params?: GetOpticsBodyDiameter$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OpticsBodyDiameterDto>>> {
+    return getOpticsBodyDiameter(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOpticsBodyDiameter$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOpticsBodyDiameter(params?: GetOpticsBodyDiameter$Params, context?: HttpContext): Observable<Array<OpticsBodyDiameterDto>> {
+    return this.getOpticsBodyDiameter$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OpticsBodyDiameterDto>>): Array<OpticsBodyDiameterDto> => r.body)
     );
   }
 

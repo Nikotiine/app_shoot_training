@@ -13,9 +13,10 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 
 import { FactoryDto } from '../../../core/api/models/factory-dto';
-import { FactoryService } from '../../../core/api/services/factory.service';
+
 import { FactoryFormComponent } from '../factory-form/factory-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
+import { FactoryService } from '../../../core/app/services/factory.service';
 
 @Component({
   selector: 'app-factory-table-list',
@@ -100,20 +101,13 @@ export class FactoryTableListComponent {
    * @param type FactoryType
    */
   private loadFactory(type: FactoryType): void {
-    this.factoryService
-      .getAllFactoryByType({
-        type: type
-      })
-      .subscribe({
-        next: (factories) => {
-          this.factories = factories;
-        },
-        error: (err) => {
-          this.customMessageService.errorMessage(
-            this._currentPageMessageHeader,
-            err.error.message
-          );
-        }
-      });
+    this.factoryService.getFactoriesByType(type).subscribe({
+      next: (factories) => {
+        this.factories = factories;
+      },
+      error: (err) => {
+        this.factoryService.errorMessage(err.error.message);
+      }
+    });
   }
 }
