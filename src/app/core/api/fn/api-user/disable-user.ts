@@ -6,14 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { WeaponTypeDto } from '../../models/weapon-type-dto';
+import { UserProfileDto } from '../../models/user-profile-dto';
 
-export interface GetAllActiveType$Params {
+export interface DisableUser$Params {
+  id: number;
 }
 
-export function getAllActiveType(http: HttpClient, rootUrl: string, params?: GetAllActiveType$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponTypeDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllActiveType.PATH, 'get');
+export function disableUser(http: HttpClient, rootUrl: string, params: DisableUser$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserProfileDto>>> {
+  const rb = new RequestBuilder(rootUrl, disableUser.PATH, 'delete');
   if (params) {
+    rb.query('id', params.id, {});
   }
 
   return http.request(
@@ -21,9 +23,9 @@ export function getAllActiveType(http: HttpClient, rootUrl: string, params?: Get
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<WeaponTypeDto>>;
+      return r as StrictHttpResponse<Array<UserProfileDto>>;
     })
   );
 }
 
-getAllActiveType.PATH = '/api/weapon/all-types';
+disableUser.PATH = '/api/user/user/disable';

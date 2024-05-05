@@ -1,7 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ActivationCodeDto } from './models/activation-code-dto';
-export { AdminDashboardDataInformation } from './models/admin-dashboard-data-information';
 export { AmmunitionCreateDto } from './models/ammunition-create-dto';
 export { AmmunitionDto } from './models/ammunition-dto';
 export { AmmunitionSpeedHistoryCreateDto } from './models/ammunition-speed-history-create-dto';
@@ -12,6 +11,7 @@ export { CaliberDto } from './models/caliber-dto';
 export { CredentialsDto } from './models/credentials-dto';
 export { FactoryCreateDto } from './models/factory-create-dto';
 export { FactoryDto } from './models/factory-dto';
+export { LastEntriesDto } from './models/last-entries-dto';
 export { NewPasswordRequestDto } from './models/new-password-request-dto';
 export { OpticsBodyDiameterDto } from './models/optics-body-diameter-dto';
 export { OpticsCreateDto } from './models/optics-create-dto';
@@ -22,6 +22,7 @@ export { OpticsUnitDto } from './models/optics-unit-dto';
 export { RefreshCodeRequest } from './models/refresh-code-request';
 export { ResponseMessage } from './models/response-message';
 export { Token } from './models/token';
+export { TotalCountDto } from './models/total-count-dto';
 export { TrainingSessionCreateDto } from './models/training-session-create-dto';
 export { TrainingSessionDto } from './models/training-session-dto';
 export { TrainingSessionGroupCreateDto } from './models/training-session-group-create-dto';

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { MapperAmminitionService } from '../api-service-mapper/mapper-amminition.service';
+import { MapperAmmunitionService } from '../api-service-mapper/mapper-ammunition.service';
 import { AmmunitionCreateDto } from '../../api/models/ammunition-create-dto';
 import { Observable } from 'rxjs';
 import { AmmunitionDto } from '../../api/models/ammunition-dto';
@@ -20,8 +20,8 @@ import { WeightViewModel } from '../model/WeightViewModel';
 })
 export class AmmunitionService {
   //************************************ MAPPERS ************************************
-  private readonly mapperAmmunitionService: MapperAmminitionService = inject(
-    MapperAmminitionService
+  private readonly mapperAmmunitionService: MapperAmmunitionService = inject(
+    MapperAmmunitionService
   );
   private readonly mapperFactoryService: MapperFactoryService =
     inject(MapperFactoryService);

@@ -27,7 +27,7 @@ export class WeaponService {
     inject(CustomMessageService);
   private readonly _currentServiceMessageHeader: string = 'Gestion des armes';
   public getAllWeapons(): Observable<WeaponDto[]> {
-    return this.mapperWeaponService.getAllWeapons();
+    return this.mapperWeaponService.getAllActiveWeapons();
   }
 
   public disableWeapon(id: number): Observable<WeaponDto[]> {

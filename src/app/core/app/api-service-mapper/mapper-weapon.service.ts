@@ -13,11 +13,11 @@ export class MapperWeaponService {
   private readonly apiWeaponService: ApiWeaponService =
     inject(ApiWeaponService);
 
-  public getAllWeapons(): Observable<WeaponDto[]> {
-    return this.apiWeaponService.getAllWeapon();
+  public getAllActiveWeapons(): Observable<WeaponDto[]> {
+    return this.apiWeaponService.getAllActiveWeapons();
   }
 
-  public disableWeapon(id: number) {
+  public disableWeapon(id: number): Observable<WeaponDto[]> {
     return this.apiWeaponService.disableWeapon({
       id: id
     });
@@ -36,10 +36,10 @@ export class MapperWeaponService {
   }
 
   public getWeaponCategories(): Observable<WeaponCategoryDto[]> {
-    return this.apiWeaponService.getAllActiveCategories();
+    return this.apiWeaponService.getAllCategories();
   }
 
   public getWeaponTypes(): Observable<WeaponTypeDto[]> {
-    return this.apiWeaponService.getAllActiveType();
+    return this.apiWeaponService.getAllType();
   }
 }

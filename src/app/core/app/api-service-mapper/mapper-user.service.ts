@@ -15,4 +15,17 @@ export class MapperUserService {
       body: profile
     });
   }
+  public editRole(profile: UserEditDto): Observable<UserProfileDto> {
+    return this.apiUserService.editProfile({
+      body: profile
+    });
+  }
+  public disable(id: number): Observable<UserProfileDto[]> {
+    return this.apiUserService.disableUser({
+      id: id
+    });
+  }
+  public getAll(): Observable<UserProfileDto[]> {
+    return this.apiUserService.allUsers();
+  }
 }

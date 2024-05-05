@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { WeaponDto } from '../../models/weapon-dto';
+import { TotalCountDto } from '../../models/total-count-dto';
 
-export interface GetAllWeapon$Params {
+export interface GetTotalCount$Params {
 }
 
-export function getAllWeapon(http: HttpClient, rootUrl: string, params?: GetAllWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllWeapon.PATH, 'get');
+export function getTotalCount(http: HttpClient, rootUrl: string, params?: GetTotalCount$Params, context?: HttpContext): Observable<StrictHttpResponse<TotalCountDto>> {
+  const rb = new RequestBuilder(rootUrl, getTotalCount.PATH, 'get');
   if (params) {
   }
 
@@ -21,9 +21,9 @@ export function getAllWeapon(http: HttpClient, rootUrl: string, params?: GetAllW
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<WeaponDto>>;
+      return r as StrictHttpResponse<TotalCountDto>;
     })
   );
 }
 
-getAllWeapon.PATH = '/api/weapon/all';
+getTotalCount.PATH = '/api/admin/total/counts';

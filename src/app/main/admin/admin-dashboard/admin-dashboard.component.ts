@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AdminService } from '../../../core/api/services/admin.service';
+
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
@@ -7,7 +7,10 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 import { DatePipe } from '@angular/common';
 import { Routing } from '../../../core/app/enum/Routing.enum';
 import { Router } from '@angular/router';
-import { AdminDashboardDataInformation } from '../../../core/api/models/admin-dashboard-data-information';
+import { AdminService } from '../../../core/app/services/admin.service';
+import { forkJoin } from 'rxjs';
+import { TotalCountDto } from '../../../core/api/models/total-count-dto';
+import { LastEntriesDto } from '../../../core/api/models/last-entries-dto';
 
 export interface AdminCardViewModel {
   title: string;
@@ -40,9 +43,12 @@ export class AdminDashboardComponent implements OnInit {
    * Charge les donnee a afficher sur le dashboard admin
    */
   private loadData(): void {
-    this.adminService.getDataForDashboard().subscribe({
+    forkJoin([
+      this.adminService.getTotalCount(),
+      this.adminService.getLastEntries()
+    ]).subscribe({
       next: (data) => {
-        this.createCardViewModel(data);
+        this.createCardViewModel(data[0], data[1]);
       },
       error: (err) => {
         this.customMessageService.errorMessage('Admin', err.error.message);
@@ -52,45 +58,51 @@ export class AdminDashboardComponent implements OnInit {
 
   /**
    * Creer les card du dashboard
-   * @param data AdminDashboardDataInformation
+
    */
-  private createCardViewModel(data: AdminDashboardDataInformation): void {
+  private createCardViewModel(
+    totals: TotalCountDto,
+    entries: LastEntriesDto
+  ): void {
     this.cards = [
       {
         title:
-          data.totalUsers > 1 ? 'Utilisateurs incrits' : 'Utilisateur incrit',
-        totalEntry: data.totalUsers,
-        nameOrFactory: data.lastUserEntry.lastName,
-        firstNameOrModel: data.lastUserEntry.firstName,
-        createdAt: data.lastUserEntry.createdAt,
+          totals.totalUsers > 1 ? 'Utilisateurs incrits' : 'Utilisateur incrit',
+        totalEntry: totals.totalUsers,
+        nameOrFactory: entries.lastUser.lastName,
+        firstNameOrModel: entries.lastUser.firstName,
+        createdAt: entries.lastUser.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_USERS_LIST
       },
       {
         title:
-          data.totalWeapons > 1 ? 'Armes enregistrées' : 'Arme enregistrée',
-        totalEntry: data.totalWeapons,
-        nameOrFactory: data.lastWeaponEntry.factory.name,
-        firstNameOrModel: data.lastWeaponEntry.model,
-        createdAt: data.lastWeaponEntry.createdAt,
+          totals.totalWeapons > 1 ? 'Armes enregistrées' : 'Arme enregistrée',
+        totalEntry: totals.totalWeapons,
+        nameOrFactory: entries.lastWeapon.factory.name,
+        firstNameOrModel: entries.lastWeapon.model,
+        createdAt: entries.lastWeapon.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_WEAPONS_LIST
       },
       {
         title:
-          data.totalOptics > 1
+          totals.totalOptics > 1
             ? 'Optiques enregistrées'
             : 'Optique enregistrée',
-        totalEntry: data.totalOptics,
-        nameOrFactory: data.lastOpticEntry.factory.name,
-        firstNameOrModel: data.lastOpticEntry.name,
-        createdAt: data.lastOpticEntry.createdAt,
+        totalEntry: totals.totalOptics,
+        nameOrFactory: entries.lastOptics.factory.name,
+        firstNameOrModel: entries.lastOptics.name,
+        createdAt: entries.lastOptics.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_OPTICS_LIST
       },
       {
-        title: 'Munitions enregistrées',
-        totalEntry: data.totalAmmunition ?? 0,
-        nameOrFactory: data.lastAmmunitionEntry?.factory.name,
-        firstNameOrModel: data.lastAmmunitionEntry?.name,
-        createdAt: data.lastAmmunitionEntry?.createdAt,
+        title:
+          totals.totalAmmunition > 1
+            ? 'Munitions enregistrées'
+            : 'Munition enregistrée',
+        totalEntry: totals.totalAmmunition,
+        nameOrFactory: entries.lastAmmunition.factory.name,
+        firstNameOrModel: entries.lastAmmunition.name,
+        createdAt: entries.lastAmmunition.createdAt,
         routerLink: Routing.ADMIN + '/' + Routing.ADMIN_AMMUNITION_LIST
       }
     ];

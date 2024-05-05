@@ -10,4 +10,4 @@ export { ApiUserWeaponSetupService } from './services/api-user-weapon-setup.serv
 export { RegistrationService } from './services/registration.service';
 export { ForgotPasswordService } from './services/forgot-password.service';
 export { AuthenticationService } from './services/authentication.service';
-export { AdminService } from './services/admin.service';
+export { ApiAdminService } from './services/api-admin.service';

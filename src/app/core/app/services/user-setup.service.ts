@@ -21,7 +21,7 @@ export class UserSetupService {
     inject(MapperOpticsService);
 
   public getAllWeapons(): Observable<WeaponDto[]> {
-    return this.mapperWeaponService.getAllWeapons();
+    return this.mapperWeaponService.getAllActiveWeapons();
   }
 
   public save(setup: UserWeaponSetupCreateDto): Observable<UserWeaponSetupDto> {

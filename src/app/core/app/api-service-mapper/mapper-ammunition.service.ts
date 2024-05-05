@@ -8,7 +8,7 @@ import { AmmunitionWeightDto } from '../../api/models/ammunition-weight-dto';
 @Injectable({
   providedIn: 'root'
 })
-export class MapperAmminitionService {
+export class MapperAmmunitionService {
   private readonly apiAmmunitionService: ApiAmmunitionService =
     inject(ApiAmmunitionService);
 

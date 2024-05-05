@@ -16,7 +16,7 @@ import { ApiUserWeaponSetupService } from './services/api-user-weapon-setup.serv
 import { RegistrationService } from './services/registration.service';
 import { ForgotPasswordService } from './services/forgot-password.service';
 import { AuthenticationService } from './services/authentication.service';
-import { AdminService } from './services/admin.service';
+import { ApiAdminService } from './services/api-admin.service';
 
 /**
  * Module that provides all services and configuration.
@@ -38,7 +38,7 @@ import { AdminService } from './services/admin.service';
     RegistrationService,
     ForgotPasswordService,
     AuthenticationService,
-    AdminService,
+    ApiAdminService,
     ApiConfiguration
   ],
 })

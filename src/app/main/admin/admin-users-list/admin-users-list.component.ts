@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AdminService } from '../../../core/api/services/admin.service';
+
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -14,6 +14,7 @@ import { CustomMessageService } from '../../../core/app/services/custom-message.
 import { RouterLink } from '@angular/router';
 import { Routing } from '../../../core/app/enum/Routing.enum';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
+import { AdminService } from '../../../core/app/services/admin.service';
 
 @Component({
   selector: 'app-admin-users-list',
@@ -98,44 +99,13 @@ export class AdminUsersListComponent implements OnInit {
   public submitChangeRole(): void {
     if (this._selectedUser) {
       this._selectedUser.role = this.form.controls['role'].value;
-      this.adminService
-        .editUserRole({
-          body: this._selectedUser
-        })
-        .subscribe({
-          next: (res) => {
-            this.users = res;
-            this.showChangeRoleForm = !this.showChangeRoleForm;
-            this.customMessageService.successMessage(
-              this._currentPageMessageHeader,
-              'Role utilisateur modifier'
-            );
-          },
-          error: (err) => {
-            this.customMessageService.errorMessage(
-              this._currentPageMessageHeader,
-              err.error.message
-            );
-          }
-        });
-    }
-  }
-
-  /**
-   * Soumission du formulaire de desactivation du profil
-   * @param id
-   */
-  private disableUser(id: number): void {
-    this.adminService
-      .disableUser({
-        id: id
-      })
-      .subscribe({
+      this.adminService.editUserRole(this._selectedUser).subscribe({
         next: (res) => {
-          this.users = res;
+          this.updateUserList(res);
+          this.showChangeRoleForm = !this.showChangeRoleForm;
           this.customMessageService.successMessage(
             this._currentPageMessageHeader,
-            'Utilisateur desactivé'
+            'Role utilisateur modifié'
           );
         },
         error: (err) => {
@@ -145,6 +115,29 @@ export class AdminUsersListComponent implements OnInit {
           );
         }
       });
+    }
+  }
+
+  /**
+   * Soumission du formulaire de desactivation du profil
+   * @param id
+   */
+  private disableUser(id: number): void {
+    this.adminService.disableUser(id).subscribe({
+      next: (res) => {
+        this.users = res;
+        this.customMessageService.successMessage(
+          this._currentPageMessageHeader,
+          'Utilisateur desactivé'
+        );
+      },
+      error: (err) => {
+        this.customMessageService.errorMessage(
+          this._currentPageMessageHeader,
+          err.error.message
+        );
+      }
+    });
   }
 
   /**
@@ -178,5 +171,11 @@ export class AdminUsersListComponent implements OnInit {
    */
   private getUserById(id: number): UserProfileDto {
     return <UserProfileDto>this.users.find((user) => user.id === id);
+  }
+
+  private updateUserList(user: UserProfileDto) {
+    const index = this.users.findIndex((user) => user.id === user.id);
+    this.users.splice(index, 1);
+    this.users.push(user);
   }
 }

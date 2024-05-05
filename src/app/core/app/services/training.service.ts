@@ -16,7 +16,7 @@ import {
 } from '../model/TrainingSessionViewModel.model';
 import { TrainingSessionGroupDto } from '../../api/models/training-session-group-dto';
 import { ColorService } from './color.service';
-import { MapperAmminitionService } from '../api-service-mapper/mapper-amminition.service';
+import { MapperAmmunitionService } from '../api-service-mapper/mapper-ammunition.service';
 import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
 
 @Injectable({
@@ -29,8 +29,8 @@ export class TrainingService {
   private readonly mapperUserSetupService: MapperUserSetupService = inject(
     MapperUserSetupService
   );
-  private readonly mapperAmmunitionService: MapperAmminitionService = inject(
-    MapperAmminitionService
+  private readonly mapperAmmunitionService: MapperAmmunitionService = inject(
+    MapperAmmunitionService
   );
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);

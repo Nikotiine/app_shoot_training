@@ -8,11 +8,11 @@ import { RequestBuilder } from '../../request-builder';
 
 import { WeaponDto } from '../../models/weapon-dto';
 
-export interface GetActiveAllWeapon$Params {
+export interface GetAllWeapons$Params {
 }
 
-export function getActiveAllWeapon(http: HttpClient, rootUrl: string, params?: GetActiveAllWeapon$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
-  const rb = new RequestBuilder(rootUrl, getActiveAllWeapon.PATH, 'get');
+export function getAllWeapons(http: HttpClient, rootUrl: string, params?: GetAllWeapons$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WeaponDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllWeapons.PATH, 'get');
   if (params) {
   }
 
@@ -26,4 +26,4 @@ export function getActiveAllWeapon(http: HttpClient, rootUrl: string, params?: G
   );
 }
 
-getActiveAllWeapon.PATH = '/api/weapon/active';
+getAllWeapons.PATH = '/api/weapon/all';
