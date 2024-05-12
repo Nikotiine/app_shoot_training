@@ -14,10 +14,11 @@ import {
   TrainingSessionTableViewModel,
   TrainingSessionViewModel
 } from '../model/TrainingSessionViewModel.model';
-import { TrainingSessionGroupDto } from '../../api/models/training-session-group-dto';
 import { ColorService } from './color.service';
 import { MapperAmmunitionService } from '../api-service-mapper/mapper-ammunition.service';
 import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
+import { CustomConfirmationService } from './custom-confirmation.service';
+import { TrainingSessionGroupCreateDto } from '../../api/models/training-session-group-create-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -35,16 +36,30 @@ export class TrainingService {
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
   private readonly colorService: ColorService = inject(ColorService);
+  private readonly customConfirmationService: CustomConfirmationService =
+    inject(CustomConfirmationService);
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
 
+  /**
+   * Retroune les setup de l'utilisateur connecté
+   * @param id du user
+   */
   public getUserSetups(id: number): Observable<UserWeaponSetupDto[]> {
     return this.mapperUserSetupService.getAllSetupByUser(id);
   }
 
+  /**
+   * Retroune les munition disponible par rapport au calibre choisi
+   * @param id
+   */
   public getAmmunitionByCaliber(id: number): Observable<AmmunitionDto[]> {
     return this.mapperAmmunitionService.getAmmunitionByCaliber(id);
   }
 
+  /**
+   * Save de la training session
+   * @param trainingSession
+   */
   public saveTrainingSession(
     trainingSession: TrainingSessionCreateDto
   ): Observable<TrainingSessionDto> {
@@ -53,29 +68,51 @@ export class TrainingService {
     );
   }
 
-  public getTrainingSessionById(id: number): Observable<TrainingSessionDto[]> {
+  /**
+   * Desactivation de la training session
+   * @param id
+   */
+  public disableTrainingSession(id: number): Observable<TrainingSessionDto[]> {
+    return this.mapperTrainingSessionService.delete(id);
+  }
+
+  /**
+   * Retroune toutes les sessions de l'utlisateur connecté
+   * @param id de l utilisateur
+   */
+  public getActiveTrainingSessionById(
+    id: number
+  ): Observable<TrainingSessionDto[]> {
+    return this.mapperTrainingSessionService.getAllActiveSessionByUser(id);
+  }
+
+  /**
+   * Retourne toutes les sessions actives ou non
+   * @param id de l'utilisateur
+   */
+  public getAllTrainingSessions(id: number): Observable<TrainingSessionDto[]> {
     return this.mapperTrainingSessionService.getAllSessionByUser(id);
   }
 
   // ***************** Affichage des different message de la page ************
-  public successCreateMessage(): void {
+  // Message de success
+  public successMessage(message: string): void {
     this.customMessageService.successMessage(
       this._currentPageMessageHeader,
-      'Session Ajoutée'
+      message
     );
   }
 
-  public successUpdateMessage(): void {
-    this.customMessageService.successMessage(
-      this._currentPageMessageHeader,
-      'Session Modifie'
-    );
-  }
-
+  // Message d'info quand le formulaire de vitesse ou groupement est sauvegarder en cache
   public savedForm(header: string): void {
     this.customMessageService.infoMessage(header, 'Donnée enregistrées');
   }
 
+  public clearSpeedHistoryForm(header: string): void {
+    this.customMessageService.warningMessage(header, 'Données effacée');
+  }
+
+  // Message d'erreur
   public errorMessage(message: string): void {
     this.customMessageService.errorMessage(
       this._currentPageMessageHeader,
@@ -198,7 +235,8 @@ export class TrainingService {
         setup: this.createSetupName(session.setup),
         position: this.getPositionLabel(session.position),
         date: new Date(session.date),
-        ammunition: this.createAmmunitionName(session.ammunition)
+        ammunition: this.createAmmunitionName(session.ammunition),
+        active: session.active
       };
     });
   }
@@ -234,7 +272,8 @@ export class TrainingService {
       groups: this.createSessionGroups(
         session.trainingSessionGroups,
         bestAverage
-      )
+      ),
+      active: session.active
     };
   }
 
@@ -262,7 +301,7 @@ export class TrainingService {
    * @param positionApiEnum
    */
   private getPositionLabel(positionApiEnum: string | undefined): string {
-    let position = '';
+    let position: string;
     switch (positionApiEnum) {
       case TrainingPosition.LYING:
         position = 'Couché';
@@ -307,7 +346,7 @@ export class TrainingService {
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    */
   private getBestScore(
-    trainingSessionGroups: TrainingSessionGroupDto[]
+    trainingSessionGroups: TrainingSessionGroupCreateDto[]
   ): number {
     let score: number = 0;
     for (const sessionGroup of trainingSessionGroups) {
@@ -328,7 +367,7 @@ export class TrainingService {
    * permet de comparer les different groupement et attribue une couleur en fontion d'un % d'ecart
    */
   private createSessionGroups(
-    trainingSessionGroups: TrainingSessionGroupDto[],
+    trainingSessionGroups: TrainingSessionGroupCreateDto[],
     bestAverageGap: number
   ): TrainingGroup[] {
     return trainingSessionGroups.map((group) => {
@@ -356,7 +395,7 @@ export class TrainingService {
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    */
   private getBestAverage(
-    trainingSessionGroups: TrainingSessionGroupDto[]
+    trainingSessionGroups: TrainingSessionGroupCreateDto[]
   ): number {
     let averageGap = null;
     for (const session of trainingSessionGroups) {
@@ -370,5 +409,23 @@ export class TrainingService {
       }
     }
     return averageGap ? averageGap : 0;
+  }
+
+  public getSessionById(id: number): Observable<TrainingSessionDto> {
+    return this.mapperTrainingSessionService.getSessionById(id);
+  }
+
+  public async confirmation(event: Event, message: string): Promise<boolean> {
+    return this.customConfirmationService.confirm(
+      event,
+      message,
+      this._currentPageMessageHeader
+    );
+  }
+
+  public updateTrainingSession(
+    session: TrainingSessionDto
+  ): Observable<TrainingSessionDto> {
+    return this.mapperTrainingSessionService.update(session);
   }
 }

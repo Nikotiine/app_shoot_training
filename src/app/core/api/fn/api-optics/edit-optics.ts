@@ -28,4 +28,4 @@ export function editOptics(http: HttpClient, rootUrl: string, params: EditOptics
   );
 }
 
-editOptics.PATH = '/api/optics/edit';
+editOptics.PATH = '/api/optics/admin/edit';

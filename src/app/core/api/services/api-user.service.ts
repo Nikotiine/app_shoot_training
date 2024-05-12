@@ -29,31 +29,6 @@ export class ApiUserService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `editUserRole()` */
-  static readonly EditUserRolePath = '/api/user/user/edit-role';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `editUserRole()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  editUserRole$Response(params: EditUserRole$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
-    return editUserRole(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `editUserRole$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  editUserRole(params: EditUserRole$Params, context?: HttpContext): Observable<UserProfileDto> {
-    return this.editUserRole$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
-    );
-  }
-
   /** Path part for operation `editProfile()` */
   static readonly EditProfilePath = '/api/user/edit';
 
@@ -75,6 +50,31 @@ export class ApiUserService extends BaseService {
    */
   editProfile(params: EditProfile$Params, context?: HttpContext): Observable<UserProfileDto> {
     return this.editProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
+    );
+  }
+
+  /** Path part for operation `editUserRole()` */
+  static readonly EditUserRolePath = '/api/user/admin/edit-role';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `editUserRole()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editUserRole$Response(params: EditUserRole$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileDto>> {
+    return editUserRole(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `editUserRole$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  editUserRole(params: EditUserRole$Params, context?: HttpContext): Observable<UserProfileDto> {
+    return this.editUserRole$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserProfileDto>): UserProfileDto => r.body)
     );
   }
@@ -105,7 +105,7 @@ export class ApiUserService extends BaseService {
   }
 
   /** Path part for operation `disableUser()` */
-  static readonly DisableUserPath = '/api/user/user/disable';
+  static readonly DisableUserPath = '/api/user/admin/disable';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

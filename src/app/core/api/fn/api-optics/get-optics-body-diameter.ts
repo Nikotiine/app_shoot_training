@@ -26,4 +26,4 @@ export function getOpticsBodyDiameter(http: HttpClient, rootUrl: string, params?
   );
 }
 
-getOpticsBodyDiameter.PATH = '/api/optics/body-diameter';
+getOpticsBodyDiameter.PATH = '/api/optics/body/diameter';

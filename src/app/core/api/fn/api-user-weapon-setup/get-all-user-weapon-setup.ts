@@ -28,4 +28,4 @@ export function getAllUserWeaponSetup(http: HttpClient, rootUrl: string, params:
   );
 }
 
-getAllUserWeaponSetup.PATH = '/api/setup/by-user';
+getAllUserWeaponSetup.PATH = '/api/setup/by/user';

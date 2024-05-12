@@ -26,4 +26,4 @@ export function getOpticsOutletDiameter(http: HttpClient, rootUrl: string, param
   );
 }
 
-getOpticsOutletDiameter.PATH = '/api/optics/outlet-diameter';
+getOpticsOutletDiameter.PATH = '/api/optics/outlet/diameter';

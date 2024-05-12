@@ -11,9 +11,9 @@ export interface TrainingSessionCreateDto {
   position?: 'STANDING' | 'SEATED' | 'LYING' | 'KNEELING';
   pressure?: number;
   setup: UserWeaponSetupDto;
-  speedHistories?: Array<AmmunitionSpeedHistoryCreateDto>;
+  speedHistories: Array<AmmunitionSpeedHistoryCreateDto>;
   support?: 'BAG' | 'BIPOD' | 'HAND';
   temperature?: number;
-  trainingSessionGroups?: Array<TrainingSessionGroupCreateDto>;
+  trainingSessionGroups: Array<TrainingSessionGroupCreateDto>;
   windSpeed?: number;
 }

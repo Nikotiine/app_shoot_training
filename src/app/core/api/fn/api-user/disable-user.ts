@@ -28,4 +28,4 @@ export function disableUser(http: HttpClient, rootUrl: string, params: DisableUs
   );
 }
 
-disableUser.PATH = '/api/user/user/disable';
+disableUser.PATH = '/api/user/admin/disable';

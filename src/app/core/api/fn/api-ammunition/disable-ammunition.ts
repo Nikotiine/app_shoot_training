@@ -28,4 +28,4 @@ export function disableAmmunition(http: HttpClient, rootUrl: string, params: Dis
   );
 }
 
-disableAmmunition.PATH = '/api/ammunition/delete';
+disableAmmunition.PATH = '/api/ammunition/admin/delete';

@@ -28,4 +28,4 @@ export function editCaliber(http: HttpClient, rootUrl: string, params: EditCalib
   );
 }
 
-editCaliber.PATH = '/api/caliber/edit';
+editCaliber.PATH = '/api/caliber/admin/edit';

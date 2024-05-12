@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -11,7 +18,7 @@ import { ButtonModule } from 'primeng/button';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { AmmunitionSpeedHistoryCreateDto } from '../../../core/api/models/ammunition-speed-history-create-dto';
-import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
+import { TrainingService } from '../../../core/app/services/training.service';
 
 @Component({
   selector: 'app-ammunition-speed-histories-form',
@@ -20,14 +27,14 @@ import { CustomConfirmationService } from '../../../core/app/services/custom-con
   templateUrl: './ammunition-speed-histories-form.component.html',
   styleUrl: './ammunition-speed-histories-form.component.scss'
 })
-export class AmmunitionSpeedHistoriesFormComponent {
+export class AmmunitionSpeedHistoriesFormComponent implements OnInit {
   // Private field
   private fb: FormBuilder = inject(FormBuilder);
   private _weapon!: WeaponDto;
   private _ammunition!: AmmunitionDto;
-  private readonly customConfirmationService: CustomConfirmationService =
-    inject(CustomConfirmationService);
-
+  private readonly trainingService: TrainingService = inject(TrainingService);
+  private _isEditSpeedHistoriesArray: boolean = false;
+  private readonly _currentComponentHeader: string = 'Vitesse des munitions';
   // Public field
   public form: FormGroup = this.fb.group({
     speedHistories: this.fb.array([])
@@ -35,7 +42,6 @@ export class AmmunitionSpeedHistoriesFormComponent {
   @Input() set ammunition(ammunition: AmmunitionDto | null) {
     if (ammunition) {
       this._ammunition = ammunition;
-      this.addNewSpeed();
     }
   }
   @Input() set weapon(weapon: WeaponDto | null) {
@@ -48,6 +54,7 @@ export class AmmunitionSpeedHistoriesFormComponent {
   ) {
     if (speedHistories) {
       this.autoCompleteForm(speedHistories);
+      this._isEditSpeedHistoriesArray = speedHistories.length > 0;
     }
   }
   @Output() save: EventEmitter<AmmunitionSpeedHistoryCreateDto[]> =
@@ -56,7 +63,11 @@ export class AmmunitionSpeedHistoriesFormComponent {
   @Output() cancelSpeedHistories: EventEmitter<void> = new EventEmitter<void>();
 
   //************************************ PUBLIC METHODS ************************************
-
+  public ngOnInit(): void {
+    if (!this._isEditSpeedHistoriesArray) {
+      this.addNewSpeed();
+    }
+  }
   /**
    * Creation du Array pour les speedHistories
    */
@@ -87,6 +98,7 @@ export class AmmunitionSpeedHistoriesFormComponent {
   }
 
   public sendSpeedHistories(): void {
+    this.trainingService.savedForm(this._currentComponentHeader);
     this.save.emit(this.form.controls['speedHistories'].value);
   }
 
@@ -95,22 +107,27 @@ export class AmmunitionSpeedHistoriesFormComponent {
    * @param event Event
    */
   public async confirm(event: Event): Promise<void> {
-    const confirmed = await this.customConfirmationService.confirm(
-      event,
-      'Effacer toutes les vitesses ?',
-      'Vitesse des munition'
-    );
-    if (confirmed) {
+    if (this.speedArray.length === 0) {
       this.cancel();
+    } else {
+      const confirmed = await this.trainingService.confirmation(
+        event,
+        'Effacer toutes les vitesses ?'
+      );
+      if (confirmed) {
+        this.speedArray.clear();
+        this.trainingService.clearSpeedHistoryForm(
+          this._currentComponentHeader
+        );
+        this.save.emit(this.form.controls['speedHistories'].value);
+      }
     }
   }
 
-  //************************************ PRIVATE METHODS ************************************
-
-  private cancel(): void {
-    this.speedArray.clear();
+  public cancel(): void {
     this.cancelSpeedHistories.emit();
   }
+  //************************************ PRIVATE METHODS ************************************
 
   private autoCompleteForm(speedHistories: AmmunitionSpeedHistoryCreateDto[]) {
     for (const speed of speedHistories) {

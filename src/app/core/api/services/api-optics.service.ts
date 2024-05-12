@@ -44,7 +44,7 @@ export class ApiOpticsService extends BaseService {
   }
 
   /** Path part for operation `editOptics()` */
-  static readonly EditOpticsPath = '/api/optics/edit';
+  static readonly EditOpticsPath = '/api/optics/admin/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -119,7 +119,7 @@ export class ApiOpticsService extends BaseService {
   }
 
   /** Path part for operation `getOpticsOutletDiameter()` */
-  static readonly GetOpticsOutletDiameterPath = '/api/optics/outlet-diameter';
+  static readonly GetOpticsOutletDiameterPath = '/api/optics/outlet/diameter';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -144,7 +144,7 @@ export class ApiOpticsService extends BaseService {
   }
 
   /** Path part for operation `getOpticsFocalPlane()` */
-  static readonly GetOpticsFocalPlanePath = '/api/optics/focal-plane';
+  static readonly GetOpticsFocalPlanePath = '/api/optics/focal/plane';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -169,7 +169,7 @@ export class ApiOpticsService extends BaseService {
   }
 
   /** Path part for operation `getOpticsBodyDiameter()` */
-  static readonly GetOpticsBodyDiameterPath = '/api/optics/body-diameter';
+  static readonly GetOpticsBodyDiameterPath = '/api/optics/body/diameter';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -244,7 +244,7 @@ export class ApiOpticsService extends BaseService {
   }
 
   /** Path part for operation `disableOptics()` */
-  static readonly DisableOpticsPath = '/api/optics/delete';
+  static readonly DisableOpticsPath = '/api/optics/admin/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

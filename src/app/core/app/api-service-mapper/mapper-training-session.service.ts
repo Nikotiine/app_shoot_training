@@ -20,9 +20,35 @@ export class MapperTrainingSessionService {
     });
   }
 
-  public getAllSessionByUser(userId: number): Observable<TrainingSessionDto[]> {
-    return this.apiTrainingSessionService.getTrainingSessionByUserId({
+  public getAllActiveSessionByUser(
+    userId: number
+  ): Observable<TrainingSessionDto[]> {
+    return this.apiTrainingSessionService.getActiveTrainingSessionByUserId({
       id: userId
+    });
+  }
+
+  public delete(id: number): Observable<TrainingSessionDto[]> {
+    return this.apiTrainingSessionService.deleteTrainingSession({
+      id: id
+    });
+  }
+
+  public getAllSessionByUser(id: number): Observable<TrainingSessionDto[]> {
+    return this.apiTrainingSessionService.getAllTrainingSessionByUserId({
+      id: id
+    });
+  }
+
+  public getSessionById(id: number): Observable<TrainingSessionDto> {
+    return this.apiTrainingSessionService.getTrainingSessionById({
+      id: id
+    });
+  }
+
+  public update(session: TrainingSessionDto): Observable<TrainingSessionDto> {
+    return this.apiTrainingSessionService.updateTrainingSession({
+      body: session
     });
   }
 }

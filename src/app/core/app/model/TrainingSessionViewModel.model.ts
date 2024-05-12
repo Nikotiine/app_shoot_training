@@ -5,6 +5,7 @@ export interface TrainingSessionTableViewModel {
   distance: number | undefined;
   distanceSeverity: string;
   ammunition: string;
+  active: boolean;
   date: Date;
 }
 export interface TrainingSessionViewModel

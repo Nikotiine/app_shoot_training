@@ -30,7 +30,7 @@ export class ApiFactoryService extends BaseService {
   }
 
   /** Path part for operation `editFactory()` */
-  static readonly EditFactoryPath = '/api/factory/edit';
+  static readonly EditFactoryPath = '/api/factory/admin/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -80,7 +80,7 @@ export class ApiFactoryService extends BaseService {
   }
 
   /** Path part for operation `getAllFactoryByType()` */
-  static readonly GetAllFactoryByTypePath = '/api/factory/all-by-type';
+  static readonly GetAllFactoryByTypePath = '/api/factory/by/type';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +105,7 @@ export class ApiFactoryService extends BaseService {
   }
 
   /** Path part for operation `disableFactory()` */
-  static readonly DisableFactoryPath = '/api/factory/delete';
+  static readonly DisableFactoryPath = '/api/factory/admin/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

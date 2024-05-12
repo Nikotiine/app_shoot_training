@@ -1,13 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-  signal,
-  WritableSignal
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -16,7 +7,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { TrainingSessionGroupCreateDto } from '../../../../core/api/models/training-session-group-create-dto';
 import { TableModule } from 'primeng/table';
-import { CustomConfirmationService } from '../../../../core/app/services/custom-confirmation.service';
+
+import { TrainingService } from '../../../../core/app/services/training.service';
 
 @Component({
   selector: 'app-group-form',
@@ -35,8 +27,7 @@ import { CustomConfirmationService } from '../../../../core/app/services/custom-
 })
 export class GroupFormComponent {
   // Private field
-  private readonly customConfirmationService: CustomConfirmationService =
-    inject(CustomConfirmationService);
+  private readonly trainingService: TrainingService = inject(TrainingService);
 
   // Public field
   public groups: TrainingSessionGroupCreateDto[] = [];
@@ -55,7 +46,6 @@ export class GroupFormComponent {
       this.groups = groups;
     }
   }
-  public $title: WritableSignal<string> = signal('titre');
 
   //************************************ PUBLIC METHODS ************************************
 
@@ -74,6 +64,7 @@ export class GroupFormComponent {
   }
 
   public closeAndEmitGroups(): void {
+    this.trainingService.savedForm('Resultats et groupememnts');
     this.sessionGroup.emit(this.groups);
   }
 
@@ -83,10 +74,9 @@ export class GroupFormComponent {
    * @param index
    */
   public async confirm(event: Event, index: number): Promise<void> {
-    const confirmed = await this.customConfirmationService.confirm(
+    const confirmed = await this.trainingService.confirmation(
       event,
-      'Supprimer ce resultat ?',
-      'Resultats et groupememnts'
+      'Supprimer ce resultat ?'
     );
     if (confirmed) {
       this.groups.splice(index, 1);

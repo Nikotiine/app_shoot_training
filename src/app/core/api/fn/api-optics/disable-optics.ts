@@ -28,4 +28,4 @@ export function disableOptics(http: HttpClient, rootUrl: string, params: Disable
   );
 }
 
-disableOptics.PATH = '/api/optics/delete';
+disableOptics.PATH = '/api/optics/admin/delete';

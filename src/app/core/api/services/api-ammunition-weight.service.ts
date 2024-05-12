@@ -32,7 +32,7 @@ export class ApiAmmunitionWeightService extends BaseService {
   }
 
   /** Path part for operation `editWeight()` */
-  static readonly EditWeightPath = '/api/weight/edit';
+  static readonly EditWeightPath = '/api/weight/admin/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -82,7 +82,7 @@ export class ApiAmmunitionWeightService extends BaseService {
   }
 
   /** Path part for operation `getWeightByCaliber()` */
-  static readonly GetWeightByCaliberPath = '/api/weight/by-caliber';
+  static readonly GetWeightByCaliberPath = '/api/weight/by/caliber';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -132,7 +132,7 @@ export class ApiAmmunitionWeightService extends BaseService {
   }
 
   /** Path part for operation `disableAmmunitionWeight()` */
-  static readonly DisableAmmunitionWeightPath = '/api/weight/delete';
+  static readonly DisableAmmunitionWeightPath = '/api/weight/admin/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

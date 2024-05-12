@@ -26,4 +26,4 @@ export function getOpticsFocalPlane(http: HttpClient, rootUrl: string, params?: 
   );
 }
 
-getOpticsFocalPlane.PATH = '/api/optics/focal-plane';
+getOpticsFocalPlane.PATH = '/api/optics/focal/plane';

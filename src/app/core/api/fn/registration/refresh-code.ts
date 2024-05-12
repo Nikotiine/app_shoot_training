@@ -29,4 +29,4 @@ export function refreshCode(http: HttpClient, rootUrl: string, params: RefreshCo
   );
 }
 
-refreshCode.PATH = '/api/registration/refresh-code';
+refreshCode.PATH = '/api/registration/code/refresh';

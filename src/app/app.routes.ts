@@ -98,6 +98,10 @@ export const routes: Routes = [
           {
             path: Routing.TRAINING_SESSION_LIST,
             component: SessionListComponent
+          },
+          {
+            path: Routing.TRAINING_SESSION_EDIT + '/:id',
+            component: SessionFormComponent
           }
         ]
       }

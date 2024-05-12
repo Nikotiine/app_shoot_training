@@ -32,7 +32,7 @@ export class ApiAmmunitionService extends BaseService {
   }
 
   /** Path part for operation `editAmmunition()` */
-  static readonly EditAmmunitionPath = '/api/ammunition/edit';
+  static readonly EditAmmunitionPath = '/api/ammunition/admin/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -132,7 +132,7 @@ export class ApiAmmunitionService extends BaseService {
   }
 
   /** Path part for operation `disableAmmunition()` */
-  static readonly DisableAmmunitionPath = '/api/ammunition/delete';
+  static readonly DisableAmmunitionPath = '/api/ammunition/admin/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

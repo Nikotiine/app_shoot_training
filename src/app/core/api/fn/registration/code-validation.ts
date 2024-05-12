@@ -29,4 +29,4 @@ export function codeValidation(http: HttpClient, rootUrl: string, params: CodeVa
   );
 }
 
-codeValidation.PATH = '/api/registration/validation-code';
+codeValidation.PATH = '/api/registration/code/validation';

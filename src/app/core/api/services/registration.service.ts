@@ -27,31 +27,6 @@ export class RegistrationService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `codeValidation()` */
-  static readonly CodeValidationPath = '/api/registration/validation-code';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `codeValidation()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  codeValidation$Response(params: CodeValidation$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
-    return codeValidation(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `codeValidation$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  codeValidation(params: CodeValidation$Params, context?: HttpContext): Observable<ResponseMessage> {
-    return this.codeValidation$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
-    );
-  }
-
   /** Path part for operation `register()` */
   static readonly RegisterPath = '/api/registration/register';
 
@@ -77,8 +52,33 @@ export class RegistrationService extends BaseService {
     );
   }
 
+  /** Path part for operation `codeValidation()` */
+  static readonly CodeValidationPath = '/api/registration/code/validation';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `codeValidation()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  codeValidation$Response(params: CodeValidation$Params, context?: HttpContext): Observable<StrictHttpResponse<ResponseMessage>> {
+    return codeValidation(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `codeValidation$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  codeValidation(params: CodeValidation$Params, context?: HttpContext): Observable<ResponseMessage> {
+    return this.codeValidation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ResponseMessage>): ResponseMessage => r.body)
+    );
+  }
+
   /** Path part for operation `refreshCode()` */
-  static readonly RefreshCodePath = '/api/registration/refresh-code';
+  static readonly RefreshCodePath = '/api/registration/code/refresh';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

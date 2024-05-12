@@ -28,4 +28,4 @@ export function editFactory(http: HttpClient, rootUrl: string, params: EditFacto
   );
 }
 
-editFactory.PATH = '/api/factory/edit';
+editFactory.PATH = '/api/factory/admin/edit';

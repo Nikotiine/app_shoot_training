@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CaliberDto } from '../../models/caliber-dto';
+import { TrainingSessionDto } from '../../models/training-session-dto';
 
-export interface DisableCaliber$Params {
+export interface GetTrainingSessionById$Params {
   id: number;
 }
 
-export function disableCaliber(http: HttpClient, rootUrl: string, params: DisableCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CaliberDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableCaliber.PATH, 'delete');
+export function getTrainingSessionById(http: HttpClient, rootUrl: string, params: GetTrainingSessionById$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionDto>> {
+  const rb = new RequestBuilder(rootUrl, getTrainingSessionById.PATH, 'get');
   if (params) {
     rb.query('id', params.id, {});
   }
@@ -23,9 +23,9 @@ export function disableCaliber(http: HttpClient, rootUrl: string, params: Disabl
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CaliberDto>>;
+      return r as StrictHttpResponse<TrainingSessionDto>;
     })
   );
 }
 
-disableCaliber.PATH = '/api/caliber/admin/delete';
+getTrainingSessionById.PATH = '/api/training/session/find/one';

@@ -10,6 +10,8 @@ export class ColorService {
   public static readonly LIGHT_BLUE_COLOR = '#36d1dc';
   public static readonly ORANGE_COLOR = '#f1880d';
   public static readonly RED_COLOR = '#ef5959';
+  public static readonly BLACK_COLOR = '#070707';
+  public static readonly GRAY_COLOR = '#cbcbcb';
 
   /**
    * Retroune la couleur des tag pour les diffentes distances
@@ -78,5 +80,9 @@ export class ColorService {
       color = ColorService.RED_COLOR;
     }
     return color;
+  }
+
+  public getActiveColor(active: boolean): string {
+    return active ? ColorService.BLACK_COLOR : ColorService.GRAY_COLOR;
   }
 }

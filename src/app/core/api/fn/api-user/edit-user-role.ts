@@ -28,4 +28,4 @@ export function editUserRole(http: HttpClient, rootUrl: string, params: EditUser
   );
 }
 
-editUserRole.PATH = '/api/user/user/edit-role';
+editUserRole.PATH = '/api/user/admin/edit-role';

@@ -1,11 +1,11 @@
 export { ApiAmmunitionWeightService } from './services/api-ammunition-weight.service';
 export { ApiWeaponService } from './services/api-weapon.service';
+export { ApiTrainingSessionService } from './services/api-training-session.service';
 export { ApiOpticsService } from './services/api-optics.service';
 export { ApiFactoryService } from './services/api-factory.service';
 export { ApiCaliberService } from './services/api-caliber.service';
 export { ApiAmmunitionService } from './services/api-ammunition.service';
 export { ApiUserService } from './services/api-user.service';
-export { ApiTrainingSessionService } from './services/api-training-session.service';
 export { ApiUserWeaponSetupService } from './services/api-user-weapon-setup.service';
 export { RegistrationService } from './services/registration.service';
 export { ForgotPasswordService } from './services/forgot-password.service';

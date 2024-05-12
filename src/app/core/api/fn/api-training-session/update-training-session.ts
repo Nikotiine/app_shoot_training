@@ -6,16 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CaliberDto } from '../../models/caliber-dto';
+import { TrainingSessionDto } from '../../models/training-session-dto';
 
-export interface DisableCaliber$Params {
-  id: number;
+export interface UpdateTrainingSession$Params {
+      body: TrainingSessionDto
 }
 
-export function disableCaliber(http: HttpClient, rootUrl: string, params: DisableCaliber$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CaliberDto>>> {
-  const rb = new RequestBuilder(rootUrl, disableCaliber.PATH, 'delete');
+export function updateTrainingSession(http: HttpClient, rootUrl: string, params: UpdateTrainingSession$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionDto>> {
+  const rb = new RequestBuilder(rootUrl, updateTrainingSession.PATH, 'put');
   if (params) {
-    rb.query('id', params.id, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -23,9 +23,9 @@ export function disableCaliber(http: HttpClient, rootUrl: string, params: Disabl
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CaliberDto>>;
+      return r as StrictHttpResponse<TrainingSessionDto>;
     })
   );
 }
 
-disableCaliber.PATH = '/api/caliber/admin/delete';
+updateTrainingSession.PATH = '/api/training/session/edit';

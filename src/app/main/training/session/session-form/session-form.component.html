@@ -31,7 +31,7 @@
             [style]="{'width':'100%'}"
             formControlName="ammunition"
             optionValue="id"
-            (onChange)="onChangeAmmunition()"
+            (onFocus)="onChangeAmmunition($event)"
             placeholder="Selectionnez une munition"></p-dropdown>
         </div>
       </div>
@@ -125,13 +125,13 @@
       </div>
       <div class="field col-12 flex justify-content-center">
         <p-button
-          label="Ajouter resultats"
+          label="{{ $speedHistoriesSaved().length > 0 ? 'Modifier groupement' : 'Ajouter groupement' }}"
           [disabled]="$ammunitionNotSelected()"
           [severity]="'info'"
           class="mr-3"
           (onClick)="showSessionGroupForm()"></p-button>
         <p-button
-          label="Enregister vitesse"
+          label="{{ $speedHistoriesSaved().length > 0 ? 'Modifier les vitesses': 'Ajouter vitesse' }}"
           [disabled]="$ammunitionNotSelected()"
           [severity]="'info'"
           class=""

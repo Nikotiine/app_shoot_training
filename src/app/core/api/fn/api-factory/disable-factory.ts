@@ -28,4 +28,4 @@ export function disableFactory(http: HttpClient, rootUrl: string, params: Disabl
   );
 }
 
-disableFactory.PATH = '/api/factory/delete';
+disableFactory.PATH = '/api/factory/admin/delete';

@@ -22,11 +22,14 @@ import {
   TrainingSessionViewModel
 } from '../../../../core/app/model/TrainingSessionViewModel.model';
 import { AmmunitionDto } from '../../../../core/api/models/ammunition-dto';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Routing } from '../../../../core/app/enum/Routing.enum';
 import { TrainingSessionDto } from '../../../../core/api/models/training-session-dto';
 import { SessionViewComponent } from '../session-view/session-view.component';
 import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+
+import { UserProfileDto } from '../../../../core/api/models/user-profile-dto';
 
 @Component({
   selector: 'app-session-list',
@@ -41,7 +44,8 @@ import { DialogModule } from 'primeng/dialog';
     MultiSelectModule,
     RouterLink,
     SessionViewComponent,
-    DialogModule
+    DialogModule,
+    ButtonModule
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss'
@@ -50,8 +54,10 @@ export class SessionListComponent implements OnInit {
   // Private field
   private readonly customUserService: UserService = inject(UserService);
   private readonly trainingService: TrainingService = inject(TrainingService);
+  private readonly router: Router = inject(Router);
   protected readonly Routing = Routing;
   private _trainingSessionDto: TrainingSessionDto[] = [];
+  private _user: UserProfileDto | null = null;
 
   // Public field
   public sessions: TrainingSessionTableViewModel[] = [];
@@ -68,9 +74,9 @@ export class SessionListComponent implements OnInit {
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
-    const user = this.customUserService.getProfile();
-    if (user) {
-      this.loadData(user.id);
+    this._user = this.customUserService.getProfile();
+    if (this._user) {
+      this.loadData(this._user.id);
     }
   }
 
@@ -100,11 +106,12 @@ export class SessionListComponent implements OnInit {
    */
   private loadData(id: number): void {
     forkJoin([
-      this.trainingService.getTrainingSessionById(id),
+      this.trainingService.getActiveTrainingSessionById(id),
       this.trainingService.getUserSetups(id)
     ]).subscribe({
       next: (data) => {
         this._trainingSessionDto = data[0];
+        console.log(data[0]);
         this.generateSessionViewModels(data[0]);
         this.userSetup = this.trainingService.mapSetupToDropdownModel(data[1]);
         this.isLoading = false;
@@ -132,5 +139,57 @@ export class SessionListComponent implements OnInit {
     this.distances = this.trainingService.mapDistanceToDropdownModel(distances);
     this.ammunitions =
       this.trainingService.mapAmmunitionToDropdownModel(ammunitions);
+  }
+
+  /**
+   * Popup de confirmation de suppresion de session
+   * @param event Event
+   * @param id de la session
+   */
+  public async confirm(event: Event, id: number): Promise<void> {
+    const confirmed = await this.trainingService.confirmation(
+      event,
+      'Supprimer cette session ? '
+    );
+    if (confirmed) {
+      this.disableSession(id);
+    }
+  }
+
+  /**
+   * Suppression d'une session
+   * @param id de la session
+   */
+  private disableSession(id: number): void {
+    this.trainingService.disableTrainingSession(id).subscribe({
+      next: (res) => {
+        this._trainingSessionDto = res;
+        this.generateSessionViewModels(res);
+        this.trainingService.successMessage('Session supprimée');
+      },
+      error: (err) => {
+        this.trainingService.errorMessage(err.error.message);
+      }
+    });
+  }
+
+  public showDeletedSessions(): void {
+    if (this._user) {
+      this.trainingService.getAllTrainingSessions(this._user.id).subscribe({
+        next: (res) => {
+          this._trainingSessionDto = res;
+          this.generateSessionViewModels(res);
+        },
+        error: (err) => {
+          this.trainingService.errorMessage(err.error.message);
+        }
+      });
+    }
+  }
+
+  public navigateToEditSession(id: number): void {
+    this.router.navigate([
+      '/' + Routing.TRAINING + '/' + Routing.TRAINING_SESSION_EDIT + '/' + id
+    ]);
   }
 }

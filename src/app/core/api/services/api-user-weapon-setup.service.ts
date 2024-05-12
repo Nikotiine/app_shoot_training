@@ -51,7 +51,7 @@ export class ApiUserWeaponSetupService extends BaseService {
   }
 
   /** Path part for operation `getAllUserWeaponSetup()` */
-  static readonly GetAllUserWeaponSetupPath = '/api/setup/by-user';
+  static readonly GetAllUserWeaponSetupPath = '/api/setup/by/user';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

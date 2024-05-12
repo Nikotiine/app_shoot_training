@@ -30,7 +30,7 @@ export class ApiCaliberService extends BaseService {
   }
 
   /** Path part for operation `editCaliber()` */
-  static readonly EditCaliberPath = '/api/caliber/edit';
+  static readonly EditCaliberPath = '/api/caliber/admin/edit';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +105,7 @@ export class ApiCaliberService extends BaseService {
   }
 
   /** Path part for operation `disableCaliber()` */
-  static readonly DisableCaliberPath = '/api/caliber/delete';
+  static readonly DisableCaliberPath = '/api/caliber/admin/delete';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

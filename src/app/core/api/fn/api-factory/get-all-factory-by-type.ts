@@ -28,4 +28,4 @@ export function getAllFactoryByType(http: HttpClient, rootUrl: string, params: G
   );
 }
 
-getAllFactoryByType.PATH = '/api/factory/all-by-type';
+getAllFactoryByType.PATH = '/api/factory/by/type';

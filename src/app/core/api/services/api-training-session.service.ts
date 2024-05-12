@@ -11,9 +11,17 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { createTrainingSession } from '../fn/api-training-session/create-training-session';
 import { CreateTrainingSession$Params } from '../fn/api-training-session/create-training-session';
-import { getTrainingSessionByUserId } from '../fn/api-training-session/get-training-session-by-user-id';
-import { GetTrainingSessionByUserId$Params } from '../fn/api-training-session/get-training-session-by-user-id';
+import { deleteTrainingSession } from '../fn/api-training-session/delete-training-session';
+import { DeleteTrainingSession$Params } from '../fn/api-training-session/delete-training-session';
+import { getActiveTrainingSessionByUserId } from '../fn/api-training-session/get-active-training-session-by-user-id';
+import { GetActiveTrainingSessionByUserId$Params } from '../fn/api-training-session/get-active-training-session-by-user-id';
+import { getAllTrainingSessionByUserId } from '../fn/api-training-session/get-all-training-session-by-user-id';
+import { GetAllTrainingSessionByUserId$Params } from '../fn/api-training-session/get-all-training-session-by-user-id';
+import { getTrainingSessionById } from '../fn/api-training-session/get-training-session-by-id';
+import { GetTrainingSessionById$Params } from '../fn/api-training-session/get-training-session-by-id';
 import { TrainingSessionDto } from '../models/training-session-dto';
+import { updateTrainingSession } from '../fn/api-training-session/update-training-session';
+import { UpdateTrainingSession$Params } from '../fn/api-training-session/update-training-session';
 
 
 /**
@@ -23,6 +31,31 @@ import { TrainingSessionDto } from '../models/training-session-dto';
 export class ApiTrainingSessionService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `updateTrainingSession()` */
+  static readonly UpdateTrainingSessionPath = '/api/training/session/edit';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateTrainingSession()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTrainingSession$Response(params: UpdateTrainingSession$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionDto>> {
+    return updateTrainingSession(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateTrainingSession$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTrainingSession(params: UpdateTrainingSession$Params, context?: HttpContext): Observable<TrainingSessionDto> {
+    return this.updateTrainingSession$Response(params, context).pipe(
+      map((r: StrictHttpResponse<TrainingSessionDto>): TrainingSessionDto => r.body)
+    );
   }
 
   /** Path part for operation `createTrainingSession()` */
@@ -50,27 +83,102 @@ export class ApiTrainingSessionService extends BaseService {
     );
   }
 
-  /** Path part for operation `getTrainingSessionByUserId()` */
-  static readonly GetTrainingSessionByUserIdPath = '/api/training/session/by-user';
+  /** Path part for operation `getTrainingSessionById()` */
+  static readonly GetTrainingSessionByIdPath = '/api/training/session/find/one';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getTrainingSessionByUserId()` instead.
+   * To access only the response body, use `getTrainingSessionById()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTrainingSessionByUserId$Response(params: GetTrainingSessionByUserId$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
-    return getTrainingSessionByUserId(this.http, this.rootUrl, params, context);
+  getTrainingSessionById$Response(params: GetTrainingSessionById$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionDto>> {
+    return getTrainingSessionById(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getTrainingSessionByUserId$Response()` instead.
+   * To access the full response (for headers, for example), `getTrainingSessionById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTrainingSessionByUserId(params: GetTrainingSessionByUserId$Params, context?: HttpContext): Observable<Array<TrainingSessionDto>> {
-    return this.getTrainingSessionByUserId$Response(params, context).pipe(
+  getTrainingSessionById(params: GetTrainingSessionById$Params, context?: HttpContext): Observable<TrainingSessionDto> {
+    return this.getTrainingSessionById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<TrainingSessionDto>): TrainingSessionDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllTrainingSessionByUserId()` */
+  static readonly GetAllTrainingSessionByUserIdPath = '/api/training/session/all/by/user';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllTrainingSessionByUserId()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllTrainingSessionByUserId$Response(params: GetAllTrainingSessionByUserId$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
+    return getAllTrainingSessionByUserId(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllTrainingSessionByUserId$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllTrainingSessionByUserId(params: GetAllTrainingSessionByUserId$Params, context?: HttpContext): Observable<Array<TrainingSessionDto>> {
+    return this.getAllTrainingSessionByUserId$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<TrainingSessionDto>>): Array<TrainingSessionDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getActiveTrainingSessionByUserId()` */
+  static readonly GetActiveTrainingSessionByUserIdPath = '/api/training/session/active/by/user';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getActiveTrainingSessionByUserId()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getActiveTrainingSessionByUserId$Response(params: GetActiveTrainingSessionByUserId$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
+    return getActiveTrainingSessionByUserId(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getActiveTrainingSessionByUserId$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getActiveTrainingSessionByUserId(params: GetActiveTrainingSessionByUserId$Params, context?: HttpContext): Observable<Array<TrainingSessionDto>> {
+    return this.getActiveTrainingSessionByUserId$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<TrainingSessionDto>>): Array<TrainingSessionDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteTrainingSession()` */
+  static readonly DeleteTrainingSessionPath = '/api/training/session/delete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteTrainingSession()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteTrainingSession$Response(params: DeleteTrainingSession$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
+    return deleteTrainingSession(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteTrainingSession$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteTrainingSession(params: DeleteTrainingSession$Params, context?: HttpContext): Observable<Array<TrainingSessionDto>> {
+    return this.deleteTrainingSession$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<TrainingSessionDto>>): Array<TrainingSessionDto> => r.body)
     );
   }

@@ -17,5 +17,6 @@ export enum Routing {
   ADMIN_AMMUNITION_LIST = 'ammunition/list',
   TRAINING = 'training',
   TRAINING_SESSION_FORM = 'session',
-  TRAINING_SESSION_LIST = 'sessions'
+  TRAINING_SESSION_LIST = 'sessions',
+  TRAINING_SESSION_EDIT = 'session/edit'
 }

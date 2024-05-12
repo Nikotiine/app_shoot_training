@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { TrainingSessionDto } from '../../models/training-session-dto';
 
-export interface GetTrainingSessionByUserId$Params {
+export interface GetActiveTrainingSessionByUserId$Params {
   id: number;
 }
 
-export function getTrainingSessionByUserId(http: HttpClient, rootUrl: string, params: GetTrainingSessionByUserId$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
-  const rb = new RequestBuilder(rootUrl, getTrainingSessionByUserId.PATH, 'get');
+export function getActiveTrainingSessionByUserId(http: HttpClient, rootUrl: string, params: GetActiveTrainingSessionByUserId$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TrainingSessionDto>>> {
+  const rb = new RequestBuilder(rootUrl, getActiveTrainingSessionByUserId.PATH, 'get');
   if (params) {
     rb.query('id', params.id, {});
   }
@@ -28,4 +28,4 @@ export function getTrainingSessionByUserId(http: HttpClient, rootUrl: string, pa
   );
 }
 
-getTrainingSessionByUserId.PATH = '/api/training/session/by-user';
+getActiveTrainingSessionByUserId.PATH = '/api/training/session/active/by/user';
