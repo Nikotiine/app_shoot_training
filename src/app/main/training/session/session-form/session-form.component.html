@@ -31,7 +31,7 @@
             [style]="{'width':'100%'}"
             formControlName="ammunition"
             optionValue="id"
-            (onFocus)="onChangeAmmunition($event)"
+            (onChange)="onChangeAmmunition($event.originalEvent)"
             placeholder="Selectionnez une munition"></p-dropdown>
         </div>
       </div>

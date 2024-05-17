@@ -1,17 +1,25 @@
 <form [formGroup]="form">
-  <fieldset class="mt-2">
+  <fieldset class="mt-4">
     <legend class="text-blue-500">Vitesse en sortie de canon</legend>
+    <div class="text-right my-2">
+      <p-button
+        label="Tout supprimer"
+        [severity]="'danger'"
+        [disabled]="!$enableDeleteAll()"
+        (onClick)="confirm($event)"></p-button>
+    </div>
     <div class="formgrid grid">
       <ng-container formArrayName="speedHistories" class="field col-3">
         @for ( speed of speedArray.controls ;let i = $index ;track speed){
-        <div [formGroupName]="i">
+        <div [formGroupName]="i" class="mx-1">
           <label for="speed-{{ i }}">Vitesse enregistrée n°{{ i + 1 }} </label>
-          <div class="mx-1">
+          <div>
             <p-inputNumber
               mode="decimal"
               suffix=" m/s"
               [maxFractionDigits]="1"
               inputId="minmaxfraction"
+              class="mt-1"
               id="speed"
               formControlName="speed"></p-inputNumber>
             <p-button
@@ -32,18 +40,12 @@
       </div>
     </div>
 
-    <div class="field col-12 mt-2 flex justify-content-between">
+    <div class="field col-12 mt-2 flex justify-content-evenly">
       <p-button
         label="Annuler"
         [severity]="'secondary'"
-        class="mr-2"
         (onClick)="cancel()"></p-button>
       <p-button label="Sauvegarder" (onClick)="sendSpeedHistories()"></p-button>
-      <p-button
-        label="Tout supprimer"
-        [severity]="'danger'"
-        class="ml-5"
-        (onClick)="confirm($event)"></p-button>
     </div>
   </fieldset>
 </form>

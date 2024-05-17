@@ -51,8 +51,9 @@
 
 <div class="mt-2 text-center">
   <p-button
-    label="Ajouter"
-    icon="pi pi-plus"
+    label="{{ isShowFormComponent ? 'Annuler' : 'Ajouter' }}"
+    icon="pi {{ isShowFormComponent ? 'pi-times' : 'pi-plus' }}"
+    severity="{{ isShowFormComponent ? 'secondary' : 'primary' }}"
     (onClick)="showAddForm()"></p-button>
   @defer (when isShowFormComponent){ @if (isShowFormComponent){
   <app-ammunition-form

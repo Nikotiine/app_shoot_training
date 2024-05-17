@@ -1,9 +1,7 @@
 import {
   Component,
-  EventEmitter,
   inject,
   OnInit,
-  Output,
   signal,
   WritableSignal
 } from '@angular/core';
@@ -70,6 +68,9 @@ export class SessionFormComponent implements OnInit {
   private _speedHistories: AmmunitionSpeedHistoryCreateDto[] = [];
   private _isEditSession: boolean = false;
   private _editedSession!: TrainingSessionDto;
+  private _originalAmmunitionId: number = 0;
+  private readonly _urlToSessionList: string =
+    '/' + Routing.TRAINING + '/' + Routing.TRAINING_SESSION_LIST;
   // Public field
   public form: FormGroup = this.fb.group({
     date: [new Date(), Validators.required],
@@ -166,7 +167,6 @@ export class SessionFormComponent implements OnInit {
    * Set le choix la munition pour l'enregistrement des vitesse ( vitesse initial constructeur )
    */
   public async onChangeAmmunition(event: Event): Promise<void> {
-    console.log('eee');
     if (this.$speedHistoriesSaved().length > 0) {
       const confirmed = await this.trainingService.confirmation(
         event,
@@ -175,6 +175,8 @@ export class SessionFormComponent implements OnInit {
       if (confirmed) {
         this.$speedHistoriesSaved.set([]);
         this._speedHistories = [];
+      } else {
+        this.form.controls['ammunition'].setValue(this._originalAmmunitionId);
       }
     }
     this.ammunitionIsSelected();
@@ -285,18 +287,14 @@ export class SessionFormComponent implements OnInit {
           this._editedSession = data[0];
           this.$title.set('Modification de session');
           this.autoCompleteForm(data[0]);
-          console.log(data[0]);
-          // this.setupSelected(data[0].setup.id);
           this._userSetups = data[1];
           this.userSetups = this.trainingService.mapSetupToDropdownModel(
             data[1]
           );
           this._sessionGroup = data[0].trainingSessionGroups;
           this._speedHistories = data[0].speedHistories;
-
           this.$groupsSaved.set(data[0].trainingSessionGroups);
           this.$speedHistoriesSaved.set(data[0].speedHistories);
-          // this.ammunitionIsSelected();
           this.$ammunitionNotSelected.set(false);
           this.isLoading = false;
         },
@@ -311,6 +309,7 @@ export class SessionFormComponent implements OnInit {
     this.form.controls['distance'].setValue(data.distance);
     this.form.controls['temperature'].setValue(data.temperature);
     this.form.controls['windSpeed'].setValue(data.windSpeed);
+    this._originalAmmunitionId = data.ammunition.id;
     this.form.controls['ammunition'].setValue(data.ammunition.id);
     this.form.controls['setup'].setValue(data.setup.id);
     this.form.controls['position'].setValue(data.position);
@@ -319,7 +318,6 @@ export class SessionFormComponent implements OnInit {
   }
 
   private ammunitionIsSelected(): void {
-    console.log(this._ammunitions);
     this.$ammunitionSelected.set(this.getAmmunition());
     this.$weaponSelected.set(this.getSetup().weapon);
     this.$ammunitionNotSelected.set(false);
@@ -327,12 +325,9 @@ export class SessionFormComponent implements OnInit {
 
   private createSession(session: TrainingSessionCreateDto): void {
     this.trainingService.saveTrainingSession(session).subscribe({
-      next: (res) => {
+      next: () => {
         this.trainingService.successMessage('Session Ajoutée');
-        //   this.newSessionAdded.emit(res);
-        this.router.navigate([
-          '/' + Routing.TRAINING + '/' + Routing.TRAINING_SESSION_LIST
-        ]);
+        this.router.navigate([this._urlToSessionList]);
       },
       error: (err) => {
         this.trainingService.errorMessage(err.error.message);
@@ -341,7 +336,6 @@ export class SessionFormComponent implements OnInit {
   }
 
   private editSession(session: TrainingSessionCreateDto) {
-    console.log(session);
     const editedSession: TrainingSessionDto = {
       ...session,
       createdAt: this._editedSession.createdAt,
@@ -349,12 +343,11 @@ export class SessionFormComponent implements OnInit {
       active: this._editedSession.active
     };
     this.trainingService.updateTrainingSession(editedSession).subscribe({
-      next: (res) => {
-        console.log(res);
-        console.log('res');
+      next: () => {
+        this.trainingService.successMessage('Session mise à jour');
+        this.router.navigate([this._urlToSessionList]);
       },
       error: (err) => {
-        console.log(err);
         this.trainingService.errorMessage(err.error.message);
       }
     });

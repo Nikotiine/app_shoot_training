@@ -32,7 +32,7 @@ export class GroupFormComponent {
   // Public field
   public groups: TrainingSessionGroupCreateDto[] = [];
   public form: FormGroup = inject(FormBuilder).group({
-    totalShoots: [0],
+    totalShoots: [10],
     score: [0],
     horizontalGap: [0],
     verticalGap: [0]
@@ -52,12 +52,15 @@ export class GroupFormComponent {
   public add(): void {
     const sessionGroup: TrainingSessionGroupCreateDto = {
       totalShoots: this.form.controls['totalShoots'].value,
-      score: this.form.controls['score'].value,
+      score: this.transformScoreOnTenShootRatio(
+        this.form.controls['score'].value,
+        this.form.controls['totalShoots'].value
+      ),
       horizontalGap: this.form.controls['horizontalGap'].value,
       verticalGap: this.form.controls['verticalGap'].value
     };
     this.groups.push(sessionGroup);
-    this.form.controls['totalShoots'].setValue(0);
+    this.form.controls['totalShoots'].setValue(10);
     this.form.controls['score'].setValue(0);
     this.form.controls['horizontalGap'].setValue(0);
     this.form.controls['verticalGap'].setValue(0);
@@ -83,4 +86,17 @@ export class GroupFormComponent {
     }
   }
   //************************************ PRIVATE METHODS ************************************
+
+  /**
+   * Transforme le score en resultat sur 100 points / ou equivalant sur 10 coups
+   * @param score le score inscrit
+   * @param shoots le nombre de munition tirée
+   */
+  private transformScoreOnTenShootRatio(score: number, shoots: number): number {
+    if (shoots === 10) {
+      return score;
+    } else {
+      return (score * 10) / shoots;
+    }
+  }
 }

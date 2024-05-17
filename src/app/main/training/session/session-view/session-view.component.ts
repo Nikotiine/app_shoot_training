@@ -1,7 +1,11 @@
 import {
   Component,
+  computed,
+  EventEmitter,
   inject,
   Input,
+  Output,
+  Signal,
   signal,
   WritableSignal
 } from '@angular/core';
@@ -20,6 +24,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { ChartData, ChartOptions } from 'chart.js';
 import { ColorService } from '../../../../core/app/services/color.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-session-view',
@@ -30,7 +35,8 @@ import { ColorService } from '../../../../core/app/services/color.service';
     FormsModule,
     TagModule,
     ChartModule,
-    ButtonModule
+    ButtonModule,
+    TooltipModule
   ],
   templateUrl: './session-view.component.html',
   styleUrl: './session-view.component.scss'
@@ -60,6 +66,7 @@ export class SessionViewComponent {
     }
   }
 
+  @Output() changeView: EventEmitter<number> = new EventEmitter<number>();
   get session(): TrainingSessionViewModel {
     return this._session;
   }

@@ -4,7 +4,9 @@ import {
   inject,
   Input,
   OnInit,
-  Output
+  Output,
+  signal,
+  WritableSignal
 } from '@angular/core';
 import {
   FormArray,
@@ -35,10 +37,12 @@ export class AmmunitionSpeedHistoriesFormComponent implements OnInit {
   private readonly trainingService: TrainingService = inject(TrainingService);
   private _isEditSpeedHistoriesArray: boolean = false;
   private readonly _currentComponentHeader: string = 'Vitesse des munitions';
+
   // Public field
   public form: FormGroup = this.fb.group({
     speedHistories: this.fb.array([])
   });
+  protected $enableDeleteAll: WritableSignal<boolean> = signal(false);
   @Input() set ammunition(ammunition: AmmunitionDto | null) {
     if (ammunition) {
       this._ammunition = ammunition;
@@ -66,6 +70,8 @@ export class AmmunitionSpeedHistoriesFormComponent implements OnInit {
   public ngOnInit(): void {
     if (!this._isEditSpeedHistoriesArray) {
       this.addNewSpeed();
+    } else {
+      this.$enableDeleteAll.set(true);
     }
   }
   /**
@@ -87,6 +93,9 @@ export class AmmunitionSpeedHistoriesFormComponent implements OnInit {
         ammunition: this._ammunition
       })
     );
+    if (this.speedArray.length > 1) {
+      this.$enableDeleteAll.set(true);
+    }
   }
 
   /**
@@ -95,6 +104,9 @@ export class AmmunitionSpeedHistoriesFormComponent implements OnInit {
    */
   public removeSpeed(i: number): void {
     this.speedArray.removeAt(i);
+    if (this.speedArray.length < 2) {
+      this.$enableDeleteAll.set(false);
+    }
   }
 
   public sendSpeedHistories(): void {

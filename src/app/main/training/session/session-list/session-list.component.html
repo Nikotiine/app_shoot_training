@@ -177,7 +177,9 @@
   header="Session du {{$sessionView()?.date | date:'dd MMM yyyy'}}"
   [(visible)]="isShowSessionView"
   [style]="{width: '75%'}">
-  <app-session-view [trainingSession]="$sessionView()"></app-session-view>
+  <app-session-view
+    [trainingSession]="$sessionView()"
+    (changeView)="onChangeView($event)"></app-session-view>
 </p-dialog>
 
 }

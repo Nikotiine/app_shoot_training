@@ -353,9 +353,6 @@ export class TrainingService {
       if (sessionGroup.score && score < sessionGroup.score) {
         score = sessionGroup.score;
       }
-      if (sessionGroup.totalShoots != 0) {
-        score = (score * 10) / sessionGroup.totalShoots;
-      }
     }
     return score;
   }

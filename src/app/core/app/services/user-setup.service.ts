@@ -7,6 +7,7 @@ import { UserWeaponSetupDto } from '../../api/models/user-weapon-setup-dto';
 import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
 import { MapperOpticsService } from '../api-service-mapper/mapper-optics.service';
 import { OpticsDto } from '../../api/models/optics-dto';
+import { CustomMessageService } from './custom-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,12 @@ export class UserSetupService {
   );
   private readonly mapperOpticsService: MapperOpticsService =
     inject(MapperOpticsService);
+
+  private readonly customMessageService: CustomMessageService =
+    inject(CustomMessageService);
+
+  private readonly _currentServiceMessageHeader: string =
+    "Gestion des setup d'arme";
 
   public getAllWeapons(): Observable<WeaponDto[]> {
     return this.mapperWeaponService.getAllActiveWeapons();
@@ -34,5 +41,17 @@ export class UserSetupService {
 
   public getAllActivesOptics(): Observable<OpticsDto[]> {
     return this.mapperOpticsService.getAllActives();
+  }
+  public successMessage(message: string): void {
+    this.customMessageService.successMessage(
+      this._currentServiceMessageHeader,
+      message
+    );
+  }
+  public errorMessage(message: string): void {
+    this.customMessageService.errorMessage(
+      this._currentServiceMessageHeader,
+      message
+    );
   }
 }

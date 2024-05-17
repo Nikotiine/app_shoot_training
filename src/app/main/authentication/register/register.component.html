@@ -1,49 +1,52 @@
-<div class="text-center flex mt-3 flex-column">
-  <h2>Creer un compte</h2>
-  <form [formGroup]="form">
-    <div class="mt-3">
-      <span class="p-input-icon-left">
-        <i class="pi pi-user"></i>
-        <input
-          type="text"
-          pInputText
-          formControlName="firstName"
-          placeholder="firstName" />
-      </span>
-    </div>
-    <div class="mt-3">
-      <span class="p-input-icon-left">
-        <i class="pi pi-user"></i>
-        <input
-          type="text"
-          pInputText
-          formControlName="lastName"
-          placeholder="lastName" />
-      </span>
-    </div>
-    <div class="mt-3">
-      <span class="p-input-icon-left">
-        <i class="pi pi-user"></i>
-        <input
-          type="text"
-          pInputText
-          formControlName="email"
-          placeholder="email" />
-      </span>
-    </div>
-    <div class="mt-3">
-      <span class="p-input-icon-left my-2">
-        <i class="pi pi-lock"></i>
-        <input
-          type="password"
-          pInputText
-          formControlName="password"
-          placeholder="password" />
-      </span>
-    </div>
-    <div class="mt-3">
-      <p-button label="Connexion" (onClick)="submit()"></p-button>
-    </div>
-  </form>
-  <a routerLink="/{{Routing.LOGIN}}" class="my-3">Page de connexion</a>
-</div>
+<fieldset class="mt-4">
+  <div class="text-center flex mt-3 flex-column">
+    <legend class="text-blue-500 mx-auto">Creer un compte</legend>
+
+    <form [formGroup]="form">
+      <div class="mt-3">
+        <span class="p-input-icon-left">
+          <i class="pi pi-user"></i>
+          <input
+            type="text"
+            pInputText
+            formControlName="firstName"
+            placeholder="Prénom" />
+        </span>
+      </div>
+      <div class="mt-3">
+        <span class="p-input-icon-left">
+          <i class="pi pi-user"></i>
+          <input
+            type="text"
+            pInputText
+            formControlName="lastName"
+            placeholder="Nom" />
+        </span>
+      </div>
+      <div class="mt-3">
+        <span class="p-input-icon-left">
+          <i class="pi pi-user"></i>
+          <input
+            type="text"
+            pInputText
+            formControlName="email"
+            placeholder="email" />
+        </span>
+      </div>
+      <div class="mt-3">
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-lock"></i>
+          <input
+            type="password"
+            pInputText
+            formControlName="password"
+            placeholder="Mot de passe" />
+        </span>
+      </div>
+      <div class="mt-3">
+        <p-button label="Creer un compte" (onClick)="submit()"></p-button>
+      </div>
+    </form>
+    <a routerLink="/{{Routing.LOGIN}}" class="my-3">Page de connexion</a>
+  </div>
+</fieldset>

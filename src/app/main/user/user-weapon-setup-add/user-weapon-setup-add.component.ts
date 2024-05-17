@@ -8,19 +8,13 @@ import {
 } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { WeaponDto } from '../../../core/api/models/weapon-dto';
-
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { WeaponFormComponent } from '../../weapon/weapon-form/weapon-form.component';
-import { CustomMessageService } from '../../../core/app/services/custom-message.service';
-
 import { OpticsDto } from '../../../core/api/models/optics-dto';
-
 import { OpticsFormComponent } from '../../optics/optics-form/optics-form.component';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
-
 import { UserService } from '../../../core/app/services/user.service';
-
 import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-dto';
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { UserWeaponSetupCreateDto } from '../../../core/api/models/user-weapon-setup-create-dto';
@@ -49,46 +43,39 @@ export class UserWeaponSetupAddComponent implements OnInit {
   // Private field
   private readonly userSetupService: UserSetupService =
     inject(UserSetupService);
+  private readonly userService: UserService = inject(UserService);
+  private _weapons: WeaponDto[] = [];
+  private _optics: OpticsDto[] = [];
 
-  @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
-    new EventEmitter<UserWeaponSetupDto>();
-
-  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
-  private weapons: WeaponDto[] = [];
-  private optics: OpticsDto[] = [];
+  // Public field
   public weaponFactories: FactoryDto[] = [];
   public opticsFactories: FactoryDto[] = [];
   public weaponsWM: DropdownViewModel[] = [];
   public opticsWM: DropdownViewModel[] = [];
-  public form: FormGroup;
+  public form: FormGroup = inject(FormBuilder).group({
+    weaponFactory: [0, Validators.min(1)],
+    weaponModel: new FormControl(
+      { value: 0, disabled: true },
+      Validators.min(1)
+    ),
+    weaponNotFound: [false],
+    opticFactory: new FormControl(
+      { value: 0, disabled: true },
+      Validators.min(1)
+    ),
+    opticModel: new FormControl(
+      { value: 0, disabled: true },
+      Validators.min(1)
+    ),
+    opticsNotFound: [false],
+    slopeRail: [0]
+  });
   public isNewWeapon: boolean = false;
   public isNewOptics: boolean = false;
+  @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
+    new EventEmitter<UserWeaponSetupDto>();
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly customMessageService: CustomMessageService,
-    private readonly appUserService: UserService
-  ) {
-    this.form = this.fb.group({
-      weaponFactory: [0, Validators.required],
-      weaponModel: new FormControl(
-        { value: '', disabled: true },
-        Validators.required
-      ),
-      weaponNotFound: [false],
-      opticFactory: new FormControl(
-        { value: '', disabled: true },
-        Validators.required
-      ),
-      opticModel: new FormControl(
-        { value: '', disabled: true },
-        Validators.required
-      ),
-      opticsNotFound: [false],
-      slopeRail: [0]
-    });
-  }
-
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   public ngOnInit(): void {
     this.loadWeaponsList();
   }
@@ -101,11 +88,11 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private loadWeaponsList(): void {
     this.userSetupService.getAllWeapons().subscribe({
       next: (data) => {
-        this.weapons = data;
+        this._weapons = data;
         this.createWeaponFactoriesDropdown(data);
       },
       error: (err) => {
-        this.customMessageService.errorMessage('Liste Arme', err.error.message);
+        this.userSetupService.errorMessage(err.error.message);
       }
     });
   }
@@ -139,7 +126,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * @param id de la marque
    */
   private createWeaponViewModel(id: number): void {
-    const selectedFactory = this.weapons.filter(
+    const selectedFactory = this._weapons.filter(
       (weapon) => weapon.factory.id === id
     );
 
@@ -166,8 +153,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * @param newWeapon WeaponDto
    */
   public weaponAdded(newWeapon: WeaponDto): void {
-    this.weapons.push(newWeapon);
-    this.createWeaponFactoriesDropdown(this.weapons);
+    this._weapons.push(newWeapon);
+    this.createWeaponFactoriesDropdown(this._weapons);
     this.isNewWeapon = false;
     this.switchStateFormControl('weapon', false);
     this.form.controls['weaponNotFound'].setValue(false);
@@ -189,14 +176,11 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private loadOpticsList(): void {
     this.userSetupService.getAllActivesOptics().subscribe({
       next: (optics) => {
-        this.optics = optics;
+        this._optics = optics;
         this.createOpticsFactoriesDropdown(optics);
       },
       error: (err) => {
-        this.customMessageService.errorMessage(
-          'Liste optiques',
-          err.error.message
-        );
+        this.userSetupService.errorMessage(err.error.message);
       }
     });
   }
@@ -215,12 +199,12 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   /**
-   * Transforme l'objet optics en DropdownViewModel , concatene le nom de le nom du model avec
+   * Transforme l'objet _optics en DropdownViewModel , concatene le nom de le nom du model avec
    * son zoom min / zoom maxi X diametre externe et plan focal
    * @param id de la marque
    */
   private createOpticsViewModel(id: number): void {
-    const selectedFactory = this.optics.filter(
+    const selectedFactory = this._optics.filter(
       (optic) => optic.factory.id === id
     );
 
@@ -247,8 +231,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * @param newOptics OpticsDto
    */
   public opticsAdded(newOptics: OpticsDto): void {
-    this.optics.push(newOptics);
-    this.createOpticsFactoriesDropdown(this.optics);
+    this._optics.push(newOptics);
+    this.createOpticsFactoriesDropdown(this._optics);
     this.isNewOptics = false;
     this.switchStateFormControl('optic', false);
     this.form.controls['opticsNotFound'].setValue(false);
@@ -281,7 +265,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
   }
 
   public submit(): void {
-    const user = this.appUserService.getProfile();
+    const user = this.userService.getProfile();
     if (user) {
       const newSetup: UserWeaponSetupCreateDto = {
         weapon: this.getSelectedWeapon(),
@@ -294,16 +278,10 @@ export class UserWeaponSetupAddComponent implements OnInit {
       this.userSetupService.save(newSetup).subscribe({
         next: (res) => {
           this.setupAdded.emit(res);
-          this.customMessageService.successMessage(
-            'Setup service',
-            'Nouveau setup enregistré'
-          );
+          this.userSetupService.successMessage('Nouveau setup enregistré');
         },
         error: (err) => {
-          this.customMessageService.errorMessage(
-            'Setup service',
-            err.error.message
-          );
+          this.userSetupService.errorMessage(err.error.message);
         }
       });
     }
@@ -312,15 +290,15 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private getSelectedWeapon(): WeaponDto {
     const weaponId = this.form.controls['weaponModel'].value;
 
-    return <WeaponDto>this.weapons.find((weapon) => weapon.id === weaponId);
+    return <WeaponDto>this._weapons.find((weapon) => weapon.id === weaponId);
   }
 
   private getSelectedOptics() {
     const opticsId = this.form.controls['opticModel'].value;
-    return <OpticsDto>this.optics.find((optics) => optics.id === opticsId);
+    return <OpticsDto>this._optics.find((optics) => optics.id === opticsId);
   }
 
-  onCancel() {
+  public onCancel(): void {
     this.cancel.emit();
   }
 }

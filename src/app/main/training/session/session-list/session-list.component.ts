@@ -58,7 +58,7 @@ export class SessionListComponent implements OnInit {
   protected readonly Routing = Routing;
   private _trainingSessionDto: TrainingSessionDto[] = [];
   private _user: UserProfileDto | null = null;
-
+  public _sessionArrayIndex: number = 0;
   // Public field
   public sessions: TrainingSessionTableViewModel[] = [];
   public isLoading: boolean = true;
@@ -71,6 +71,7 @@ export class SessionListComponent implements OnInit {
   public isShowSessionView: boolean = false;
   public $sessionView: WritableSignal<TrainingSessionViewModel | null> =
     signal(null);
+
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
@@ -86,11 +87,13 @@ export class SessionListComponent implements OnInit {
    */
   public onRowSelect(session: TrainingSessionTableViewModel): void {
     this.isShowSessionView = !this.isShowSessionView;
-    const selectedSession: TrainingSessionDto = <TrainingSessionDto>(
-      this._trainingSessionDto.find(
-        (sessionDto) => sessionDto.id === session.id
-      )
+    const selectedSession: TrainingSessionDto = this.getTrainingSession(
+      session.id
     );
+    const index = this._trainingSessionDto.findIndex(
+      (s) => selectedSession.id === s.id
+    );
+    this._sessionArrayIndex = index;
     this.$sessionView.set(
       this.trainingService.createTrainingViewModel(selectedSession)
     );
@@ -98,6 +101,11 @@ export class SessionListComponent implements OnInit {
 
   //************************************ PRIVATE METHODS ************************************
 
+  private getTrainingSession(id: number): TrainingSessionDto {
+    return <TrainingSessionDto>(
+      this._trainingSessionDto.find((session) => session.id === id)
+    );
+  }
   /**
    * Charge les donnee depuis l'api
    * Toutes les sessions de l'utilisateur
@@ -111,7 +119,6 @@ export class SessionListComponent implements OnInit {
     ]).subscribe({
       next: (data) => {
         this._trainingSessionDto = data[0];
-        console.log(data[0]);
         this.generateSessionViewModels(data[0]);
         this.userSetup = this.trainingService.mapSetupToDropdownModel(data[1]);
         this.isLoading = false;
@@ -191,5 +198,26 @@ export class SessionListComponent implements OnInit {
     this.router.navigate([
       '/' + Routing.TRAINING + '/' + Routing.TRAINING_SESSION_EDIT + '/' + id
     ]);
+  }
+
+  public onChangeView(index: number): void {
+    this._sessionArrayIndex = this._sessionArrayIndex + index;
+
+    if (
+      this._sessionArrayIndex > -1 &&
+      this._sessionArrayIndex < this._trainingSessionDto.length
+    ) {
+      const session: TrainingSessionDto =
+        this._trainingSessionDto[this._sessionArrayIndex];
+      this.$sessionView.set(
+        this.trainingService.createTrainingViewModel(session)
+      );
+    }
+    if (this._sessionArrayIndex < 0) {
+      this._sessionArrayIndex = 0;
+    }
+    if (this._sessionArrayIndex > this._trainingSessionDto.length - 1) {
+      this._sessionArrayIndex = this._trainingSessionDto.length - 1;
+    }
   }
 }

@@ -218,6 +218,6 @@ export class AmmunitionFormComponent implements OnInit {
   private setTitle(): void {
     this._isEditAmmunition
       ? this.$title.set('Modifier la munition')
-      : this.$title.set('Ajouter un nouvelle munition');
+      : this.$title.set('Ajouter une nouvelle munition');
   }
 }

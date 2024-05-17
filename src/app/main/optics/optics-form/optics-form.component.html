@@ -1,150 +1,173 @@
 @if (!$isLoading()){
 
 <form [formGroup]="form">
-  <fieldset class="formgrid grid">
+  <fieldset class="mt-4">
     <legend class="text-blue-500 text-2xl">{{$title()}}</legend>
 
-    <div class="flex flex-column">
-      <div class="mt-2">
-        <label for="opticsFocalPlan">Plan Focal (*)</label>
-        <p-dropdown
-          [options]="opticsFocalPlane"
-          id="opticsFocalPlan"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="opticsFocalPlan"
-          optionValue="id"
-          placeholder="Selectionnez une categorie"></p-dropdown>
-      </div>
-      <div class="mt-2">
-        <label for="opticsClickType">Type de reglage des tourelles (*)</label>
-        <p-dropdown
-          [options]="opticsUnits"
-          id="opticsClickType"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="opticsClickType"
-          optionValue="id"
-          (onChange)="opticUnitSelected($event.value)"
-          placeholder="Selectionnez un type"></p-dropdown>
-      </div>
-      <div class="mt-2">
-        <label for="opticsValueOfOneClick">Valeur d'un click (*)</label>
-        <p-dropdown
-          [options]="opticsClickValues"
-          id="opticsValueOfOneClick"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="opticsValueOfOneClick"
-          optionValue="value"
-          placeholder="Selectionnez une valeur"></p-dropdown>
-      </div>
-      <div class="mt-2">
-        <label for="opticsOutletDiameter">Diametre de sortie (*)</label>
-        <p-dropdown
-          [options]="opticsOutletDiameter"
-          id="opticsOutletDiameter"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="opticsOutletDiameter"
-          optionValue="id"
-          placeholder="Selectionnez un diametre"></p-dropdown>
-      </div>
-
-      <div class="mt-2">
-        <label for="opticsBodyDiameter">Diametre du tube (*)</label>
-        <p-dropdown
-          [options]="opticsBodyDiameter"
-          id="opticsBodyDiameter"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="opticsBodyDiameter"
-          optionValue="id"
-          placeholder="Selectionnez un diametre"></p-dropdown>
-      </div>
-      <div class="mt-2">
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-12">
         <label for="opticsFactory">Marque (*)</label>
         <p-dropdown
           [options]="factories"
           id="opticsFactory"
           optionLabel="name"
           class="ml-2"
+          [style]="{'width':'100%'}"
           formControlName="opticsFactory"
           optionValue="id"
           placeholder="Selectionnez une marque"></p-dropdown>
       </div>
-      <div class="mt-2">
+      <div class="field col-12 md:col-12">
         <label for="weaponModel">Modele (*)</label>
-        <input type="text" pInputText formControlName="name" id="weaponModel" />
+        <input
+          type="text"
+          pInputText
+          formControlName="name"
+          id="weaponModel"
+          [style]="{'width':'100%'}" />
+      </div>
+      <div class="field col-12 md:col-4">
+        <label for="opticsFocalPlan">Plan Focal (*)</label>
+        <p-dropdown
+          [options]="opticsFocalPlane"
+          id="opticsFocalPlan"
+          optionLabel="label"
+          class="ml-2"
+          [style]="{'width':'100%'}"
+          formControlName="opticsFocalPlan"
+          optionValue="id"
+          placeholder="Selectionnez une categorie"></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-4">
+        <label for="opticsClickType">Type de reglage des tourelles (*)</label>
+        <p-dropdown
+          [options]="opticsUnits"
+          id="opticsClickType"
+          optionLabel="label"
+          [style]="{'width':'100%'}"
+          class="ml-2"
+          formControlName="opticsClickType"
+          optionValue="id"
+          (onChange)="opticUnitSelected($event.value)"
+          placeholder="Selectionnez un type"></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-4">
+        <label for="opticsValueOfOneClick">Valeur d'un click (*)</label>
+        <p-dropdown
+          [options]="opticsClickValues"
+          id="opticsValueOfOneClick"
+          optionLabel="label"
+          [style]="{'width':'100%'}"
+          class="ml-2"
+          formControlName="opticsValueOfOneClick"
+          optionValue="value"
+          placeholder="Selectionnez une valeur"></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="opticsOutletDiameter">Diametre de sortie (*)</label>
+        <p-dropdown
+          [options]="opticsOutletDiameter"
+          id="opticsOutletDiameter"
+          optionLabel="label"
+          [style]="{'width':'100%'}"
+          class="ml-2"
+          formControlName="opticsOutletDiameter"
+          optionValue="id"
+          placeholder="Selectionnez un diametre"></p-dropdown>
       </div>
 
-      <div class="mt-2">
-        <label for="opticsMinZoom">Zoom mini (*)</label>
-        <p-inputNumber
-          inputId="integeronly"
-          id="opticsMinZoom"
-          class="ml-2"
-          formControlName="opticsMinZoom"></p-inputNumber>
-      </div>
-      <div class="mt-2">
-        <label for="opticsMaxZoom">Zoom max (*)</label>
-        <p-inputNumber
-          inputId="integeronly"
-          id="opticsMaxZoom"
-          class="ml-2"
-          formControlName="opticsMaxZoom"></p-inputNumber>
-      </div>
-      <div class="mt-2">
-        <label for="opticsMaxElevation">Elevation max (*)</label>
-        <p-inputNumber
-          inputId="integeronly"
-          id="opticsMaxElevation"
-          class="ml-2"
-          formControlName="opticsMaxElevation"></p-inputNumber>
+      <div class="field col-12 md:col-6">
+        <label for="opticsBodyDiameter">Diametre du tube (*)</label>
         <p-dropdown
-          [options]="opticsUnits"
+          [options]="opticsBodyDiameter"
+          id="opticsBodyDiameter"
           optionLabel="label"
+          [style]="{'width':'100%'}"
           class="ml-2"
-          formControlName="maxElevationUnit"
+          formControlName="opticsBodyDiameter"
           optionValue="id"
-          placeholder="Selectionnez un type"></p-dropdown>
+          placeholder="Selectionnez un diametre"></p-dropdown>
       </div>
-      <div class="mt-2">
-        <label for="opticsMaxDerivation">Derive max (*)</label>
-        <p-inputNumber
-          inputId="integeronly"
-          id="opticsMaxDerivation"
-          class="ml-2"
-          formControlName="opticsMaxDerivation"></p-inputNumber>
-        <p-dropdown
-          [options]="opticsUnits"
-          optionLabel="label"
-          class="ml-2"
-          formControlName="maxDerivationUnit"
-          optionValue="id"
-          placeholder="Selectionnez un type"></p-dropdown>
+
+      <div class="field col-12 md:col-6">
+        <div class="w-full">
+          <label for="opticsMinZoom">Zoom mini (*)</label>
+          <p-inputNumber
+            inputId="integeronly"
+            id="opticsMinZoom"
+            class="ml-2"
+            formControlName="opticsMinZoom"></p-inputNumber>
+        </div>
+        <div class="w-full mt-2">
+          <label for="opticsMaxZoom">Zoom max (*)</label>
+          <p-inputNumber
+            inputId="integeronly"
+            id="opticsMaxZoom"
+            class="ml-2"
+            formControlName="opticsMaxZoom"></p-inputNumber>
+        </div>
       </div>
-      <div class="mt-2 flex align-items-center justify-content-center">
-        <label for="isParallax">Parallaxe reglable ?</label>
+
+      <div class="field col-12 md:col-6">
+        <div class="w-full flex justify-content-around align-items-center">
+          <label for="opticsMaxElevation" class="min-width-8rem"
+            >Elevation max (*)</label
+          >
+          <p-inputNumber
+            inputId="integeronly"
+            id="opticsMaxElevation"
+            class="ml-2"
+            formControlName="opticsMaxElevation"></p-inputNumber>
+          <p-dropdown
+            [options]="opticsUnits"
+            optionLabel="label"
+            class="ml-2"
+            formControlName="maxElevationUnit"
+            optionValue="id"
+            placeholder="Selectionnez un type"></p-dropdown>
+        </div>
+        <div class="w-full mt-2 flex justify-content-around align-items-center">
+          <label for="opticsMaxDerivation" class="min-width-8rem"
+            >Derive max (*)</label
+          >
+          <p-inputNumber
+            inputId="integeronly"
+            id="opticsMaxDerivation"
+            class="ml-2"
+            formControlName="opticsMaxDerivation"></p-inputNumber>
+          <p-dropdown
+            [options]="opticsUnits"
+            optionLabel="label"
+            class="ml-2"
+            formControlName="maxDerivationUnit"
+            optionValue="id"
+            placeholder="Selectionnez un type"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="isParallax" class="w-full">Parallaxe reglable ?</label>
         <p-inputSwitch
-          class="ml-2"
           id="isParallax"
           formControlName="isParallax"></p-inputSwitch>
       </div>
-      <div class="mt-2">
+      <div class="field col-12 md:col-6">
         <label for="opticsMinParallax"
           >Reglage mini de la parallaxe (optionel)</label
         >
         <p-inputNumber
           inputId="integeronly"
+          class="ml-2"
           id="opticsMinParallax"
           formControlName="opticsMinParallax"></p-inputNumber>
       </div>
-      <p-button
-        label="Valider"
-        class="mt-3"
-        (onClick)="submit()"
-        [disabled]="form.invalid"></p-button>
+      <div class="field col-12">
+        <p-button
+          label="Valider"
+          class="mt-3"
+          (onClick)="submit()"
+          [disabled]="form.invalid"></p-button>
+      </div>
     </div>
   </fieldset>
 </form>
