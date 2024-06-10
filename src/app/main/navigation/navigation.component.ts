@@ -98,7 +98,8 @@ export class NavigationComponent implements OnInit {
           },
           {
             label: 'Statistiques',
-            icon: 'pi pi-fw pi-chart-line'
+            icon: 'pi pi-fw pi-chart-line',
+            routerLink: Routing.TRAINING + '/' + Routing.TRAINING_STATS_LIST
           }
         ]
       }

@@ -25,6 +25,7 @@ export { Token } from './models/token';
 export { TotalCountDto } from './models/total-count-dto';
 export { TrainingSessionCreateDto } from './models/training-session-create-dto';
 export { TrainingSessionDto } from './models/training-session-dto';
+export { TrainingSessionGroupByMouthDto } from './models/training-session-group-by-mouth-dto';
 export { TrainingSessionGroupCreateDto } from './models/training-session-group-create-dto';
 export { UserEditDto } from './models/user-edit-dto';
 export { UserProfileDto } from './models/user-profile-dto';

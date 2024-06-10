@@ -4,6 +4,7 @@ import { ApiTrainingSessionService } from '../../api/services/api-training-sessi
 import { TrainingSessionCreateDto } from '../../api/models/training-session-create-dto';
 import { Observable } from 'rxjs';
 import { TrainingSessionDto } from '../../api/models/training-session-dto';
+import { TrainingSessionGroupByMouthDto } from '../../api/models/training-session-group-by-mouth-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +51,15 @@ export class MapperTrainingSessionService {
     return this.apiTrainingSessionService.updateTrainingSession({
       body: session
     });
+  }
+
+  public getTrainingSessionByUserIdGroupByMouthOrderASC(
+    id: number
+  ): Observable<TrainingSessionGroupByMouthDto> {
+    return this.apiTrainingSessionService.getTrainingSessionByUserIdGroupByMouth(
+      {
+        id: id
+      }
+    );
   }
 }

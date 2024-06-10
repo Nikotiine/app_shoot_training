@@ -19,7 +19,10 @@ import { getAllTrainingSessionByUserId } from '../fn/api-training-session/get-al
 import { GetAllTrainingSessionByUserId$Params } from '../fn/api-training-session/get-all-training-session-by-user-id';
 import { getTrainingSessionById } from '../fn/api-training-session/get-training-session-by-id';
 import { GetTrainingSessionById$Params } from '../fn/api-training-session/get-training-session-by-id';
+import { getTrainingSessionByUserIdGroupByMouth } from '../fn/api-training-session/get-training-session-by-user-id-group-by-mouth';
+import { GetTrainingSessionByUserIdGroupByMouth$Params } from '../fn/api-training-session/get-training-session-by-user-id-group-by-mouth';
 import { TrainingSessionDto } from '../models/training-session-dto';
+import { TrainingSessionGroupByMouthDto } from '../models/training-session-group-by-mouth-dto';
 import { updateTrainingSession } from '../fn/api-training-session/update-training-session';
 import { UpdateTrainingSession$Params } from '../fn/api-training-session/update-training-session';
 
@@ -105,6 +108,31 @@ export class ApiTrainingSessionService extends BaseService {
   getTrainingSessionById(params: GetTrainingSessionById$Params, context?: HttpContext): Observable<TrainingSessionDto> {
     return this.getTrainingSessionById$Response(params, context).pipe(
       map((r: StrictHttpResponse<TrainingSessionDto>): TrainingSessionDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getTrainingSessionByUserIdGroupByMouth()` */
+  static readonly GetTrainingSessionByUserIdGroupByMouthPath = '/api/training/session/all/user/session/by-mouth';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getTrainingSessionByUserIdGroupByMouth()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTrainingSessionByUserIdGroupByMouth$Response(params: GetTrainingSessionByUserIdGroupByMouth$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionGroupByMouthDto>> {
+    return getTrainingSessionByUserIdGroupByMouth(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getTrainingSessionByUserIdGroupByMouth$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTrainingSessionByUserIdGroupByMouth(params: GetTrainingSessionByUserIdGroupByMouth$Params, context?: HttpContext): Observable<TrainingSessionGroupByMouthDto> {
+    return this.getTrainingSessionByUserIdGroupByMouth$Response(params, context).pipe(
+      map((r: StrictHttpResponse<TrainingSessionGroupByMouthDto>): TrainingSessionGroupByMouthDto => r.body)
     );
   }
 

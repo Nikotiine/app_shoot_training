@@ -20,6 +20,7 @@ import { OpticsTabviewComponent } from './main/admin/optics-tabview/optics-tabvi
 import { AmmunitionTabviewComponent } from './main/admin/ammunition-tabview/ammunition-tabview.component';
 import { SessionFormComponent } from './main/training/session/session-form/session-form.component';
 import { SessionListComponent } from './main/training/session/session-list/session-list.component';
+import { StatListComponent } from './main/training/stats/stat-list/stat-list.component';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,10 @@ export const routes: Routes = [
           {
             path: Routing.TRAINING_SESSION_EDIT + '/:id',
             component: SessionFormComponent
+          },
+          {
+            path: Routing.TRAINING_STATS_LIST,
+            component: StatListComponent
           }
         ]
       }
