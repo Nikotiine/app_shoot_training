@@ -13,6 +13,8 @@ import {
   ChartOptions
 } from 'chart.js';
 import { TrainingSessionGroupByMouthViewModel } from '../model/TrainingSessionGroupByMouthViewModel';
+import { TrainingService } from './training.service';
+import { TrainingSessionGroupCreateDto } from '../../api/models/training-session-group-create-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,7 @@ export class StatsService {
     inject(MapperTrainingSessionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly trainingService: TrainingService = inject(TrainingService);
   private readonly _currentPageMessageHeader: string =
     'Gestion des statistiques';
   private readonly _mouthNames = [
@@ -104,10 +107,10 @@ export class StatsService {
           data: data.map((d) => d.trainingSessions.length)
         },
         {
-          label: 'My Second dataset',
+          label: 'Meuilleur score du mois',
           backgroundColor: 'pink',
           borderColor: 'pink-500',
-          data: [28, 48, 40, 19, 86, 27, 90, 80, 81, 56, 55, 40]
+          data: this.getBestScore(data)
         }
       ]
     };
@@ -126,7 +129,7 @@ export class StatsService {
       plugins: {
         title: {
           display: true,
-          text: 'tt'
+          text: "Statitique de l'aneeé"
         },
         legend: {
           display: true,
@@ -158,5 +161,29 @@ export class StatsService {
         }
       }
     };
+  }
+
+  private getBestScore(data: TrainingSessionGroupByMouthViewModel[]): number[] {
+    const bestScores: number[] = [];
+
+    for (const mouthSession of data) {
+      let score: number = 0;
+      if (mouthSession.trainingSessions.length > 0) {
+        score = this.getBestScoreInTheMouth(mouthSession.trainingSessions);
+      }
+      bestScores.push(score);
+    }
+    return bestScores;
+  }
+  private getBestScoreInTheMouth(sessions: TrainingSessionDto[]): number {
+    let result: number = 0;
+    for (const session of sessions) {
+      if (session.trainingSessionGroups.length > 0) {
+        result = this.trainingService.getBestScore(
+          session.trainingSessionGroups
+        );
+      }
+    }
+    return result;
   }
 }

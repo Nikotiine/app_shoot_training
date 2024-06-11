@@ -345,7 +345,7 @@ export class TrainingService {
    * Compare et retourne le meuilleur score
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    */
-  private getBestScore(
+  public getBestScore(
     trainingSessionGroups: TrainingSessionGroupCreateDto[]
   ): number {
     let score: number = 0;
