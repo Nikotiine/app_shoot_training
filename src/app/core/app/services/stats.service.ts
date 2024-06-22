@@ -14,7 +14,6 @@ import {
 } from 'chart.js';
 import { TrainingSessionGroupByMouthViewModel } from '../model/TrainingSessionGroupByMouthViewModel';
 import { TrainingService } from './training.service';
-import { TrainingSessionGroupCreateDto } from '../../api/models/training-session-group-create-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +27,7 @@ export class StatsService {
   private readonly trainingService: TrainingService = inject(TrainingService);
   private readonly _currentPageMessageHeader: string =
     'Gestion des statistiques';
-  private readonly _mouthNames = [
+  private readonly _monthNames = [
     'Janvier',
     'Fevrier',
     'Mars',
@@ -73,14 +72,18 @@ export class StatsService {
       throw new Error('Index must be between 0 and 11');
     }
 
-    return this._mouthNames[index];
+    return this._monthNames[index];
+  }
+
+  public getMonths(): string[] {
+    return this._monthNames;
   }
 
   public createTrainingSessionGroupByMouthViewModel(
     trainingSessionGroupByMouth: TrainingSessionGroupByMouthDto
   ): TrainingSessionGroupByMouthViewModel[] {
     const result: TrainingSessionGroupByMouthViewModel[] = [];
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       const wm: TrainingSessionGroupByMouthViewModel = {
         mouth: this.getMonthNameWithIndex(i),
         trainingSessions: []
@@ -92,25 +95,43 @@ export class StatsService {
       }
       result.push(wm);
     }
-
     return result;
   }
 
   public getChartData(data: TrainingSessionGroupByMouthViewModel[]): ChartData {
     return {
-      labels: this._mouthNames,
+      labels: data.map((d) => d.mouth),
       datasets: [
         {
-          label: 'Nombre de seance',
-          backgroundColor: 'blue',
-          borderColor: 'blue-500',
+          type: 'bar',
+          label: 'Nombre de seances',
+          backgroundColor: '#296696',
+          borderColor: '#296696',
           data: data.map((d) => d.trainingSessions.length)
         },
         {
-          label: 'Meuilleur score du mois',
-          backgroundColor: 'pink',
-          borderColor: 'pink-500',
-          data: this.getBestScore(data)
+          type: 'bubble',
+          // fill: false,
+          //  tension: 0.4,
+          label: 'Meilleur score du mois',
+          backgroundColor: '#1ABC9C',
+          borderColor: '#1ABC9C',
+          data: this.getBestScore(data).map((score) => {
+            return {
+              x: score != 0 ? 50 : 0,
+              y: score,
+              r: score != 0 ? 10 : 0
+            };
+          })
+        },
+        {
+          type: 'bar',
+          // fill: false,
+          //  tension: 0.4,
+          label: 'Meilleur groupement du mois',
+          backgroundColor: '#E67E22',
+          borderColor: '#E67E22',
+          data: this.getBestAverage(data)
         }
       ]
     };
@@ -124,12 +145,17 @@ export class StatsService {
         elements: ActiveElement[],
         chart: Chart
       ): void {},
+
       maintainAspectRatio: false,
       aspectRatio: 0.8,
+      interaction: {
+        mode: 'index',
+        axis: 'y'
+      },
       plugins: {
         title: {
           display: true,
-          text: "Statitique de l'aneeé"
+          text: "Statistiques de l'année"
         },
         legend: {
           display: true,
@@ -180,6 +206,30 @@ export class StatsService {
     for (const session of sessions) {
       if (session.trainingSessionGroups.length > 0) {
         result = this.trainingService.getBestScore(
+          session.trainingSessionGroups
+        );
+      }
+    }
+    return result;
+  }
+  private getBestAverage(
+    data: TrainingSessionGroupByMouthViewModel[]
+  ): number[] {
+    const averages: number[] = [];
+    for (const sessions of data) {
+      let average: number = 0;
+      if (sessions.trainingSessions.length > 0) {
+        average = this.getBestAverageInTheMouth(sessions.trainingSessions);
+      }
+      averages.push(average);
+    }
+    return averages;
+  }
+  private getBestAverageInTheMouth(sessions: TrainingSessionDto[]): number {
+    let result: number = 0;
+    for (const session of sessions) {
+      if (session.trainingSessionGroups.length > 0) {
+        result = this.trainingService.getBestAverage(
           session.trainingSessionGroups
         );
       }

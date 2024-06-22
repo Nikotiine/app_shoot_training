@@ -1,7 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-
 import { ApiAmmunitionWeightService } from '../../api/services/api-ammunition-weight.service';
-
 import { AmmunitionWeightCreateDto } from '../../api/models/ammunition-weight-create-dto';
 import { Observable } from 'rxjs';
 import { AmmunitionWeightDto } from '../../api/models/ammunition-weight-dto';

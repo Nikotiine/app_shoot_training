@@ -391,7 +391,7 @@ export class TrainingService {
    * Compare et reourne le meuilleur groupement de la session
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    */
-  private getBestAverage(
+  public getBestAverage(
     trainingSessionGroups: TrainingSessionGroupCreateDto[]
   ): number {
     let averageGap = null;
