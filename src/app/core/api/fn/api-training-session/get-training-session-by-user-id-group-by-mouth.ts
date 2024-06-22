@@ -10,12 +10,14 @@ import { TrainingSessionGroupByMouthDto } from '../../models/training-session-gr
 
 export interface GetTrainingSessionByUserIdGroupByMouth$Params {
   id: number;
+  year: number;
 }
 
 export function getTrainingSessionByUserIdGroupByMouth(http: HttpClient, rootUrl: string, params: GetTrainingSessionByUserIdGroupByMouth$Params, context?: HttpContext): Observable<StrictHttpResponse<TrainingSessionGroupByMouthDto>> {
   const rb = new RequestBuilder(rootUrl, getTrainingSessionByUserIdGroupByMouth.PATH, 'get');
   if (params) {
     rb.query('id', params.id, {});
+    rb.query('year', params.year, {});
   }
 
   return http.request(

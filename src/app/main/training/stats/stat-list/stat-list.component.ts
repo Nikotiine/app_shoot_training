@@ -48,6 +48,7 @@ export class StatListComponent implements OnInit {
   private readonly statsService: StatsService = inject(StatsService);
   private readonly userService: UserService = inject(UserService);
   private _trainingViewModel: TrainingSessionGroupByMouthViewModel[] = [];
+  private _userId!: number;
   // Public field
   public data!: ChartData;
   public options!: ChartOptions;
@@ -57,26 +58,26 @@ export class StatListComponent implements OnInit {
   public $selectedLabel: WritableSignal<string> = signal('Année complete');
   public months: string[] = this.statsService.getMonths();
   public isLoading: boolean = true;
-  public form: FormGroup = inject(FormBuilder).group({
-    month: [this.months, Validators.required]
-  });
-  public totalTrainingSessionInCurrentYear: number = 0;
+
+  public $totalTrainingSessionInCurrentYear: WritableSignal<number> = signal(0);
 
   ngOnInit(): void {
     const user = this.userService.getProfile();
     if (user) {
-      this.loadData(user.id);
+      this._userId = user.id;
+      this.loadData(user.id, this.$currentYear());
     }
   }
 
-  private loadData(id: number): void {
-    this.statsService.getTrainingSessionGroupByMouth(id).subscribe({
+  private loadData(id: number, year: number): void {
+    this.statsService.getTrainingSessionGroupByMouth(id, year).subscribe({
       next: (data) => {
         this._trainingViewModel =
           this.statsService.createTrainingSessionGroupByMouthViewModel(data);
         this.data = this.statsService.getChartData(this._trainingViewModel);
-        this.totalTrainingSessionInCurrentYear =
-          this.getTotalTrainingSessionInCurrentYear(this._trainingViewModel);
+        this.$totalTrainingSessionInCurrentYear.set(
+          this.getTotalTrainingSessionInCurrentYear(this._trainingViewModel)
+        );
         this.options = this.statsService.getOptions();
         this.isLoading = false;
       },
@@ -98,27 +99,12 @@ export class StatListComponent implements OnInit {
 
   nextYear() {
     this.$currentYear.update((value) => value + 1);
+    this.loadData(this._userId, this.$currentYear());
   }
 
   previousYear() {
     this.$currentYear.update((value) => value - 1);
-  }
-
-  showSelectedMouth() {
-    console.log(this.form.controls['year'].value);
-    const mouth = new Date(this.form.controls['year'].value).getMonth();
-    console.log(this.statsService.getMonthNameWithIndex(mouth));
-    console.log(this._trainingViewModel);
-    const yoyo: TrainingSessionGroupByMouthViewModel[] = [];
-    const test: TrainingSessionGroupByMouthViewModel = <
-      TrainingSessionGroupByMouthViewModel
-    >this._trainingViewModel.find(
-      (t) => t.mouth === this.statsService.getMonthNameWithIndex(mouth)
-    );
-    yoyo.push(test);
-
-    this.data = this.statsService.getChartData(yoyo);
-    console.log(test);
+    this.loadData(this._userId, this.$currentYear());
   }
 
   onSelectMonths(event: MultiSelectChangeEvent) {

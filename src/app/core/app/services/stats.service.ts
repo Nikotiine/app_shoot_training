@@ -60,10 +60,12 @@ export class StatsService {
   }
 
   public getTrainingSessionGroupByMouth(
-    id: number
+    id: number,
+    year: number
   ): Observable<TrainingSessionGroupByMouthDto> {
     return this.mapperTrainingSessionService.getTrainingSessionByUserIdGroupByMouthOrderASC(
-      id
+      id,
+      year
     );
   }
 

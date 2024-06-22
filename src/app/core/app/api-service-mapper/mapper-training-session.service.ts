@@ -54,11 +54,13 @@ export class MapperTrainingSessionService {
   }
 
   public getTrainingSessionByUserIdGroupByMouthOrderASC(
-    id: number
+    id: number,
+    year: number
   ): Observable<TrainingSessionGroupByMouthDto> {
     return this.apiTrainingSessionService.getTrainingSessionByUserIdGroupByMouth(
       {
-        id: id
+        id: id,
+        year: year
       }
     );
   }
