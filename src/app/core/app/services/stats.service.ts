@@ -14,6 +14,8 @@ import {
 } from 'chart.js';
 import { TrainingSessionGroupByMouthViewModel } from '../model/TrainingSessionGroupByMouthViewModel';
 import { TrainingService } from './training.service';
+import { DateService } from './date.service';
+import { ScoreService } from './score.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,23 +26,11 @@ export class StatsService {
     inject(MapperTrainingSessionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
-  private readonly trainingService: TrainingService = inject(TrainingService);
+  private readonly scoreService: ScoreService = inject(ScoreService);
+  private readonly dateService: DateService = inject(DateService);
   private readonly _currentPageMessageHeader: string =
     'Gestion des statistiques';
-  private readonly _monthNames = [
-    'Janvier',
-    'Fevrier',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juillet',
-    'Aout',
-    'Septembre',
-    'Octobre',
-    'Novembre',
-    'Decembre'
-  ];
+
   /**
    * Retroune toutes les sessions de l'utlisateur connecté
    * @param id de l utilisateur
@@ -70,15 +60,11 @@ export class StatsService {
   }
 
   public getMonthNameWithIndex(index: number): string {
-    if (index < 0 || index > 11) {
-      throw new Error('Index must be between 0 and 11');
-    }
-
-    return this._monthNames[index];
+    return this.dateService.getMonthNameWithIndex(index);
   }
 
   public getMonths(): string[] {
-    return this._monthNames;
+    return this.dateService.getMonths();
   }
 
   public createTrainingSessionGroupByMouthViewModel(
@@ -207,9 +193,7 @@ export class StatsService {
     let result: number = 0;
     for (const session of sessions) {
       if (session.trainingSessionGroups.length > 0) {
-        result = this.trainingService.getBestScore(
-          session.trainingSessionGroups
-        );
+        result = this.scoreService.getBestScore(session.trainingSessionGroups);
       }
     }
     return result;
@@ -227,11 +211,12 @@ export class StatsService {
     }
     return averages;
   }
+
   private getBestAverageInTheMouth(sessions: TrainingSessionDto[]): number {
     let result: number = 0;
     for (const session of sessions) {
       if (session.trainingSessionGroups.length > 0) {
-        result = this.trainingService.getBestAverage(
+        result = this.scoreService.getBestAverage(
           session.trainingSessionGroups
         );
       }

@@ -19,6 +19,7 @@ import { MapperAmmunitionService } from '../api-service-mapper/mapper-ammunition
 import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
 import { CustomConfirmationService } from './custom-confirmation.service';
 import { TrainingSessionGroupCreateDto } from '../../api/models/training-session-group-create-dto';
+import { ScoreService } from './score.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,7 @@ export class TrainingService {
   private readonly colorService: ColorService = inject(ColorService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
+  private readonly scoreService: ScoreService = inject(ScoreService);
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
 
   /**
@@ -248,8 +250,10 @@ export class TrainingService {
   public createTrainingViewModel(
     session: TrainingSessionDto
   ): TrainingSessionViewModel {
-    const bestScore: number = this.getBestScore(session.trainingSessionGroups);
-    const bestAverage: number = this.getBestAverage(
+    const bestScore: number = this.scoreService.getBestScore(
+      session.trainingSessionGroups
+    );
+    const bestAverage: number = this.scoreService.getBestAverage(
       session.trainingSessionGroups
     );
     return {
@@ -342,22 +346,6 @@ export class TrainingService {
   }
 
   /**
-   * Compare et retourne le meuilleur score
-   * @param trainingSessionGroups TrainingSessionGroupDto[]
-   */
-  public getBestScore(
-    trainingSessionGroups: TrainingSessionGroupCreateDto[]
-  ): number {
-    let score: number = 0;
-    for (const sessionGroup of trainingSessionGroups) {
-      if (sessionGroup.score && score < sessionGroup.score) {
-        score = sessionGroup.score;
-      }
-    }
-    return score;
-  }
-
-  /**
    * Genere le traningGroupViewModel et attribue les couleur des score et des groupement
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    * @param bestAverageGap number le meuilleur groupement de toute les enregistrement de la session
@@ -385,27 +373,6 @@ export class TrainingService {
         )
       };
     });
-  }
-
-  /**
-   * Compare et reourne le meuilleur groupement de la session
-   * @param trainingSessionGroups TrainingSessionGroupDto[]
-   */
-  public getBestAverage(
-    trainingSessionGroups: TrainingSessionGroupCreateDto[]
-  ): number {
-    let averageGap = null;
-    for (const session of trainingSessionGroups) {
-      if (session.verticalGap && session.horizontalGap) {
-        const average = session.verticalGap + session.horizontalGap;
-        if (averageGap === null) {
-          averageGap = average;
-        } else if (averageGap > average) {
-          averageGap = average;
-        }
-      }
-    }
-    return averageGap ? averageGap : 0;
   }
 
   public getSessionById(id: number): Observable<TrainingSessionDto> {

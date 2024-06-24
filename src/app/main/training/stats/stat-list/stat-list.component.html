@@ -40,7 +40,7 @@
 </div>
 @if ($totalTrainingSessionInCurrentYear() === 0){
 <p class="text-2xl text-center text-red-500">
-  Aucune session enregristré en {{$currentYear()}}
+  Aucune session enregistrée en {{$currentYear()}}
 </p>
 } @else {
 <p-chart type="bar" [data]="data" [options]="options"></p-chart>

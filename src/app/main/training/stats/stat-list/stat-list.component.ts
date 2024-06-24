@@ -12,22 +12,12 @@ import { ChartData, ChartOptions } from 'chart.js';
 
 import { ChartModule } from 'primeng/chart';
 import { InputNumberModule } from 'primeng/inputnumber';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TrainingSessionGroupByMouthViewModel } from '../../../../core/app/model/TrainingSessionGroupByMouthViewModel';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import {
-  MultiSelectBlurEvent,
-  MultiSelectChangeEvent,
-  MultiSelectModule
-} from 'primeng/multiselect';
+import { MultiSelectChangeEvent, MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-stat-list',
@@ -61,7 +51,7 @@ export class StatListComponent implements OnInit {
 
   public $totalTrainingSessionInCurrentYear: WritableSignal<number> = signal(0);
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const user = this.userService.getProfile();
     if (user) {
       this._userId = user.id;
@@ -97,17 +87,17 @@ export class StatListComponent implements OnInit {
     return total;
   }
 
-  nextYear() {
+  public nextYear(): void {
     this.$currentYear.update((value) => value + 1);
     this.loadData(this._userId, this.$currentYear());
   }
 
-  previousYear() {
+  public previousYear(): void {
     this.$currentYear.update((value) => value - 1);
     this.loadData(this._userId, this.$currentYear());
   }
 
-  onSelectMonths(event: MultiSelectChangeEvent) {
+  public onSelectMonths(event: MultiSelectChangeEvent): void {
     this.$selectedLabel.set(
       event.value.length < 12
         ? event.value.length + ' mois selectionnés'
