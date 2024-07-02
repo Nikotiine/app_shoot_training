@@ -58,7 +58,7 @@
     <p-button
       label="{{isChangePassword ? 'Annuler':'Changer le mot de passe'}}"
       (onClick)="showFormForNewPassword()"
-      severity="{{isChangePassword ? 'secondary':'danger'}}"></p-button>
+      [severity]="$severity()"></p-button>
   </div>
   <div class="mt-3">
     <p-button

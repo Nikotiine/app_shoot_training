@@ -13,11 +13,19 @@ import { TableModule } from 'primeng/table';
 import { CaliberFormComponent } from '../caliber-form/caliber-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { CaliberService } from '../../../core/app/services/caliber.service';
+import { TagModule } from 'primeng/tag';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-caliber-table-list',
   standalone: true,
-  imports: [ButtonModule, SharedModule, TableModule, CaliberFormComponent],
+  imports: [
+    ButtonModule,
+    SharedModule,
+    TableModule,
+    CaliberFormComponent,
+    TagModule
+  ],
   templateUrl: './caliber-table-list.component.html',
   styleUrl: './caliber-table-list.component.scss'
 })
@@ -29,7 +37,7 @@ export class CaliberTableListComponent implements OnInit {
   public calibers: CaliberDto[] = [];
   public visible: boolean = false;
   public $caliberToEdit: WritableSignal<CaliberDto | null> = signal(null);
-
+  public $severity: WritableSignal<Severity> = signal('primary');
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
@@ -45,6 +53,7 @@ export class CaliberTableListComponent implements OnInit {
       this.$caliberToEdit.set(null);
     }
     this.visible = !this.visible;
+    this.$severity.set(this.visible ? 'secondary' : 'primary');
   }
 
   /**
@@ -63,6 +72,7 @@ export class CaliberTableListComponent implements OnInit {
   public edit(caliber: CaliberDto): void {
     this.visible = !this.visible;
     this.$caliberToEdit.set(caliber);
+    this.$severity.set(this.visible ? 'secondary' : 'primary');
   }
 
   /**

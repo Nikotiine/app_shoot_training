@@ -49,6 +49,7 @@
   <p-button
     label="{{isShowFormComponent ? 'Annuler' : 'Ajouter'}}"
     icon="pi {{isShowFormComponent ? 'pi-times' : 'pi-plus'}}"
+    [severity]="$severity()"
     (onClick)="showAddForm()"></p-button>
   @defer (when isShowFormComponent){ @if (isShowFormComponent){
   <app-weapon-form

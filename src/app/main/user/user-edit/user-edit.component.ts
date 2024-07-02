@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +18,7 @@ import { ButtonModule } from 'primeng/button';
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
 import { UserEditDto } from '../../../core/api/models/user-edit-dto';
 import { UserService } from '../../../core/app/services/user.service';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -43,7 +52,7 @@ export class UserEditComponent {
     password: [null],
     confirmPassword: [null]
   });
-
+  public $severity: WritableSignal<Severity> = signal('danger');
   public submit(): void {
     const editProfile: UserEditDto = {
       firstName: this.form.controls['firstName'].value,
@@ -83,5 +92,6 @@ export class UserEditComponent {
 
   public showFormForNewPassword(): void {
     this.isChangePassword = !this.isChangePassword;
+    this.$severity.set(this.isChangePassword ? 'secondary' : 'danger');
   }
 }

@@ -46,7 +46,7 @@
   <p-button
     label="{{ isShowFormComponent ? 'Annuler' : 'Ajouter' }}"
     icon="pi {{ isShowFormComponent ? 'pi-times' : 'pi-plus' }}"
-    severity="{{ isShowFormComponent ? 'secondary' : 'primary' }}"
+    [severity]="$severity()"
     (onClick)="showAddForm()"></p-button>
   @defer (when isShowFormComponent){ @if (isShowFormComponent){
   <app-optics-form

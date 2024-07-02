@@ -90,10 +90,9 @@ export class SessionListComponent implements OnInit {
     const selectedSession: TrainingSessionDto = this.getTrainingSession(
       session.id
     );
-    const index = this._trainingSessionDto.findIndex(
+    this._sessionArrayIndex = this._trainingSessionDto.findIndex(
       (s) => selectedSession.id === s.id
     );
-    this._sessionArrayIndex = index;
     this.$sessionView.set(
       this.trainingService.createTrainingViewModel(selectedSession)
     );

@@ -15,20 +15,76 @@
 </div>
 
 <div class="text-center">
-  <p-multiSelect
-    [options]="months"
-    placeholder="Filtrer par mois"
-    [filter]="false"
-    [showToggleAll]="true"
-    [selectedItemsLabel]="$selectedLabel()"
-    [maxSelectedLabels]="3"
-    [showHeader]="true"
-    appendTo="body"
-    [style]="{'width':'20rem'}"
-    [showClear]="true"
-    [disabled]="$totalTrainingSessionInCurrentYear()===0"
-    (onChange)="onSelectMonths($event)">
-  </p-multiSelect>
+  <form [formGroup]="form">
+    <p-multiSelect
+      [options]="setupsAvailable"
+      placeholder="Filtrer par setup"
+      optionValue="id"
+      optionLabel="name"
+      [filter]="true"
+      [selectedItemsLabel]="$selectedLabel()"
+      [maxSelectedLabels]="3"
+      [showHeader]="true"
+      formControlName="setup"
+      appendTo="body"
+      [style]="{'width':'20rem'}"
+      (onChange)="onChangeFilters()"
+      [showClear]="true"
+      (onClear)="onClearSetup()">
+    </p-multiSelect>
+    <p-multiSelect
+      [options]="ammunitionAvailable"
+      placeholder="Filtrer par munitions"
+      optionValue="id"
+      optionLabel="name"
+      [filter]="false"
+      [showToggleAll]="true"
+      [selectedItemsLabel]="$selectedLabel()"
+      [maxSelectedLabels]="3"
+      [showHeader]="true"
+      formControlName="ammo"
+      appendTo="body"
+      [style]="{'width':'20rem'}"
+      (onChange)="onChangeFilters()"
+      (onClear)="onClearAmmo()"
+      [showClear]="true">
+    </p-multiSelect>
+    <p-multiSelect
+      [options]="distanceAvailable"
+      placeholder="Filtrer par distance"
+      [filter]="false"
+      [showToggleAll]="true"
+      [selectedItemsLabel]="$selectedLabel()"
+      [maxSelectedLabels]="3"
+      [showHeader]="true"
+      appendTo="body"
+      [style]="{'width':'20rem'}"
+      [showClear]="true"
+      optionLabel="name"
+      formControlName="distance"
+      optionValue="value"
+      (onClear)="onClearDistance()"
+      (onChange)="onChangeFilters()">
+    </p-multiSelect>
+    <p-multiSelect
+      [options]="months"
+      placeholder="Filtrer par mois"
+      [filter]="false"
+      [showToggleAll]="true"
+      [selectedItemsLabel]="$selectedLabel()"
+      [maxSelectedLabels]="3"
+      [showHeader]="true"
+      appendTo="body"
+      formControlName="month"
+      [style]="{'width':'20rem'}"
+      [showClear]="true"
+      (onClear)="onClearMonths()"
+      (onChange)="onChangeMonth()">
+    </p-multiSelect>
+  </form>
+</div>
+<div class="text-center mt-4">
+  <p-button label="Effacer tous les filtres" severity="secondary" />
 </div>
 
 @if (!isLoading){

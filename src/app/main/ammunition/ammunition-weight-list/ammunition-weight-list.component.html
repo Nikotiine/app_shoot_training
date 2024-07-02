@@ -56,7 +56,7 @@
       <p-button
         label="{{ isShowForm ? 'Annuler' : 'Ajouter' }}"
         icon="pi {{ isShowForm ? 'pi-times' : 'pi-plus' }}"
-        severity="{{ isShowForm ? 'secondary' : 'primary' }}"
+        [severity]="$severity()"
         (onClick)="showAddForm()"></p-button>
     </div>
     @defer (when isShowForm){ @if (isShowForm){

@@ -93,9 +93,7 @@
                 optionLabel="name"
                 [showClear]="true">
                 <ng-template let-option pTemplate="item">
-                  <p-tag
-                    [value]="option.name"
-                    severity="{{option.severity}}"></p-tag>
+                  <p-tag [value]="option.name" severity="success"></p-tag>
                 </ng-template>
               </p-dropdown>
             </ng-template>
@@ -134,9 +132,7 @@
         <td>{{session.setup}}</td>
         <td>{{session.ammunition}}</td>
         <td class="text-center">
-          <p-tag
-            [value]="session.distance"
-            severity="{{session.distanceSeverity}}"></p-tag>
+          <p-tag [value]="session.distance" severity="success"></p-tag>
         </td>
         <td class="text-center">{{session.position}}</td>
         <td class="flex align-items-center">

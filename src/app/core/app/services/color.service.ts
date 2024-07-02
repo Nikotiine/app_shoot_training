@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
-
+export type Severity =
+  | 'success'
+  | 'info'
+  | 'warning'
+  | 'danger'
+  | 'help'
+  | 'primary'
+  | 'secondary'
+  | 'contrast'
+  | null
+  | undefined;
 @Injectable({
   providedIn: 'root'
 })

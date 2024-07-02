@@ -16,6 +16,10 @@ import { TrainingSessionGroupByMouthViewModel } from '../model/TrainingSessionGr
 import { TrainingService } from './training.service';
 import { DateService } from './date.service';
 import { ScoreService } from './score.service';
+import { UserWeaponSetupDto } from '../../api/models/user-weapon-setup-dto';
+import { DropdownModelService } from './dropdown-model.service';
+import { DropdownModel } from '../model/DropdownModel';
+import { AmmunitionDto } from '../../api/models/ammunition-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +30,8 @@ export class StatsService {
     inject(MapperTrainingSessionService);
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly dropdownModelService: DropdownModelService =
+    inject(DropdownModelService);
   private readonly scoreService: ScoreService = inject(ScoreService);
   private readonly dateService: DateService = inject(DateService);
   private readonly _currentPageMessageHeader: string =
@@ -73,7 +79,7 @@ export class StatsService {
     const result: TrainingSessionGroupByMouthViewModel[] = [];
     for (let i = 0; i < 12; i++) {
       const wm: TrainingSessionGroupByMouthViewModel = {
-        mouth: this.getMonthNameWithIndex(i),
+        month: this.getMonthNameWithIndex(i),
         trainingSessions: []
       };
       for (const key in trainingSessionGroupByMouth.groupByMouth) {
@@ -88,7 +94,7 @@ export class StatsService {
 
   public getChartData(data: TrainingSessionGroupByMouthViewModel[]): ChartData {
     return {
-      labels: data.map((d) => d.mouth),
+      labels: data.map((d) => d.month),
       datasets: [
         {
           type: 'bar',
@@ -222,5 +228,74 @@ export class StatsService {
       }
     }
     return result;
+  }
+
+  public extractDistance(
+    trainingGroups: TrainingSessionGroupByMouthDto
+  ): DropdownModel[] {
+    const distanceSetup: number[] = [];
+
+    Object.values(trainingGroups.groupByMouth)
+      .flat()
+      .forEach((session) => {
+        if (
+          session.distance != null &&
+          !distanceSetup.includes(session.distance)
+        ) {
+          distanceSetup.push(session.distance);
+        }
+      });
+
+    return this.dropdownModelService.mapDistanceToDropdownModel(
+      Array.from(distanceSetup.values())
+    );
+  }
+  public extractDistance2(
+    trainingGroups: TrainingSessionGroupByMouthViewModel[]
+  ): DropdownModel[] {
+    const distances: number[] = [];
+
+    trainingGroups.forEach((group) => {
+      group.trainingSessions.forEach((session) => {
+        if (session.distance != null && !distances.includes(session.distance)) {
+          distances.push(session.distance);
+        }
+      });
+    });
+
+    return this.dropdownModelService.mapDistanceToDropdownModel(
+      Array.from(distances.values())
+    );
+  }
+
+  public extractSetup(
+    trainingGroups: TrainingSessionGroupByMouthViewModel[]
+  ): DropdownModel[] {
+    const setupMap = new Map<number, UserWeaponSetupDto>();
+
+    trainingGroups.forEach((group) => {
+      group.trainingSessions.forEach((session) => {
+        setupMap.set(session.setup.id, session.setup);
+      });
+    });
+
+    return this.dropdownModelService.mapSetupToDropdownModel(
+      Array.from(setupMap.values())
+    );
+  }
+  public extractAmmunition(
+    trainingGroups: TrainingSessionGroupByMouthViewModel[]
+  ): DropdownModel[] {
+    const setupMap = new Map<number, AmmunitionDto>();
+
+    trainingGroups.forEach((group) => {
+      group.trainingSessions.forEach((session) => {
+        setupMap.set(session.ammunition.id, session.ammunition);
+      });
+    });
+
+    return this.dropdownModelService.mapAmmunitionToDropdownModel(
+      Array.from(setupMap.values())
+    );
   }
 }
