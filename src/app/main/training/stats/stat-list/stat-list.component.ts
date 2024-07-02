@@ -22,14 +22,14 @@ import { ButtonModule } from 'primeng/button';
 import { TrainingSessionGroupByMouthViewModel } from '../../../../core/app/model/TrainingSessionGroupByMouthViewModel';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectChangeEvent, MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { DropdownModel } from '../../../../core/app/model/DropdownModel';
 
 export interface Filter {
-  ammos: number[];
-  setups: number[];
-  distances: number[];
+  ammos: number[] | null;
+  setups: number[] | null;
+  distances: number[] | null;
 }
 @Component({
   selector: 'app-stat-list',
@@ -56,7 +56,7 @@ export class StatListComponent implements OnInit {
     [];
   private _userId!: number;
 
-  filters!: Filter;
+  private _filters!: Filter;
 
   // Public field
   public data!: ChartData;
@@ -78,7 +78,8 @@ export class StatListComponent implements OnInit {
     distance: []
   });
   public $totalTrainingSessionInCurrentYear: WritableSignal<number> = signal(0);
-
+  public $totalFilteredTrainingSession: WritableSignal<number> = signal(0);
+  public $isFiltering: WritableSignal<boolean> = signal(false);
   public ngOnInit(): void {
     const user = this.userService.getProfile();
     if (user) {
@@ -137,157 +138,98 @@ export class StatListComponent implements OnInit {
     this.loadData(this._userId, this.$currentYear());
   }
 
-  /*public onSelectMonths(event: MultiSelectChangeEvent): void {
-    this.$selectedLabel.set(
-      event.value.length < 12
-        ? event.value.length + ' mois selectionnés'
-        : 'Année complete'
-    );
-    const filteredMonths: string[] = event.value;
-    const filteredTrainingSessions: TrainingSessionGroupByMouthViewModel[] = [];
-    for (const month of filteredMonths) {
-      const trainingSession: TrainingSessionGroupByMouthViewModel = <
-        TrainingSessionGroupByMouthViewModel
-      >this._trainingViewModel.find((t) => t.month === month);
-      filteredTrainingSessions.push(trainingSession);
-    }
-    this._filteredTrainingViewModel = filteredTrainingSessions;
-    this.data = this.statsService.getChartData(this._filteredTrainingViewModel);
-  }*/
-
-  /* public onSelectSetup(event: MultiSelectChangeEvent): void {
-    const filteredWeaponSetupId: number[] = event.value;
-    const filteredTrainingSessions: TrainingSessionGroupByMouthViewModel[] =
-      this._filteredTrainingViewModel.map((vm) => {
-        return {
-          ...vm,
-          trainingSessions: vm.trainingSessions.filter((s) =>
-            filteredWeaponSetupId.includes(s.setup.id)
-          )
-        };
-      });
-
-    this._filteredTrainingViewModel = filteredTrainingSessions;
-   this.data = this.statsService.getChartData(filteredTrainingSessions);
-  } */
-
-  /* public onSelectDistance(event: MultiSelectChangeEvent): void {
-    const selectedDistances: number[] = event.value;
-
-    const filteredTrainingSessions: TrainingSessionGroupByMouthViewModel[] =
-      this._filteredTrainingViewModel.map((vm) => {
-        return {
-          ...vm,
-          trainingSessions: vm.trainingSessions.filter((s) =>
-            selectedDistances.includes(<number>s.distance)
-          )
-        };
-      });
-    this.setupsAvailable = this.statsService.extractSetup(
-      filteredTrainingSessions
-    );
-    this._filteredTrainingViewModel = filteredTrainingSessions;
-    this.data = this.statsService.getChartData(filteredTrainingSessions);
-  }*/
-
-  /* public onSelectAmmo(event: MultiSelectChangeEvent): void {
-    const selectedAmmoId: number[] = event.value;
-    const filteredTrainingSessions: TrainingSessionGroupByMouthViewModel[] =
-      this._filteredTrainingViewModel.map((vm) => {
-        return {
-          ...vm,
-          trainingSessions: vm.trainingSessions.filter((s) =>
-            selectedAmmoId.includes(s.ammunition.id)
-          )
-        };
-      });
-    this._filteredTrainingViewModel = filteredTrainingSessions;
-    this.data = this.statsService.getChartData(filteredTrainingSessions);
-  }*/
-
-  onChange(): void {
-    const selectedAmmoIds: number[] = this.form.controls['ammo'].value;
-    const filteredWeaponSetupIds: number[] = this.form.controls['setup'].value;
-    const distances: number[] = this.form.controls['distance'].value;
-
-    const months: string[] = this.form.controls['month'].value;
-
-    const filteredTrainingSessions: TrainingSessionGroupByMouthViewModel[] =
-      this._trainingViewModel
-        .filter((t) => months.includes(t.month))
-        .map((vm) => {
-          return {
-            ...vm,
-            trainingSessions: vm.trainingSessions.filter(
-              (s) =>
-                selectedAmmoIds.includes(s.ammunition.id) &&
-                filteredWeaponSetupIds.includes(s.setup.id) &&
-                distances.includes(<number>s.distance)
-            )
-          };
-        });
-
-    this.data = this.statsService.getChartData(filteredTrainingSessions);
-  }
-
-  onChangeFilters(): void {
-    this.filters = {
+  public onChangeFilters(): void {
+    this._filters = {
       ammos: this.form.controls['ammo'].value,
       setups: this.form.controls['setup'].value,
       distances: this.form.controls['distance'].value
     };
-
+    console.log(this._filters);
     this.applyFilters(this._filteredTrainingViewModel);
   }
 
-  private applyFilters(list: TrainingSessionGroupByMouthViewModel[]) {
-    if (this.filters) {
+  private applyFilters(list: TrainingSessionGroupByMouthViewModel[]): void {
+    if (this._filters) {
       list = list.map((vm) => {
         return {
           ...vm,
           trainingSessions: vm.trainingSessions.filter(
             (s) =>
               //Bonne chance pour comprendre
-              (!this.filters.ammos ||
-                this.filters.ammos.includes(s.ammunition.id)) &&
-              (!this.filters.setups ||
-                this.filters.setups.includes(s.setup.id)) &&
-              (!this.filters.distances ||
-                this.filters.distances.includes(<number>s.distance))
+              (!this._filters.ammos ||
+                this._filters.ammos.includes(s.ammunition.id)) &&
+              (!this._filters.setups ||
+                this._filters.setups.includes(s.setup.id)) &&
+              (!this._filters.distances ||
+                this._filters.distances.includes(<number>s.distance))
           )
         };
       });
+      this.verifyIsFiltering();
     }
+    this.setTotalFilterdTrainingSession(list);
     this.data = this.statsService.getChartData(list);
   }
 
-  onChangeMonth(): void {
+  public onChangeMonth(): void {
     const months: string[] = this.form.controls['month'].value;
+    this.$selectedLabel.set(
+      months.length < 12
+        ? months.length + ' mois selectionnés'
+        : 'Année complete'
+    );
     if (months?.length > 0) {
       this._filteredTrainingViewModel = this._trainingViewModel.filter((t) =>
         months.includes(t.month)
       );
-
       this.applyFilters(this._filteredTrainingViewModel);
     }
+
+    this.$isFiltering.set(months?.length > 0 && months?.length < 12);
   }
 
-  onClearDistance() {
-    console.log('ii distance');
+  public onClearDistance(): void {
+    this._filters.distances = null;
+    this.applyFilters(this._trainingViewModel);
   }
 
-  onClearAmmo() {
-    console.log('ii ammo');
+  public onClearAmmo(): void {
+    this._filters.ammos = null;
+    this.applyFilters(this._trainingViewModel);
   }
 
-  onClearSetup() {
-    console.log('ii setup');
+  public onClearSetup(): void {
+    this._filters.setups = null;
+    this.applyFilters(this._trainingViewModel);
   }
 
-  onClearMonths() {
-    console.log('ii month');
+  public onClearMonths(): void {
     this.form.controls['month'].setValue(this.months);
     this.$selectedLabel.set('Année complete');
-    this.data = this.statsService.getChartData(this._trainingViewModel);
+    this.onChangeMonth();
+  }
+
+  public resetFilter(): void {
+    this._filters = {
+      ammos: null,
+      setups: null,
+      distances: null
+    };
+    this.form.reset();
+    this.onClearMonths();
+  }
+  private setTotalFilterdTrainingSession(
+    list: TrainingSessionGroupByMouthViewModel[]
+  ): void {
+    const total = this.getTotalTrainingSessionInCurrentYear(list);
+    this.$totalFilteredTrainingSession.set(total);
+  }
+
+  private verifyIsFiltering(): void {
+    const isFiltering =
+      (!this._filters.ammos || this._filters.ammos.length === 0) &&
+      (!this._filters.setups || this._filters.setups.length === 0) &&
+      (!this._filters.distances || this._filters.distances.length === 0);
+    this.$isFiltering.set(!isFiltering);
   }
 }

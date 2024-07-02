@@ -22,12 +22,13 @@
       optionValue="id"
       optionLabel="name"
       [filter]="true"
-      [selectedItemsLabel]="$selectedLabel()"
-      [maxSelectedLabels]="3"
+      selectedItemsLabel="{value} setup selectionnés"
+      [maxSelectedLabels]="1"
       [showHeader]="true"
       formControlName="setup"
       appendTo="body"
-      [style]="{'width':'20rem'}"
+      [style]="{'width':'15rem'}"
+      class="mr-2"
       (onChange)="onChangeFilters()"
       [showClear]="true"
       (onClear)="onClearSetup()">
@@ -39,12 +40,13 @@
       optionLabel="name"
       [filter]="false"
       [showToggleAll]="true"
-      [selectedItemsLabel]="$selectedLabel()"
-      [maxSelectedLabels]="3"
+      selectedItemsLabel="{value} munitions selectionnés"
+      [maxSelectedLabels]="1"
       [showHeader]="true"
       formControlName="ammo"
       appendTo="body"
-      [style]="{'width':'20rem'}"
+      [style]="{'width':'15rem'}"
+      class="mr-2"
       (onChange)="onChangeFilters()"
       (onClear)="onClearAmmo()"
       [showClear]="true">
@@ -54,11 +56,12 @@
       placeholder="Filtrer par distance"
       [filter]="false"
       [showToggleAll]="true"
-      [selectedItemsLabel]="$selectedLabel()"
-      [maxSelectedLabels]="3"
+      selectedItemsLabel="{value} setup selectionnés"
+      [maxSelectedLabels]="2"
       [showHeader]="true"
       appendTo="body"
-      [style]="{'width':'20rem'}"
+      [style]="{'width':'15rem'}"
+      class="mr-2"
       [showClear]="true"
       optionLabel="name"
       formControlName="distance"
@@ -76,7 +79,7 @@
       [showHeader]="true"
       appendTo="body"
       formControlName="month"
-      [style]="{'width':'20rem'}"
+      [style]="{'width':'15rem'}"
       [showClear]="true"
       (onClear)="onClearMonths()"
       (onChange)="onChangeMonth()">
@@ -84,15 +87,25 @@
   </form>
 </div>
 <div class="text-center mt-4">
-  <p-button label="Effacer tous les filtres" severity="secondary" />
+  <p-button
+    label="Effacer tous les filtres"
+    severity="secondary"
+    (onClick)="resetFilter()"
+    [style]="{'width':'15rem'}" />
 </div>
 
 @if (!isLoading){
 <div class="">
   <p>
-    Total de séances cette année :
+    Total de séances en {{$currentYear()}} :
     <span class="text-primary">{{$totalTrainingSessionInCurrentYear()}}</span>
   </p>
+  @if ($isFiltering()){
+  <p>
+    {{$totalFilteredTrainingSession()>1?'Resultats':'Resultat'}} des filtres :
+    <span class="text-primary">{{$totalFilteredTrainingSession()}}</span>
+  </p>
+  }
 </div>
 @if ($totalTrainingSessionInCurrentYear() === 0){
 <p class="text-2xl text-center text-red-500">
