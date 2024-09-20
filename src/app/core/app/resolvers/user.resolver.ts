@@ -3,8 +3,6 @@ import { AuthenticationService } from '../../api/services/authentication.service
 import { inject } from '@angular/core';
 import { SecurityService } from '../services/security.service';
 import { catchError, map } from 'rxjs/operators';
-
-import { of } from 'rxjs';
 import { UserProfileDto } from '../../api/models/user-profile-dto';
 import { Routing } from '../enum/Routing.enum';
 

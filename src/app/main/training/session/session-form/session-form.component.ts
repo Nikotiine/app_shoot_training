@@ -125,7 +125,8 @@ export class SessionFormComponent implements OnInit {
    * @param id du calibre du setup
    */
   public setupSelected(id: number): void {
-    this.trainingService.getAmmunitionByCaliber(id).subscribe({
+    const caliberId: number = this.getCaliberIdFormSetup(id);
+    this.trainingService.getAmmunitionByCaliber(caliberId).subscribe({
       next: (data) => {
         this.form.controls['ammunition'].enable();
         this._ammunitions = data;
@@ -251,7 +252,11 @@ export class SessionFormComponent implements OnInit {
       }
     });
   }
-
+  public getCaliberIdFormSetup(id: number): number {
+    return <number>(
+      this._userSetups.find((setup) => setup.id === id)?.weapon.caliber.id
+    );
+  }
   /**
    * Retourne la munition choisie part l'utilisateur sous forme dobjet AmmunitionDto
    */

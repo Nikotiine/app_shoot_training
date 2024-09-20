@@ -14,6 +14,8 @@ import { TableModule } from 'primeng/table';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 import { AmmunitionDto } from '../../../core/api/models/ammunition-dto';
 import { AmmunitionService } from '../../../core/app/services/ammunition.service';
+import { TagModule } from 'primeng/tag';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-ammunition-list',
@@ -24,7 +26,8 @@ import { AmmunitionService } from '../../../core/app/services/ammunition.service
     CaliberDropdownComponent,
     DatePipe,
     SharedModule,
-    TableModule
+    TableModule,
+    TagModule
   ],
   templateUrl: './ammunition-list.component.html',
   styleUrl: './ammunition-list.component.scss'
@@ -41,6 +44,7 @@ export class AmmunitionListComponent implements OnInit {
   public $totalAmmunition = signal(0);
   public $selectedAmmunition: WritableSignal<AmmunitionDto | null> =
     signal(null);
+  public $severity: WritableSignal<Severity> = signal('primary');
   public filteredAmmunition: AmmunitionDto[] = [];
   public isShowFormComponent: boolean = false;
 
@@ -80,6 +84,7 @@ export class AmmunitionListComponent implements OnInit {
   public showEditForm(ammunition: AmmunitionDto): void {
     this.isShowFormComponent = !this.isShowFormComponent;
     this.$selectedAmmunition.set(ammunition);
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   public showAddForm(): void {
@@ -87,6 +92,7 @@ export class AmmunitionListComponent implements OnInit {
       this.$selectedAmmunition.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   /**

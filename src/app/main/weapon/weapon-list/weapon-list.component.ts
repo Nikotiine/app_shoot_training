@@ -20,6 +20,7 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { WeaponFormComponent } from '../weapon-form/weapon-form.component';
 import { WeaponService } from '../../../core/app/services/weapon.service';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-weapon-list',
@@ -52,7 +53,7 @@ export class WeaponListComponent implements OnInit {
   public factories: FactoryDto[] = [];
   public $currentCaliberId: WritableSignal<number> = signal(0);
   public $selectedWeapon: WritableSignal<WeaponDto | null> = signal(null);
-
+  public $severity: WritableSignal<Severity> = signal('primary');
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
@@ -69,6 +70,7 @@ export class WeaponListComponent implements OnInit {
       this.$selectedWeapon.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   /**
@@ -114,6 +116,7 @@ export class WeaponListComponent implements OnInit {
   public showEditForm(weapon: WeaponDto): void {
     this.isShowFormComponent = !this.isShowFormComponent;
     this.$selectedWeapon.set(weapon);
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   /**

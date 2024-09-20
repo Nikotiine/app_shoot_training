@@ -19,6 +19,8 @@ import { MapperAmmunitionService } from '../api-service-mapper/mapper-ammunition
 import { MapperUserSetupService } from '../api-service-mapper/mapper-user-setup.service';
 import { CustomConfirmationService } from './custom-confirmation.service';
 import { TrainingSessionGroupCreateDto } from '../../api/models/training-session-group-create-dto';
+import { ScoreService } from './score.service';
+import { DropdownModelService } from './dropdown-model.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +37,12 @@ export class TrainingService {
   );
   private readonly customMessageService: CustomMessageService =
     inject(CustomMessageService);
+  private readonly dropdownModelService: DropdownModelService =
+    inject(DropdownModelService);
   private readonly colorService: ColorService = inject(ColorService);
   private readonly customConfirmationService: CustomConfirmationService =
     inject(CustomConfirmationService);
+  private readonly scoreService: ScoreService = inject(ScoreService);
   private readonly _currentPageMessageHeader: string = 'Gestion des sesssion';
 
   /**
@@ -178,27 +183,7 @@ export class TrainingService {
   public mapSetupToDropdownModel(
     setups: UserWeaponSetupDto[]
   ): DropdownModel[] {
-    return setups.map((setup) => {
-      return {
-        id: setup.id,
-        name: this.createSetupName(setup)
-      };
-    });
-  }
-
-  /**
-   * Transforme les munition utilisées par l'utilisateur AmmunitionDto[] en DropdownModel[]
-   * @param ammunition
-   */
-  public mapAmmunitionToDropdownModel(
-    ammunition: AmmunitionDto[]
-  ): DropdownModel[] {
-    return ammunition.map((ammo) => {
-      return {
-        id: ammo.id,
-        name: this.createAmmunitionName(ammo)
-      };
-    });
+    return this.dropdownModelService.mapSetupToDropdownModel(setups);
   }
 
   /**
@@ -206,16 +191,7 @@ export class TrainingService {
    * @param distances
    */
   public mapDistanceToDropdownModel(distances: number[]): DropdownModel[] {
-    const dropdown: DropdownModel[] = [];
-    distances.forEach((distance, index) => {
-      dropdown.push({
-        id: index,
-        name: distance.toString(),
-        value: distance,
-        severity: this.colorService.getDistanceSeverity(distance)
-      });
-    });
-    return dropdown;
+    return this.dropdownModelService.mapDistanceToDropdownModel(distances);
   }
 
   /**
@@ -232,10 +208,12 @@ export class TrainingService {
         distanceSeverity: this.colorService.getDistanceSeverity(
           session.distance
         ),
-        setup: this.createSetupName(session.setup),
+        setup: this.dropdownModelService.createSetupName(session.setup),
         position: this.getPositionLabel(session.position),
         date: new Date(session.date),
-        ammunition: this.createAmmunitionName(session.ammunition),
+        ammunition: this.dropdownModelService.createAmmunitionName(
+          session.ammunition
+        ),
         active: session.active
       };
     });
@@ -248,18 +226,22 @@ export class TrainingService {
   public createTrainingViewModel(
     session: TrainingSessionDto
   ): TrainingSessionViewModel {
-    const bestScore: number = this.getBestScore(session.trainingSessionGroups);
-    const bestAverage: number = this.getBestAverage(
+    const bestScore: number = this.scoreService.getBestScore(
+      session.trainingSessionGroups
+    );
+    const bestAverage: number = this.scoreService.getBestAverage(
       session.trainingSessionGroups
     );
     return {
       id: session.id,
       distance: session.distance,
       distanceSeverity: this.colorService.getDistanceSeverity(session.distance),
-      setup: this.createSetupName(session.setup),
+      setup: this.dropdownModelService.createSetupName(session.setup),
       position: this.getPositionLabel(session.position),
       date: new Date(session.date),
-      ammunition: this.createAmmunitionName(session.ammunition),
+      ammunition: this.dropdownModelService.createAmmunitionName(
+        session.ammunition
+      ),
       support: this.getSupportLabel(session.support),
       windSpeed: session.windSpeed,
       windSpeedTextColor: this.colorService.getWindSpeedColor(
@@ -276,25 +258,16 @@ export class TrainingService {
       active: session.active
     };
   }
-
+  /**
+   * Transforme les munition utilisées par l'utilisateur AmmunitionDto[] en DropdownModel[]
+   * @param ammunition
+   */
+  public mapAmmunitionToDropdownModel(
+    ammunition: AmmunitionDto[]
+  ): DropdownModel[] {
+    return this.dropdownModelService.mapAmmunitionToDropdownModel(ammunition);
+  }
   //************************************ PRIVATE METHODS ************************************
-
-  /**
-   * Genere le nom du setup complet : Marque de l'arme / model + lunette associe avec zoom mini - maxi et diametre de
-   * lentille exterieur UserWeaponSetupDto
-   * @param setup
-   */
-  private createSetupName(setup: UserWeaponSetupDto): string {
-    return `${setup.weapon.factory.name}-${setup.weapon.model} + ${setup.optics.factory.name}-${setup.optics.name} ${setup.optics.minZoom}-${setup.optics.maxZoom}x${setup.optics.outletDiameter.label}`;
-  }
-
-  /**
-   * Genere le nom de la munition avec Marque / modele et poids en grains
-   * @param ammo AmmunitionDto
-   */
-  private createAmmunitionName(ammo: AmmunitionDto): string {
-    return `${ammo.factory.name} - ${ammo.name} / ${ammo.weight.grains} grains`;
-  }
 
   /**
    * Retourne le label en fonction de la position de la session
@@ -342,22 +315,6 @@ export class TrainingService {
   }
 
   /**
-   * Compare et retourne le meuilleur score
-   * @param trainingSessionGroups TrainingSessionGroupDto[]
-   */
-  private getBestScore(
-    trainingSessionGroups: TrainingSessionGroupCreateDto[]
-  ): number {
-    let score: number = 0;
-    for (const sessionGroup of trainingSessionGroups) {
-      if (sessionGroup.score && score < sessionGroup.score) {
-        score = sessionGroup.score;
-      }
-    }
-    return score;
-  }
-
-  /**
    * Genere le traningGroupViewModel et attribue les couleur des score et des groupement
    * @param trainingSessionGroups TrainingSessionGroupDto[]
    * @param bestAverageGap number le meuilleur groupement de toute les enregistrement de la session
@@ -385,27 +342,6 @@ export class TrainingService {
         )
       };
     });
-  }
-
-  /**
-   * Compare et reourne le meuilleur groupement de la session
-   * @param trainingSessionGroups TrainingSessionGroupDto[]
-   */
-  private getBestAverage(
-    trainingSessionGroups: TrainingSessionGroupCreateDto[]
-  ): number {
-    let averageGap = null;
-    for (const session of trainingSessionGroups) {
-      if (session.verticalGap && session.horizontalGap) {
-        const average = session.verticalGap + session.horizontalGap;
-        if (averageGap === null) {
-          averageGap = average;
-        } else if (averageGap > average) {
-          averageGap = average;
-        }
-      }
-    }
-    return averageGap ? averageGap : 0;
   }
 
   public getSessionById(id: number): Observable<TrainingSessionDto> {

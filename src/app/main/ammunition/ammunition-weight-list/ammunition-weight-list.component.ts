@@ -14,6 +14,8 @@ import { TableModule } from 'primeng/table';
 import { AmmunitionWeightFormComponent } from '../ammunition-weight-form/ammunition-weight-form.component';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 import { WeightService } from '../../../core/app/services/weight.service';
+import { TagModule } from 'primeng/tag';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-ammunition-weight-list',
@@ -24,7 +26,8 @@ import { WeightService } from '../../../core/app/services/weight.service';
     DatePipe,
     SharedModule,
     TableModule,
-    AmmunitionWeightFormComponent
+    AmmunitionWeightFormComponent,
+    TagModule
   ],
   templateUrl: './ammunition-weight-list.component.html',
   styleUrl: './ammunition-weight-list.component.scss'
@@ -44,7 +47,7 @@ export class AmmunitionWeightListComponent implements OnInit {
   public $selectedCaliberId: WritableSignal<number> = signal(0);
   public $selectedWeight: WritableSignal<AmmunitionWeightDto | null> =
     signal(null);
-
+  public $severity: WritableSignal<Severity> = signal('primary');
   public ngOnInit(): void {
     this.loadData();
   }
@@ -77,6 +80,7 @@ export class AmmunitionWeightListComponent implements OnInit {
       this.$selectedWeight.set(null);
     }
     this.isShowForm = !this.isShowForm;
+    this.$severity.set(this.isShowForm ? 'secondary' : 'primary');
     this.$disableDropdown.set(this.isShowForm);
   }
 
@@ -114,6 +118,7 @@ export class AmmunitionWeightListComponent implements OnInit {
    */
   public showEditForm(weight: AmmunitionWeightDto): void {
     this.isShowForm = !this.isShowForm;
+    this.$severity.set(this.isShowForm ? 'secondary' : 'primary');
     this.$disableDropdown.set(this.isShowForm);
     this.$selectedWeight.set(weight);
   }

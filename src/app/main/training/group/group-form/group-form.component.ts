@@ -50,14 +50,17 @@ export class GroupFormComponent {
   //************************************ PUBLIC METHODS ************************************
 
   public add(): void {
+    const verticalGap: number = this.form.controls['verticalGap'].value;
+    const horizontalGap: number = this.form.controls['horizontalGap'].value;
     const sessionGroup: TrainingSessionGroupCreateDto = {
       totalShoots: this.form.controls['totalShoots'].value,
       score: this.transformScoreOnTenShootRatio(
         this.form.controls['score'].value,
         this.form.controls['totalShoots'].value
       ),
-      horizontalGap: this.form.controls['horizontalGap'].value,
-      verticalGap: this.form.controls['verticalGap'].value
+      horizontalGap: horizontalGap,
+      verticalGap: verticalGap,
+      averageGap: this.getAverageGap(horizontalGap, verticalGap)
     };
     this.groups.push(sessionGroup);
     this.form.controls['totalShoots'].setValue(10);
@@ -98,5 +101,9 @@ export class GroupFormComponent {
     } else {
       return (score * 10) / shoots;
     }
+  }
+
+  private getAverageGap(horizontalGap: number, verticalGap: number): number {
+    return horizontalGap + verticalGap;
   }
 }

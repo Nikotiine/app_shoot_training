@@ -17,6 +17,8 @@ import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { FactoryFormComponent } from '../factory-form/factory-form.component';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { FactoryService } from '../../../core/app/services/factory.service';
+import { TagModule } from 'primeng/tag';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-factory-table-list',
@@ -26,7 +28,8 @@ import { FactoryService } from '../../../core/app/services/factory.service';
     DatePipe,
     SharedModule,
     TableModule,
-    FactoryFormComponent
+    FactoryFormComponent,
+    TagModule
   ],
   templateUrl: './factory-table-list.component.html',
   styleUrl: './factory-table-list.component.scss'
@@ -41,6 +44,7 @@ export class FactoryTableListComponent {
 
   // Public field
   public $factoryToEdit: WritableSignal<FactoryDto | null> = signal(null);
+  public $severity: WritableSignal<Severity> = signal('primary');
   public factories: FactoryDto[] = [];
   public newFactoryForm: boolean = false;
   @Input() set factoryType(factory: FactoryType) {
@@ -62,6 +66,7 @@ export class FactoryTableListComponent {
       this.$factoryToEdit.set(null);
     }
     this.newFactoryForm = !this.newFactoryForm;
+    this.$severity.set(this.newFactoryForm ? 'secondary' : 'primary');
   }
 
   /**
@@ -79,6 +84,7 @@ export class FactoryTableListComponent {
    */
   public edit(factory: FactoryDto): void {
     this.newFactoryForm = !this.newFactoryForm;
+    this.$severity.set(this.newFactoryForm ? 'secondary' : 'primary');
     this.$factoryToEdit.set(factory);
   }
 

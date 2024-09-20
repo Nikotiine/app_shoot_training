@@ -3,7 +3,6 @@ import { ApiAmmunitionService } from '../../api/services/api-ammunition.service'
 import { AmmunitionCreateDto } from '../../api/models/ammunition-create-dto';
 import { Observable } from 'rxjs';
 import { AmmunitionDto } from '../../api/models/ammunition-dto';
-import { AmmunitionWeightDto } from '../../api/models/ammunition-weight-dto';
 
 @Injectable({
   providedIn: 'root'

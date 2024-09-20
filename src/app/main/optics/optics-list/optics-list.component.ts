@@ -15,6 +15,8 @@ import { OpticsDto } from '../../../core/api/models/optics-dto';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { CustomConfirmationService } from '../../../core/app/services/custom-confirmation.service';
 import { OpticsService } from '../../../core/app/services/optics.service';
+import { TagModule } from 'primeng/tag';
+import { Severity } from '../../../core/app/services/color.service';
 
 @Component({
   selector: 'app-optics-list',
@@ -24,7 +26,8 @@ import { OpticsService } from '../../../core/app/services/optics.service';
     DatePipe,
     OpticsFormComponent,
     SharedModule,
-    TableModule
+    TableModule,
+    TagModule
   ],
   templateUrl: './optics-list.component.html',
   styleUrl: './optics-list.component.scss'
@@ -39,7 +42,7 @@ export class OpticsListComponent implements OnInit {
   public optics: OpticsDto[] = [];
   public isShowFormComponent: boolean = false;
   public $selectedOptics: WritableSignal<OpticsDto | null> = signal(null);
-
+  public $severity: WritableSignal<Severity> = signal('primary');
   //************************************ PUBLIC METHODS ************************************
 
   public ngOnInit(): void {
@@ -55,6 +58,7 @@ export class OpticsListComponent implements OnInit {
       this.$selectedOptics.set(null);
     }
     this.isShowFormComponent = !this.isShowFormComponent;
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   /**
@@ -90,6 +94,7 @@ export class OpticsListComponent implements OnInit {
   public showEditForm(optic: OpticsDto): void {
     this.$selectedOptics.set(optic);
     this.isShowFormComponent = !this.isShowFormComponent;
+    this.$severity.set(this.isShowFormComponent ? 'secondary' : 'primary');
   }
 
   /**

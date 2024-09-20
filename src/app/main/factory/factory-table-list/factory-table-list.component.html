@@ -30,7 +30,7 @@
   <p-button
     label="{{ newFactoryForm ? 'Annuler' : 'Ajouter une marque' }}"
     icon="pi {{ newFactoryForm ? 'pi-times' : 'pi-plus' }}"
-    severity="{{ newFactoryForm ? 'secondary' : 'primary' }}"
+    [severity]="$severity()"
     (onClick)="addFactory()"></p-button>
   @defer (when newFactoryForm){ @if (newFactoryForm){
   <app-factory-form

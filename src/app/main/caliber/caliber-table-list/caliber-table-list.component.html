@@ -27,7 +27,7 @@
   <p-button
     label="{{ visible ? 'Annuler' : 'Ajouter' }}"
     icon="pi {{ visible ? 'pi-times' : 'pi-plus' }}"
-    severity="{{ visible ? 'secondary' : 'primary' }}"
+    [severity]="$severity()"
     (onClick)="add()"></p-button>
 </div>
 @defer (when visible){ @if (visible){
