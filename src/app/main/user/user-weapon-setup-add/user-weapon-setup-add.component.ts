@@ -59,14 +59,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
       Validators.min(1)
     ),
     weaponNotFound: [false],
-    opticFactory: new FormControl(
-      { value: 0, disabled: true },
-      Validators.min(1)
-    ),
-    opticModel: new FormControl(
-      { value: 0, disabled: true },
-      Validators.min(1)
-    ),
+    opticFactory: new FormControl({ value: 0, disabled: true }),
+    opticModel: new FormControl({ value: 0, disabled: true }),
     opticsNotFound: [false],
     slopeRail: [0]
   });

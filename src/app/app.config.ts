@@ -10,11 +10,16 @@ import {
 import { apiInterceptor } from './core/app/api.interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  provideAngularQuery,
+  QueryClient
+} from '@tanstack/angular-query-experimental';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([apiInterceptor])),
+    provideAngularQuery(new QueryClient()),
     importProvidersFrom([BrowserAnimationsModule]),
     MessageService,
     ConfirmationService

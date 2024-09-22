@@ -6,7 +6,7 @@ import { WeaponDto } from '../models/weapon-dto';
 import { WeaponSoundReducerDto } from '../models/weapon-sound-reducer-dto';
 export interface UserWeaponSetupDto {
   id: number;
-  optics: OpticsDto;
+  optics?: OpticsDto;
   slopeRail?: number;
   soundReducer?: WeaponSoundReducerDto;
   user: UserProfileDto;

@@ -1,4 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { UserWeaponSetupAddComponent } from '../user-weapon-setup-add/user-weapon-setup-add.component';
@@ -8,6 +14,9 @@ import { TableModule } from 'primeng/table';
 import { CustomMessageService } from '../../../core/app/services/custom-message.service';
 import { RouterLink } from '@angular/router';
 import { UserSetupService } from '../../../core/app/services/user-setup.service';
+import { injectQuery } from '@tanstack/angular-query-experimental';
+import { lastValueFrom, tap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-weapon-setup-list',
@@ -24,32 +33,41 @@ import { UserSetupService } from '../../../core/app/services/user-setup.service'
 })
 export class UserWeaponSetupListComponent implements OnInit {
   public isAddNewSetup: boolean = false;
-  public weaponsSetups: UserWeaponSetupDto[] = [];
+  public weaponsRiffleSetups: UserWeaponSetupDto[] = [];
+  public weaponsHandGunSetups: UserWeaponSetupDto[] = [];
   private userSetupService: UserSetupService = inject(UserSetupService);
   private appUserService: UserService = inject(UserService);
-  private customMessageService: CustomMessageService =
-    inject(CustomMessageService);
+  private $_userId: WritableSignal<number> = signal(0);
 
   public ngOnInit(): void {
     const user = this.appUserService.getProfile();
     if (user) {
-      this.loadData(user.id);
+      this.$_userId.set(user.id);
     }
   }
 
-  private loadData(id: number): void {
-    this.userSetupService.getSetupByUserId(id).subscribe({
-      next: (data) => {
-        this.weaponsSetups = data;
-      },
-      error: (err) => {
-        this.customMessageService.errorMessage(
-          'Setup liste',
-          err.error.message
-        );
-      }
-    });
-  }
+  protected setupByUserIdQuery = injectQuery(() => ({
+    queryKey: ['setups'],
+    queryFn: () =>
+      lastValueFrom(
+        this.userSetupService.getSetupByUserId(this.$_userId()).pipe(
+          catchError((err) => {
+            this.userSetupService.errorMessage(err.error.message);
+            throw err;
+          }),
+          tap((res) => {
+            this.weaponsRiffleSetups = res.filter(
+              (setup) => setup.weapon.type.type === 'RIFFLE'
+            );
+            this.weaponsHandGunSetups = res.filter(
+              (setup) => setup.weapon.type.type === 'HAND_GUN'
+            );
+          })
+        )
+      ),
+    retry: false,
+    enabled: this.$_userId() > 0
+  }));
 
   /**
    * Afficher le formulaire d'ajout de setup
@@ -59,7 +77,9 @@ export class UserWeaponSetupListComponent implements OnInit {
   }
 
   public setupAdded(newSetup: UserWeaponSetupDto): void {
-    this.weaponsSetups.push(newSetup);
+    newSetup.weapon.type.type === 'RIFFLE'
+      ? this.weaponsRiffleSetups.push(newSetup)
+      : this.weaponsHandGunSetups.push(newSetup);
     this.isAddNewSetup = false;
   }
 }
