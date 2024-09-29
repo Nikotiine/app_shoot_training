@@ -30,7 +30,11 @@ export class DropdownModelService {
    * @param setup
    */
   public createSetupName(setup: UserWeaponSetupDto): string {
-    return `${setup.weapon.factory.name}-${setup.weapon.model} + ${setup.optics.factory.name}-${setup.optics.name} ${setup.optics.minZoom}-${setup.optics.maxZoom}x${setup.optics.outletDiameter.label}`;
+    if (setup.weapon.type.type === 'RIFFLE') {
+      return `${setup.weapon.factory.name}-${setup.weapon.model} + ${setup.optics?.factory.name}-${setup.optics?.name} ${setup.optics?.minZoom}-${setup.optics?.maxZoom}x${setup.optics?.outletDiameter.label}`;
+    } else {
+      return `${setup.weapon.factory.name}-${setup.weapon.model}`;
+    }
   }
 
   /**
