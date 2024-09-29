@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,10 +27,20 @@ import { UserWeaponSetupDto } from '../../../core/api/models/user-weapon-setup-d
 import { FactoryDto } from '../../../core/api/models/factory-dto';
 import { UserWeaponSetupCreateDto } from '../../../core/api/models/user-weapon-setup-create-dto';
 import { UserSetupService } from '../../../core/app/services/user-setup.service';
+import {
+  injectMutation,
+  injectQuery
+} from '@tanstack/angular-query-experimental';
+import { lastValueFrom, tap } from 'rxjs';
 
 export interface DropdownViewModel {
   id: number;
   model: string;
+}
+export interface ApiError {
+  error: {
+    message: string;
+  };
 }
 @Component({
   selector: 'app-user-weapon-setup-add',
@@ -46,6 +64,8 @@ export class UserWeaponSetupAddComponent implements OnInit {
   private readonly userService: UserService = inject(UserService);
   private _weapons: WeaponDto[] = [];
   private _optics: OpticsDto[] = [];
+  private $_enabledAllWeaponQuery: WritableSignal<boolean> = signal(false);
+  private $_enabledAllOpticsQuery: WritableSignal<boolean> = signal(false);
 
   // Public field
   public weaponFactories: FactoryDto[] = [];
@@ -64,43 +84,76 @@ export class UserWeaponSetupAddComponent implements OnInit {
     opticsNotFound: [false],
     slopeRail: [0]
   });
-  public isNewWeapon: boolean = false;
-  public isNewOptics: boolean = false;
+  public $isNewWeapon: WritableSignal<boolean> = signal(false);
+  public $isNewOptics: WritableSignal<boolean> = signal(false);
+  public $isHandGunNewSetup: WritableSignal<boolean> = signal(false);
   @Output() setupAdded: EventEmitter<UserWeaponSetupDto> =
     new EventEmitter<UserWeaponSetupDto>();
 
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   public ngOnInit(): void {
-    this.loadWeaponsList();
+    this.$_enabledAllWeaponQuery.update(() => true);
   }
+  // Protected field
+  protected getAllWeaponsQuery = injectQuery(() => ({
+    queryKey: ['allWeapons'],
+    queryFn: async () => {
+      return await lastValueFrom(
+        this.userSetupService.getAllWeapons().pipe(
+          tap((res) => {
+            this._weapons = res;
+            this.createWeaponFactoriesDropdown(res);
+          })
+        )
+      );
+    },
+    retry: false,
+    enabled: this.$_enabledAllWeaponQuery()
+  }));
 
+  protected getAllOpticsQuery = injectQuery(() => ({
+    queryKey: ['allOptics'],
+    queryFn: async () => {
+      return lastValueFrom(
+        this.userSetupService.getAllActivesOptics().pipe(
+          tap((res) => {
+            this._optics = res;
+            this.createOpticsFactoriesDropdown(res);
+          })
+        )
+      );
+    },
+    retry: false,
+    enabled: this.$_enabledAllOpticsQuery()
+  }));
+
+  protected addNewUserSetupMutation = injectMutation(() => ({
+    mutationFn: async (newSetup: UserWeaponSetupCreateDto) => {
+      return lastValueFrom(this.userSetupService.save(newSetup));
+    },
+    onError: (err: ApiError) => {
+      this.userSetupService.errorMessage(err.error.message);
+    },
+    onSuccess: (res) => {
+      this.setupAdded.emit(res);
+      this.userSetupService.successMessage('Nouveau setup enregistré');
+    }
+  }));
   //************************************ WEAPON ************************************
-
-  /**
-   * Charge la liste des armes disponible en bdd et creer le dropdown pour le choix de la marque de l'arme
-   */
-  private loadWeaponsList(): void {
-    this.userSetupService.getAllWeapons().subscribe({
-      next: (data) => {
-        this._weapons = data;
-        this.createWeaponFactoriesDropdown(data);
-      },
-      error: (err) => {
-        this.userSetupService.errorMessage(err.error.message);
-      }
-    });
-  }
 
   /**
    * Creer le dropdown pour le choix de la maruqe de l'arme
    * @param weapons WeaponDto[]
    */
   private createWeaponFactoriesDropdown(weapons: WeaponDto[]): void {
-    this.weaponFactories = [];
-
     for (const weapon of weapons) {
-      const factory: FactoryDto = weapon.factory;
-      this.weaponFactories.push(factory);
+      const isExist = this.weaponFactories.find(
+        (f) => f.id === weapon.factory.id
+      );
+      if (!isExist) {
+        const factory: FactoryDto = weapon.factory;
+        this.weaponFactories.push(factory);
+      }
     }
   }
 
@@ -137,7 +190,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * @param checked event du inputSwitch
    */
   public newWeaponForm(checked: boolean): void {
-    this.isNewWeapon = checked;
+    this.$isNewWeapon.update(() => checked);
     this.switchStateFormControl('weapon', checked);
   }
 
@@ -149,7 +202,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
   public weaponAdded(newWeapon: WeaponDto): void {
     this._weapons.push(newWeapon);
     this.createWeaponFactoriesDropdown(this._weapons);
-    this.isNewWeapon = false;
+    this.$isNewWeapon.update(() => false);
     this.switchStateFormControl('weapon', false);
     this.form.controls['weaponNotFound'].setValue(false);
   }
@@ -157,9 +210,22 @@ export class UserWeaponSetupAddComponent implements OnInit {
   /**
    * Quand l'arme est choisi active le dropdown du choix de la marque de l'optique et charge la liste des optique disponible en bdd
    */
-  public weaponSelected(): void {
-    this.form.controls['opticFactory'].enable();
-    this.loadOpticsList();
+  public weaponSelected(id: number): void {
+    const weapon = this._weapons.find((w) => w.id === id);
+    if (weapon && weapon.type.type === 'RIFFLE') {
+      this.form.controls['opticFactory'].setValidators([Validators.min(1)]);
+      this.form.controls['opticModel'].setValidators([Validators.min(1)]);
+      this.form.controls['opticFactory'].enable();
+      this.form.updateValueAndValidity();
+      this.$isHandGunNewSetup.update(() => false);
+      this.loadOpticsList();
+    } else if (weapon && weapon.type.type === 'HAND_GUN') {
+      this.form.controls['opticFactory'].removeValidators([Validators.min(1)]);
+      this.form.controls['opticModel'].removeValidators([Validators.min(1)]);
+      this.form.controls['opticFactory'].disable();
+      this.form.updateValueAndValidity();
+      this.$isHandGunNewSetup.update(() => true);
+    }
   }
 
   //************************************ OPTICS ************************************
@@ -168,15 +234,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * Charge la liste des optiques disponible apres que l'utilisateur est choisi son arme
    */
   private loadOpticsList(): void {
-    this.userSetupService.getAllActivesOptics().subscribe({
-      next: (optics) => {
-        this._optics = optics;
-        this.createOpticsFactoriesDropdown(optics);
-      },
-      error: (err) => {
-        this.userSetupService.errorMessage(err.error.message);
-      }
-    });
+    this.$_enabledAllOpticsQuery.update(() => true);
   }
 
   /**
@@ -215,7 +273,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
    * @param checked event du inputSwitch
    */
   public newOpticsForm(checked: boolean): void {
-    this.isNewOptics = checked;
+    this.$isNewOptics.update(() => checked);
     this.switchStateFormControl('optic', checked);
   }
 
@@ -227,7 +285,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
   public opticsAdded(newOptics: OpticsDto): void {
     this._optics.push(newOptics);
     this.createOpticsFactoriesDropdown(this._optics);
-    this.isNewOptics = false;
+    this.$isNewOptics.update(() => false);
     this.switchStateFormControl('optic', false);
     this.form.controls['opticsNotFound'].setValue(false);
   }
@@ -269,15 +327,7 @@ export class UserWeaponSetupAddComponent implements OnInit {
         user: user
       };
 
-      this.userSetupService.save(newSetup).subscribe({
-        next: (res) => {
-          this.setupAdded.emit(res);
-          this.userSetupService.successMessage('Nouveau setup enregistré');
-        },
-        error: (err) => {
-          this.userSetupService.errorMessage(err.error.message);
-        }
-      });
+      this.addNewUserSetupMutation.mutate(newSetup);
     }
   }
 
