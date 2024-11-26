@@ -17,12 +17,13 @@
   <p class="text-center text-xl font-bold">Armes longues</p>
   <p-table
     [value]="weaponsRiffleSetups"
+    styleClass="p-datatable-gridlines"
     [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
       <tr>
-        <th>Calibre</th>
         <th>Marque</th>
         <th>Name</th>
+        <th>Calibre</th>
         <th>Optique</th>
         <th>RDS</th>
         <th class="text-center">Detail</th>
@@ -30,9 +31,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-setup>
       <tr>
-        <td>{{ setup.weapon.caliber.label }}</td>
         <td>{{ setup.weapon.factory.name }}</td>
         <td>{{ setup.weapon.model }} - {{ setup.weapon.variation }}</td>
+        <td>{{ setup.weapon.caliber.label }}</td>
         <td>
           {{ setup.optics.name }} / {{ setup.optics.minZoom }}-{{
             setup.optics.maxZoom
@@ -50,22 +51,25 @@
   <p class="text-center text-xl font-bold">Armes de poing</p>
   <p-table
     [value]="weaponsHandGunSetups"
+    styleClass="p-datatable-gridlines"
     [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
       <tr>
-        <th>Calibre</th>
         <th>Marque</th>
         <th>Name</th>
+        <th>Calibre</th>
         <th>RDS</th>
         <th class="text-center">Detail</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-setup>
       <tr>
-        <td>{{ setup.weapon.caliber.label }}</td>
         <td>{{ setup.weapon.factory.name }}</td>
         <td>{{ setup.weapon.model }} - {{ setup.weapon.variation }}</td>
-        <td>{{ setup.soundReducer ? setup.soundReducer.model : 'no rds' }}</td>
+        <td>{{ setup.weapon.caliber.label }}</td>
+        <td>
+          {{ setup.soundReducer ? setup.soundReducer.model : 'no rds' }}
+        </td>
         <td class="text-center">
           <a [routerLink]="['/user/weapon/setup/' + setup.id]"
             ><i class="pi pi-search"></i

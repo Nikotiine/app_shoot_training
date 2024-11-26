@@ -68,21 +68,6 @@ export class NavigationComponent implements OnInit {
         ]
       },
       {
-        label: 'Calculateur balistique',
-        icon: 'pi pi-fw pi-sliders-h',
-        items: [
-          {
-            label: 'Joules',
-            icon: 'pi pi-fw pi-sort-alt',
-            routerLink: Routing.JOULE_CALCULATOR
-          },
-          {
-            label: 'Reglages de lunette',
-            icon: 'pi pi-fw pi-wrench'
-          }
-        ]
-      },
-      {
         label: 'Entrainement',
         icon: 'pi pi-fw pi-calendar',
         items: [
@@ -100,6 +85,21 @@ export class NavigationComponent implements OnInit {
             label: 'Statistiques',
             icon: 'pi pi-fw pi-chart-line',
             routerLink: Routing.TRAINING + '/' + Routing.TRAINING_STATS_LIST
+          }
+        ]
+      },
+      {
+        label: 'Calculateur balistique',
+        icon: 'pi pi-fw pi-sliders-h',
+        items: [
+          {
+            label: 'Joules',
+            icon: 'pi pi-fw pi-sort-alt',
+            routerLink: Routing.JOULE_CALCULATOR
+          },
+          {
+            label: 'Reglages de lunette',
+            icon: 'pi pi-fw pi-wrench'
           }
         ]
       }
@@ -127,40 +127,6 @@ export class NavigationComponent implements OnInit {
             icon: 'pi pi-fw pi-wrench'
           }
         ]
-      },
-      {
-        label: 'Menu Hors co',
-        icon: 'pi pi-fw pi-calendar',
-        items: [
-          {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-pencil',
-            items: [
-              {
-                label: 'Save',
-                icon: 'pi pi-fw pi-calendar-plus'
-              },
-              {
-                label: 'Delete',
-                icon: 'pi pi-fw pi-calendar-minus'
-              }
-            ]
-          },
-          {
-            label: 'Archive',
-            icon: 'pi pi-fw pi-calendar-times',
-            items: [
-              {
-                label: 'Remove',
-                icon: 'pi pi-fw pi-calendar-minus'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Menu Hors co',
-        icon: 'pi pi-fw pi-power-off'
       }
     ];
   }
