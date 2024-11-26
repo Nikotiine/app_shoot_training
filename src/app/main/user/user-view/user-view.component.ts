@@ -6,11 +6,23 @@ import { ButtonModule } from 'primeng/button';
 
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UserProfileDto } from '../../../core/api/models/user-profile-dto';
+import { AccordionModule } from 'primeng/accordion';
+import { StatListComponent } from '../../training/stats/stat-list/stat-list.component';
+import { TabViewModule } from 'primeng/tabview';
+import { UserWeaponSetupListComponent } from '../user-weapon-setup-list/user-weapon-setup-list.component';
 
 @Component({
   selector: 'app-user-view',
   standalone: true,
-  imports: [DatePipe, ButtonModule, UserEditComponent],
+  imports: [
+    DatePipe,
+    ButtonModule,
+    UserEditComponent,
+    AccordionModule,
+    StatListComponent,
+    TabViewModule,
+    UserWeaponSetupListComponent
+  ],
   templateUrl: './user-view.component.html',
   styleUrl: './user-view.component.scss'
 })

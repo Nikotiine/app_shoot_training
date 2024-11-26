@@ -1,16 +1,38 @@
-<div class="text-center">
-  <h1 class="text-blue-500">Mes informations</h1>
-  <div class="text-left">
-    <p>{{shooterProfile.firstName}} - {{shooterProfile.lastName}}</p>
-    <p>Mon email : {{shooterProfile.email}}</p>
-    <p>Membre depuis {{shooterProfile.createdAt | date:'dd MMM yyyy'}}</p>
-  </div>
-  <div class="mt-3">
-    <p-button label="Modifier mon profil" (onClick)="editProfile()"></p-button>
-  </div>
-  @defer (when isEdit){ @if (isEdit){
-  <app-user-edit
-    [profile]="shooterProfile"
-    (profileChange)="profileChange($event)"></app-user-edit>
-  } }
+<div class="mt-5">
+  <p-tabView>
+    <p-tabPanel header="Mes informations">
+      <div class="text-left">
+        <p>{{ shooterProfile.firstName }} - {{ shooterProfile.lastName }}</p>
+        <p>
+          Mon email :
+          <span class="text-primary">{{ shooterProfile.email }}</span>
+        </p>
+        <p>
+          Membre depuis {{ shooterProfile.createdAt | date: 'dd MMM yyyy' }}
+        </p>
+      </div>
+      <div class="mt-3">
+        <p-button
+          label="Modifier mon profil"
+          (onClick)="editProfile()"></p-button>
+      </div>
+      @defer (when isEdit) {
+        @if (isEdit) {
+          <app-user-edit
+            [profile]="shooterProfile"
+            (profileChange)="profileChange($event)"></app-user-edit>
+        }
+      }
+    </p-tabPanel>
+    <p-tabPanel header="Mes armes">
+      <ng-template pTemplate="content">
+        <app-user-weapon-setup-list></app-user-weapon-setup-list>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Mes stats">
+      <ng-template pTemplate="content">
+        <app-stat-list></app-stat-list>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
 </div>
